@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/dositadi/groupie-tracker.git/cmd/api/handlers"
+	"github.com/dositadi/groupie-tracker/cmd/api/handlers"
 )
 
 func TestRecover(t *testing.T) {

@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/dositadi/groupie-tracker.git/internal/helper"
+	"github.com/dositadi/groupie-tracker/internal/helper"
 )
 
 type Level int8

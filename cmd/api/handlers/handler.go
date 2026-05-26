@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	jsonlog "github.com/dositadi/groupie-tracker.git/internal/json_log"
+	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
 
 type Handler struct {

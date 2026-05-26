@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/dositadi/groupie-tracker.git/internal/helper"
+	"github.com/dositadi/groupie-tracker/internal/helper"
 )
 
 func (h *Handler) HomeHandler(w http.ResponseWriter, r *http.Request) {

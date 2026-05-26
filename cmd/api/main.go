@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dositadi/groupie-tracker.git/internal/helper"
-	jsonlog "github.com/dositadi/groupie-tracker.git/internal/json_log"
+	"github.com/dositadi/groupie-tracker/internal/helper"
+	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
 
 type Test struct{ Name string }

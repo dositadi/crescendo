@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"github.com/dositadi/groupie-tracker.git/cmd/api/handlers"
-	jsonlog "github.com/dositadi/groupie-tracker.git/internal/json_log"
+	"github.com/dositadi/groupie-tracker/cmd/api/handlers"
+	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
 
 type Middleware struct {
