@@ -16,7 +16,7 @@ const (
 var logger *jsonlog.Logger = jsonlog.New(os.Stdout, jsonlog.LevelInfo)
 
 // A generic function that fetches all the artist resource.
-func (a *ArtistInfo) FetchArtists() (*[]Artist, error) {
+func (a *ArtistInfo) FetchArtists() (map[int]Artist, error) {
 	response, err := http.Get(artist)
 	if err != nil {
 		e := helper.WrapError("Get error", err)
@@ -39,9 +39,15 @@ func (a *ArtistInfo) FetchArtists() (*[]Artist, error) {
 		return nil, e
 	}
 
+	artistsMap := make(map[int]Artist)
+
+	for _, artist := range artists {
+		artistsMap[artist.Id] = artist
+	}
+
 	logger.PrintInfo("Artists fetch successful", map[string]string{
 		"Source": "Fetch resource f(n) under artistapi package.",
 	})
 
-	return &artists, nil
+	return artistsMap, nil
 }

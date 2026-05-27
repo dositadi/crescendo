@@ -14,7 +14,7 @@ type InfoTypes interface {
 }
 
 // Writing an interace type to populate the Artist struct with all it's data.
-func PopulateArtistInfo[T InfoTypes](info T, artistInfo *ArtistInfo) *ArtistInfo {
+func populateArtistInfo[T InfoTypes](info T, artistInfo *ArtistInfo) *ArtistInfo {
 	switch v := any(info).(type) {
 	case Artist:
 		artistInfo.Id = v.Id
@@ -26,36 +26,30 @@ func PopulateArtistInfo[T InfoTypes](info T, artistInfo *ArtistInfo) *ArtistInfo
 
 	case Location:
 		if artistInfo != nil {
-			if artistInfo.Id != v.Id {
-				return nil
+			if artistInfo.Id == v.Id {
+				artistInfo.Locations = v.Locations
 			}
 		} else {
 			return nil
 		}
-
-		artistInfo.Locations = v.Locations
 
 	case ConcertDate:
 		if artistInfo != nil {
-			if artistInfo.Id != v.Id {
-				return nil
+			if artistInfo.Id == v.Id {
+				artistInfo.ConcertDates = v.Dates
 			}
 		} else {
 			return nil
 		}
-
-		artistInfo.ConcertDates = v.Dates
 
 	case Relations:
 		if artistInfo != nil {
-			if artistInfo.Id != v.Id {
-				return nil
+			if artistInfo.Id == v.Id {
+				artistInfo.DatesLocations = v.DatesLocations
 			}
 		} else {
 			return nil
 		}
-
-		artistInfo.DatesLocations = v.DatesLocations
 
 	default:
 		if artistInfo != nil {
@@ -67,7 +61,7 @@ func PopulateArtistInfo[T InfoTypes](info T, artistInfo *ArtistInfo) *ArtistInfo
 }
 
 func fetchInfo[T InfoTypes](url string) (T, error) {
-	var locations T
+	var info T
 	logger := jsonlog.New(os.Stdout, jsonlog.LevelInfo)
 
 	resp, err := http.Get(url)
@@ -81,7 +75,7 @@ func fetchInfo[T InfoTypes](url string) (T, error) {
 
 	defer resp.Body.Close()
 
-	err = json.NewDecoder(resp.Body).Decode(&locations)
+	err = json.NewDecoder(resp.Body).Decode(&info)
 	if err != nil {
 		e := fmt.Errorf("Json Decode error: %w", err)
 
@@ -90,5 +84,5 @@ func fetchInfo[T InfoTypes](url string) (T, error) {
 		})
 	}
 
-	return locations, nil
+	return info, nil
 }

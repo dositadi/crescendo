@@ -1,8 +1,8 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"sync"
 
 	artistapi "github.com/dositadi/groupie-tracker/cmd/api/artist_api"
 )
@@ -18,16 +18,28 @@ func main() {
 	artists, _ := a.FetchArtists()
 
 	ch := make(chan artistapi.ArtistInfo, 52)
-	chErr := make(chan error)
-	var mu *sync.Mutex = &sync.Mutex{}
+	chError := make(chan error)
 
-	ch = a.FillArtistsInfoFromArtists(ch, chErr, *artists, mu)
+	ctx, cancel := context.WithCancel(context.Background())
 
-	close(ch)
-	fmt.Println(len(ch))
+	artistFilled := a.FillArtistsInfoFromArtists(ch, artists)
+	locationFilled := a.FillArtistInfoFromLocation(ctx, artistFilled, chError, artists)
+	dateFilled := a.FillArtistInfoFromDate(ctx, locationFilled, chError, artists)
 
-	for v := range ch {
-		fmt.Println(v)
+	fmt.Println(len(dateFilled))
+
+	for v := range locationFilled {
+		fmt.Println("location: ", v)
 	}
 
+	for v := range dateFilled {
+		fmt.Println("date: ", v)
+	}
+
+	select {
+	case <-chError:
+		cancel()
+	default:
+		return
+	}
 }

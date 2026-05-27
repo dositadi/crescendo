@@ -4,7 +4,7 @@ import (
 	"sync"
 )
 
-func (a *ArtistInfo) FillArtistsInfoFromArtists(ch chan ArtistInfo, artists []Artist) chan ArtistInfo {
+func (a *ArtistInfo) FillArtistsInfoFromArtists(ch chan ArtistInfo, artists map[int]Artist) chan ArtistInfo {
 	temp := make(chan ArtistInfo, 5)
 
 	var wg *sync.WaitGroup = &sync.WaitGroup{}
@@ -17,7 +17,7 @@ func (a *ArtistInfo) FillArtistsInfoFromArtists(ch chan ArtistInfo, artists []Ar
 
 			var artistInfo *ArtistInfo = new(ArtistInfo)
 
-			artistInfo = PopulateArtistInfo(a, artistInfo)
+			artistInfo = populateArtistInfo(a, artistInfo)
 
 			temp <- *artistInfo
 		}(artist)
@@ -31,6 +31,8 @@ func (a *ArtistInfo) FillArtistsInfoFromArtists(ch chan ArtistInfo, artists []Ar
 	for artistInfo := range temp {
 		ch <- artistInfo
 	}
+
+	close(ch)
 
 	logger.PrintInfo("Filled in artists in artist's info successfully", map[string]string{
 		"Source": "Fill artists info from artists f(n) in artistapi pkg",
