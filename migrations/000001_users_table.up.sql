@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS users (
 
 INSERT INTO users (id, username, email, hashed_password, version)
     VALUES
-    ('1','dositadi','akindivine587@gmail.com','123gdh456', 'version = version + 1');
+    ('1','dositadi','akindivine587@gmail.com','123gdh456', '2');
+UPDATE users
+    SET version = version + 1;
 
 COMMIT;
