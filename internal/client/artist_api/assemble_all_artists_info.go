@@ -3,6 +3,7 @@ package artistapi
 import (
 	"context"
 	"os"
+	"time"
 )
 
 func (a *ArtistInfo) assembleArtistInfoAsMap(chArtistsInfo chan *ArtistInfo) (map[int]ArtistInfo, map[int]ArtistInfo, map[string]ArtistInfo, map[string]ArtistInfo) {
@@ -38,6 +39,7 @@ func (a *ArtistInfo) mapArtistsInfo() (map[int]ArtistInfo, map[int]ArtistInfo, m
 	select {
 	case <-chError:
 		cancel()
+		time.Sleep(5 * time.Millisecond)
 		os.Exit(1)
 	default:
 		return a.assembleArtistInfoAsMap(filledRelations)

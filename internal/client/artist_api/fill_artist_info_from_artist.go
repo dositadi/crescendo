@@ -16,7 +16,7 @@ func (a *ArtistInfo) fillArtistsInfoFromArtists(artists map[int]artist) chan Art
 		return nil
 	}
 
-	var wg *sync.WaitGroup = &sync.WaitGroup{}
+	var wg = new(sync.WaitGroup)
 
 	for _, art := range artists {
 		wg.Add(1)
