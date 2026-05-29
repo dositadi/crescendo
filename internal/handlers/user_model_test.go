@@ -32,6 +32,7 @@ type UserModel interface {
 var (
 	USER_NOT_FOUND = errors.New("User not found")
 	USER_EXISTS    = errors.New("User exists")
+	EMAIL_EXISTS   = errors.New("Email exists")
 )
 
 func (f *FakeUserModel) Delete(id string) error {
@@ -73,6 +74,43 @@ func (f *FakeUserModel) Insert(user data.User) error {
 func (f *FakeUserModel) Update(id string, info data.UpdateUser) error {
 	user, ok := f.Users[id]
 	if !ok {
-		return 
+		return USER_NOT_FOUND
 	}
+
+	if info.HashedPassword != nil {
+		user.HashedPassword = *info.HashedPassword
+	}
+
+	if info.Username != nil {
+		user.Username = *info.Username
+	}
+
+	if info.Email != nil {
+		for _, user := range f.Users {
+			if user.Email == *info.Email {
+				return EMAIL_EXISTS
+			}
+		}
+		user.Email = *info.Email
+	}
+
+	f.Users[user.Id] = user
+	return nil
+}
+
+func (f *FakeUserModel) EmailExists(email string) (bool, error) {
+	for _, user := range f.Users {
+		if user.Email == email {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
+func (f *FakeUserModel) IDExists(id string) (bool, error) {
+	_, ok := f.Users[id]
+	if !ok {
+		return false, USER_NOT_FOUND
+	}
+	return ok, nil
 }
