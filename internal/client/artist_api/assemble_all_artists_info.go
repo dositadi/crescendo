@@ -29,6 +29,7 @@ func (a *ArtistInfo) mapArtistsInfo() (map[int]ArtistInfo, map[int]ArtistInfo, m
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 	chError := make(chan error)
 
 	filledArtists := a.fillArtistsInfoFromArtists(arts)
@@ -38,7 +39,6 @@ func (a *ArtistInfo) mapArtistsInfo() (map[int]ArtistInfo, map[int]ArtistInfo, m
 
 	select {
 	case <-chError:
-		cancel()
 		time.Sleep(5 * time.Millisecond)
 		os.Exit(1)
 	default:

@@ -50,7 +50,7 @@ func (a *ArtistInfo) fillArtistInfoFromLocation(ctx context.Context, chArtistInf
 				return
 			}
 
-			artInfo := populateArtistInfo[location](locations, &aInfo)
+			artInfo := populateArtistInfo(locations, &aInfo)
 
 			temp <- artInfo
 

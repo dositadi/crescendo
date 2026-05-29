@@ -29,7 +29,7 @@ func (a *ArtistInfo) fillArtistInfoFromRelations(ctx context.Context, chArtistIn
 				chError <- e
 			}
 
-			filledArtistInfo := populateArtistInfo[relations](relation, aInfo)
+			filledArtistInfo := populateArtistInfo(relation, aInfo)
 
 			temp <- filledArtistInfo
 		}(artInfo, art)

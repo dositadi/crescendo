@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -91,7 +92,7 @@ func (a *App) migrate() error {
 		return e
 	}
 
-	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+	if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
 		e := helper.WrapError("Migration failed", err)
 		a.logger.PrintFatal(e.Error(), map[string]string{
 			"Source": "Migrate f(n)",

@@ -26,7 +26,7 @@ func (a *ArtistInfo) fillArtistsInfoFromArtists(artists map[int]artist) chan Art
 
 			var artInfo *ArtistInfo = new(ArtistInfo)
 
-			artInfo = populateArtistInfo[artist](a, artInfo)
+			artInfo = populateArtistInfo(a, artInfo)
 
 			temp <- *artInfo
 		}(art)

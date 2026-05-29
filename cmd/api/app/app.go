@@ -8,6 +8,7 @@ import (
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 	"github.com/dositadi/groupie-tracker/internal/middleware"
 	"github.com/dositadi/groupie-tracker/internal/models"
+	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -18,9 +19,11 @@ type App struct {
 	handler   *handlers.Handler
 	midleware *middleware.Middleware
 	client    *artistapi.ArtistInfo
+	router    *chi.Mux
 }
 
 func (a *App) init() {
+	a.router = chi.NewRouter()
 	a.client.Init()
 	a.config = newConfig()
 	a.logger = jsonlog.New(os.Stdout, jsonlog.LevelInfo)
@@ -31,5 +34,8 @@ func (a *App) init() {
 }
 
 func (a *App) Run() {
-	a.init()
+	//a.init()
+	a.logger = jsonlog.New(os.Stdout, jsonlog.LevelInfo)
+	a.router = chi.NewRouter()
+	a.startServer()
 }

@@ -50,7 +50,7 @@ func (a *ArtistInfo) fillArtistInfoFromDate(ctx context.Context, chArtistInfo ch
 				return
 			}
 
-			filledArtistInfo := populateArtistInfo[concertDate](dates, aInfo)
+			filledArtistInfo := populateArtistInfo(dates, aInfo)
 
 			temp <- filledArtistInfo
 
