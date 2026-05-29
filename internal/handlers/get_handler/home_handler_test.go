@@ -1,4 +1,4 @@
-package handlers
+package gethandler
 
 import (
 	"net/http"
@@ -10,7 +10,7 @@ func TestHomeHandler(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 
-	handler := Handler{}
+	handler := Get{}
 
 	handler.HomeHandler(recorder, req)
 

@@ -4,6 +4,9 @@ import (
 	"net/http"
 
 	"github.com/dositadi/groupie-tracker/internal/data"
+	deletehandler "github.com/dositadi/groupie-tracker/internal/handlers/delete_handler"
+	gethandler "github.com/dositadi/groupie-tracker/internal/handlers/get_handler"
+	posthandler "github.com/dositadi/groupie-tracker/internal/handlers/post_handler"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
 
@@ -20,12 +23,18 @@ type UserModel interface {
 type Handler struct {
 	logger    jsonlog.Logger
 	userModel UserModel
+	Get       gethandler.Get
+	Post      posthandler.Post
+	Delete    deletehandler.Delete
 }
 
 func New(logger jsonlog.Logger, userModel UserModel) *Handler {
 	return &Handler{
 		logger:    logger,
 		userModel: userModel,
+		Get:       *gethandler.New(userModel),
+		Post:      *posthandler.New(userModel),
+		Delete:    *deletehandler.New(userModel),
 	}
 }
 

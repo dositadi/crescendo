@@ -1,4 +1,4 @@
-package handlers
+package gethandler
 
 import (
 	"net/http"
@@ -6,7 +6,7 @@ import (
 	"github.com/dositadi/groupie-tracker/internal/helper"
 )
 
-func (h *Handler) HomeHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Get) HomeHandler(w http.ResponseWriter, r *http.Request) {
 	json := helper.Marshal(map[string]string{"Name": "Divine"})
 	w.Write(json)
 }
