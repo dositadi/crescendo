@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	deletehandler "github.com/dositadi/groupie-tracker/internal/handlers/delete_handler"
 	gethandler "github.com/dositadi/groupie-tracker/internal/handlers/get_handler"
@@ -23,12 +24,13 @@ type UserModel interface {
 type Handler struct {
 	logger    jsonlog.Logger
 	userModel UserModel
+	client    artistapi.ArtistInfo
 	Get       gethandler.Get
 	Post      posthandler.Post
 	Delete    deletehandler.Delete
 }
 
-func New(logger jsonlog.Logger, userModel UserModel) *Handler {
+func New(logger jsonlog.Logger, userModel UserModel, client artistapi.ArtistInfo) *Handler {
 	return &Handler{
 		logger:    logger,
 		userModel: userModel,

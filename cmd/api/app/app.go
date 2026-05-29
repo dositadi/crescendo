@@ -29,13 +29,11 @@ func (a *App) init() {
 	a.logger = jsonlog.New(os.Stdout, jsonlog.LevelInfo)
 	a.initDB()
 	models := models.New(a.db, a.logger)
-	a.handler = handlers.New(*a.logger, &models.UserModel)
+	a.handler = handlers.New(*a.logger, &models.UserModel, *a.client)
 	a.midleware = middleware.New(*a.handler, *a.logger)
 }
 
 func (a *App) Run() {
-	//a.init()
-	a.logger = jsonlog.New(os.Stdout, jsonlog.LevelInfo)
-	a.router = chi.NewRouter()
+	a.init()
 	a.startServer()
 }

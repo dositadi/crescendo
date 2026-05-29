@@ -7,6 +7,8 @@ import (
 	"strings"
 	"testing"
 
+	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/handlers"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
@@ -41,9 +43,12 @@ func TestRecover(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			recorder := httptest.NewRecorder()
 			request := httptest.NewRequest(http.MethodGet, "/", nil)
+			logger := *jsonlog.New(os.Stdout, jsonlog.LevelInfo)
 
 			// Replace the nil for interface here with a demo data for testing
-			mid := New(*handlers.New(*jsonlog.New(os.Stdout, jsonlog.LevelInfo), nil), *jsonlog.New(os.Stdout, jsonlog.LevelInfo))
+			mid := New(*handlers.New(logger, &handlers.FakeUserModel{
+				Users: map[string]data.User{},
+			}, artistapi.ArtistInfo{}), logger)
 
 			mid.Recover(tt.handler).ServeHTTP(recorder, request)
 
