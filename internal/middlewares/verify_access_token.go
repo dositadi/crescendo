@@ -1,0 +1,73 @@
+package middlewares
+
+import (
+	"fmt"
+	"net/http"
+	"os"
+	"strings"
+
+	"github.com/dositadi/groupie-tracker/internal/data"
+	"github.com/dositadi/groupie-tracker/internal/helper"
+	"github.com/golang-jwt/jwt/v5"
+)
+
+func (m *Middleware) VerifyAccessToken(next http.Handler) http.Handler {
+	return http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			// Step 1: get the token string form either header or cookie
+			tokenString := m.getToken(r)
+			if tokenString == "" {
+				// Direct to the page for expired session page
+				e := fmt.Errorf("Unauthorized access")
+				m.logger.PrintError(e.Error(), map[string]string{
+					"Source": "Verify access token f(n) under middleware pkg",
+				})
+				http.Error(w, e.Error(), http.StatusUnauthorized)
+			}
+
+			// Parse the claim using the address of the variable below
+			var active data.ActiveUser
+			token, err := jwt.ParseWithClaims(tokenString, &active, func(t *jwt.Token) (any, error) {
+				jwtKey := os.Getenv("JWTKEY")
+				return []byte(jwtKey), nil
+			})
+			if err != nil {
+				// Direct to the page for expired session page
+				e := helper.WrapError("Unauthorized access", err)
+				logger.PrintError(e.Error(), map[string]string{
+					"Source": "Verify access token f(n) under middleware pkg",
+				})
+				http.Error(w, e.Error(), http.StatusUnauthorized)
+			}
+
+			// Check that the token is valid and is of the active user type
+			if _, ok := token.Claims.(*data.ActiveUser); !ok && !token.Valid {
+				e := helper.WrapError("Unauthorized access", err)
+				logger.PrintError(e.Error(), map[string]string{
+					"Source": "Verify access token f(n) under middleware pkg",
+				})
+				http.Error(w, e.Error(), http.StatusUnauthorized)
+			}
+
+			next.ServeHTTP(w, r)
+		},
+	)
+}
+
+func (m *Middleware) getToken(r *http.Request) string {
+	val := r.Header.Get("Authorization")
+	if val == "" {
+		return val
+	}
+
+	splitted := strings.Split(val, " ")
+	if len(splitted) == 2 && splitted[0] == "Bearer" {
+		return splitted[1]
+	}
+
+	cookie, err := r.Cookie("access")
+	if err == nil {
+		return cookie.Value
+	}
+	return ""
+}

@@ -6,7 +6,7 @@ import (
 	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
 	"github.com/dositadi/groupie-tracker/internal/handlers"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
-	"github.com/dositadi/groupie-tracker/internal/middleware"
+	"github.com/dositadi/groupie-tracker/internal/middlewares"
 	"github.com/dositadi/groupie-tracker/internal/models"
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5"
@@ -17,7 +17,7 @@ type App struct {
 	config    config
 	logger    *jsonlog.Logger
 	handler   *handlers.Handler
-	midleware *middleware.Middleware
+	midleware *middlewares.Middleware
 	client    *artistapi.ArtistInfo
 	router    *chi.Mux
 }
@@ -31,7 +31,7 @@ func (a *App) init() {
 	a.initDB()
 	models := models.New(a.db, a.logger)
 	a.handler = handlers.New(*a.logger, &models.UserModel, *a.client)
-	a.midleware = middleware.New(*a.handler, *a.logger)
+	a.midleware = middlewares.New(*a.handler, *a.logger)
 	a.initHandlers()
 }
 

@@ -19,3 +19,10 @@ type Auth struct {
 	logger    jsonlog.Logger
 	usermodel UserModel
 }
+
+func New(logger jsonlog.Logger, userModel UserModel) *Auth {
+	return &Auth{
+		logger:    logger,
+		usermodel: userModel,
+	}
+}
