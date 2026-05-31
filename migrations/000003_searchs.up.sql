@@ -1,6 +1,6 @@
 BEGIN;
 
-CREATE TABLE IF NOT EXISTS searches (
+CREATE TABLE IF NOT EXISTS searchs (
     id uuid NOT NULL PRIMARY KEY,
     search text NOT NULL,
     userId uuid NOT NULL,

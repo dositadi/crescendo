@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"os"
 	"time"
 
@@ -14,7 +13,7 @@ const (
 	sourceJWT = "Generate JWT f(n) under auth pkg"
 )
 
-func (a *Auth) GenerateJWT(claim data.ActiveUser) ([]byte, error) {
+func (a *Auth) generateJWT(claim data.ActiveUser) ([]byte, error) {
 	// Step one: fill in the struct values of the claim.RegisteredClaims type declared in the ActiveUser struct
 	claim.RegisteredClaims = jwt.RegisteredClaims{
 		Issuer:    "http://localhost:8080",
@@ -37,8 +36,6 @@ func (a *Auth) GenerateJWT(claim data.ActiveUser) ([]byte, error) {
 		})
 		return nil, e
 	}
-
-	fmt.Println(signedToken)
 
 	// Step four: return the signed token
 	return []byte(signedToken), nil

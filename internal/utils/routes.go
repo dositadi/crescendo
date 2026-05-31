@@ -1,0 +1,18 @@
+package utils
+
+type Route string
+
+func (r Route) String() string {
+	return string(r)
+}
+
+const (
+	LOGIN          Route = Route("/auth/session")
+	REGISTER       Route = Route("/auth/registration")
+	HOME           Route = Route("/artists")
+	FAVORITES      Route = Route("/artists/favorites")
+	ARTIST_DETAILS Route = Route("/artists/detail")
+	ARTIST_SEARCH  Route = Route("/artists/search")  //?query=
+	ARTIST_FILTER  Route = Route("/artists/filter/") //?by=
+	EVENTS         Route = Route("/artists/concert")
+)

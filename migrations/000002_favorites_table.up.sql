@@ -11,4 +11,8 @@ CREATE TABLE IF NOT EXISTS favorites (
     CONSTRAINT fk_user FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE EXTENSION pg_trgm;
+
+CREATE INDEX idx_artist_id ON favorites USING gin (artistId gin_trgm_ops);
+
 COMMIT;
