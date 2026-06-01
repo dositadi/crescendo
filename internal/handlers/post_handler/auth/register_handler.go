@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/dositadi/groupie-tracker/internal/data"
@@ -12,10 +11,10 @@ import (
 )
 
 const (
-	sourceReg     = "Register handler f(n) under auth pkg"
-	usernameEmpty = "Username field cannot be empty"
+	sourceReg = "Register handler f(n) under auth pkg"
+	/* usernameEmpty = "Username field cannot be empty"
 	passwordEmpty = "Password field cannot be empty"
-	emailEmpty    = "Email field cannot be empty"
+	emailEmpty    = "Email field cannot be empty" */
 )
 
 func (a *Auth) RegisterHandler(w http.ResponseWriter, r *http.Request) {
@@ -43,11 +42,10 @@ func (a *Auth) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 	hashedPassword, err := a.hashPassword([]byte(password))
 	if err != nil {
-		e := fmt.Errorf(err.Error())
-		a.logger.PrintError(e.Error(), map[string]string{
+		a.logger.PrintError(err.Error(), map[string]string{
 			"Source": sourceReg,
 		})
-		http.Error(w, e.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
 	var user data.User

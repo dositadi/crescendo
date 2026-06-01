@@ -4,162 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sign In — Crescendo</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/src/output.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand:   { DEFAULT: '#4F46E5', hover: '#4338CA', active: '#3730A3', light: '#EEF2FF' },
-            ink:     { DEFAULT: '#111827', secondary: '#4B5563', muted: '#6B7280', disabled: '#9CA3AF' },
-            surface: { DEFAULT: '#FAF9F7', white: '#FFFFFF', alt: '#F5F6F8' },
-            border:  { DEFAULT: '#E5E7EB', soft: '#EEF1F4', focus: '#C7D2FE' },
-          },
-          fontFamily: {
-            display: ['"DM Serif Display"', 'Georgia', 'serif'],
-            sans:    ['"DM Sans"', 'system-ui', 'sans-serif'],
-          },
-          boxShadow: {
-            sm:         '0 1px 2px rgba(0,0,0,.04)',
-            md:         '0 4px 12px rgba(0,0,0,.06)',
-            lg:         '0 10px 30px rgba(0,0,0,.08)',
-            'brand-sm': '0 4px 14px rgba(79,70,229,.18)',
-          },
-          keyframes: {
-            'fade-up':       { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
-            'slide-in-left': { '0%': { opacity: '0', transform: 'translateX(-24px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
-            'bar-dance':     { '0%,100%': { transform: 'scaleY(0.25)' }, '50%': { transform: 'scaleY(1)' } },
-            'note-rise':     { '0%': { opacity: '0', transform: 'translateY(4px) rotate(-6deg)' }, '30%': { opacity: '1' }, '100%': { opacity: '0', transform: 'translateY(-56px) rotate(12deg)' } },
-            'needle-sway':   { '0%,100%': { transform: 'rotate(-24deg)' }, '50%': { transform: 'rotate(-10deg)' } },
-            'platter-spin':  { '0%': { transform: 'rotate(0deg)' }, '100%': { transform: 'rotate(360deg)' } },
-            'ring-pulse':    { '0%': { transform: 'scale(1)', opacity: '.5' }, '70%': { transform: 'scale(1.12)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '0' } },
-            'track-scroll':  { '0%': { transform: 'translateX(0)' }, '100%': { transform: 'translateX(-50%)' } },
-          },
-          animation: {
-            'fade-up':     'fade-up .65s ease-out both',
-            'fu-d1':       'fade-up .65s ease-out  .08s both',
-            'fu-d2':       'fade-up .65s ease-out  .16s both',
-            'fu-d3':       'fade-up .65s ease-out  .24s both',
-            'fu-d4':       'fade-up .65s ease-out  .32s both',
-            'fu-d5':       'fade-up .65s ease-out  .40s both',
-            'fu-d6':       'fade-up .65s ease-out  .48s both',
-            'slide-left':  'slide-in-left .7s ease-out both',
-            'sl-d1':       'slide-in-left .7s ease-out  .10s both',
-            'sl-d2':       'slide-in-left .7s ease-out  .25s both',
-            'sl-d3':       'slide-in-left .7s ease-out  .40s both',
-            'sl-d4':       'slide-in-left .7s ease-out  .55s both',
-            'bar1':        'bar-dance 1.0s ease-in-out         infinite',
-            'bar2':        'bar-dance 1.0s ease-in-out  .14s  infinite',
-            'bar3':        'bar-dance 1.0s ease-in-out  .28s  infinite',
-            'bar4':        'bar-dance 1.0s ease-in-out  .42s  infinite',
-            'bar5':        'bar-dance 1.0s ease-in-out  .56s  infinite',
-            'bar6':        'bar-dance 1.0s ease-in-out  .70s  infinite',
-            'note1':       'note-rise 3.4s ease-out          infinite',
-            'note2':       'note-rise 3.4s ease-out  1.15s   infinite',
-            'note3':       'note-rise 3.4s ease-out  2.3s    infinite',
-            'needle':      'needle-sway 2.8s ease-in-out      infinite',
-            'platter':     'platter-spin 4s linear            infinite',
-            'ring':        'ring-pulse 2.6s ease-out          infinite',
-            'ring-d':      'ring-pulse 2.6s ease-out   .9s   infinite',
-            'track-scroll':'track-scroll 28s linear          infinite',
-          },
-        }
-      }
-    }
-  </script>
-
-  <style>
-    /* ── Page base ── */
-    body { background-color: #FAF9F7; }
-
-    /* ── Brand panel ── */
-    .brand-panel {
-      background-color: #0f0d23;
-      background-image:
-        radial-gradient(ellipse at 15% 15%, rgba(79,70,229,.32) 0%, transparent 55%),
-        radial-gradient(ellipse at 85% 75%, rgba(99,91,255,.18) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 100%, rgba(55,48,163,.22) 0%, transparent 60%);
-    }
-
-    /* ── Noise texture ── */
-    .noise {
-      position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
-      background-size: 180px; opacity: .45;
-    }
-
-    /* ── Waveform bar ── */
-    .wbar { display: inline-block; width: 3px; border-radius: 999px; transform-origin: bottom center; }
-
-    /* ── Floating music note ── */
-    .mnote { position: absolute; pointer-events: none; user-select: none; color: #818cf8; }
-
-    /* ── Turntable needle pivot ── */
-    .needle-wrap { transform-origin: 228px 62px; }
-
-    /* ── Scrolling track strip ── */
-    .track-strip { display: flex; white-space: nowrap; width: max-content; }
-    .track-item {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 6px 14px; margin-right: 10px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 999px;
-      font-size: 12px; color: rgba(255,255,255,.55);
-      flex-shrink: 0;
-    }
-    .track-item svg { color: #818cf8; flex-shrink: 0; }
-
-    /* ── Field input focus ring ── */
-    .field-input {
-      transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
-    }
-    .field-input:focus {
-      outline: none;
-      border-color: #C7D2FE;
-      box-shadow: 0 0 0 3px rgba(79,70,229,.09);
-      background: #fff;
-    }
-
-    /* ── CSS-only inline validation ── */
-    .field-error { display: none; }
-    .field-input:not(:placeholder-shown):invalid + .field-error,
-    .field-input:not(:placeholder-shown):invalid ~ .field-error { display: block; }
-    .field-input:not(:placeholder-shown):invalid {
-      border-color: #FCA5A5;
-      background-color: #FFF5F5;
-    }
-    .field-input:not(:placeholder-shown):invalid:focus {
-      border-color: #FCA5A5;
-      box-shadow: 0 0 0 3px rgba(220,38,38,.08);
-    }
-    .field-input:not(:placeholder-shown):valid { border-color: #86EFAC; }
-
-    /* ── CSS-only password visibility toggle ──
-       Hidden checkbox (#pw-toggle) acts as boolean state.
-       Its <label> (the eye button) flips it.
-       :checked rules swap the two inputs and the eye icons.
-    ── */
-    #pw-toggle { display: none; }
-
-    /* Default: show password input, hide text input */
-    #pw-toggle:not(:checked) ~ .pw-field-wrap #password-masked { display: block; }
-    #pw-toggle:not(:checked) ~ .pw-field-wrap #password-plain  { display: none;  }
-
-    /* Checked: hide password input, show text input */
-    #pw-toggle:checked ~ .pw-field-wrap #password-masked { display: none;  }
-    #pw-toggle:checked ~ .pw-field-wrap #password-plain  { display: block; }
-
-    /* Eye icon swap */
-    .eye-open  { display: block; }
-    .eye-closed { display: none; }
-    #pw-toggle:checked ~ .pw-toggle-label .eye-open  { display: none;  }
-    #pw-toggle:checked ~ .pw-toggle-label .eye-closed { display: block; }
-  </style>
 </head>
 
 <body class="min-h-screen font-sans text-ink">
@@ -175,7 +23,7 @@
     <!-- Logo -->
     <div class="animate-slide-left relative z-10">
       <a href="#" class="inline-flex items-center gap-2.5">
-        <div class="flex items-end gap-[3px]" style="height:26px">
+        <div class="flex items-end gap-0.75" style="height:26px">
           <div class="wbar bg-white animate-bar1" style="height:38%;opacity:.75"></div>
           <div class="wbar bg-white animate-bar2" style="height:68%;opacity:.8"></div>
           <div class="wbar bg-white animate-bar3" style="height:100%;opacity:.9"></div>
@@ -190,7 +38,7 @@
     <div class="flex-1 flex flex-col items-center justify-center relative z-10 py-8">
 
       <!-- Turntable deck -->
-      <div class="relative w-[280px] xl:w-[320px] animate-sl-d2">
+      <div class="relative w-70 xl:w-[320px] animate-sl-d2">
 
         <!-- Pulse rings -->
         <div class="absolute top-1/2 left-[42%] -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border border-indigo-500/25 animate-ring pointer-events-none"></div>
@@ -252,13 +100,13 @@
           Welcome back.<br/>
           <em class="text-indigo-300 not-italic">The music missed you.</em>
         </h2>
-        <p class="text-indigo-200/60 text-sm max-w-[260px] mx-auto leading-relaxed">
+        <p class="text-indigo-200/60 text-sm max-w-65 mx-auto leading-relaxed">
           Pick up where you left off — your artists, shows, and playlists are waiting.
         </p>
       </div>
 
       <!-- Mini waveform -->
-      <div class="flex items-end gap-[4px] mt-8 animate-sl-d4" style="height:28px">
+      <div class="flex items-end gap-1 mt-8 animate-sl-d4" style="height:28px">
         <div class="wbar bg-indigo-400 animate-bar1" style="height:30%;opacity:.2"></div>
         <div class="wbar bg-indigo-400 animate-bar2" style="height:55%;opacity:.25"></div>
         <div class="wbar bg-indigo-400 animate-bar3" style="height:80%;opacity:.3"></div>
@@ -309,7 +157,7 @@
 
     <!-- Mobile logo -->
     <div class="flex items-center gap-2 mb-10 lg:hidden animate-fade-up">
-      <div class="flex items-end gap-[3px]" style="height:24px">
+      <div class="flex items-end gap-0.75" style="height:24px">
         <div class="wbar animate-bar1" style="height:38%;opacity:.7;background:#4F46E5"></div>
         <div class="wbar animate-bar2" style="height:68%;opacity:.8;background:#4F46E5"></div>
         <div class="wbar animate-bar3" style="height:100%;opacity:.9;background:#4F46E5"></div>
@@ -319,7 +167,7 @@
       <span class="font-display text-ink text-2xl tracking-tight">Crescendo</span>
     </div>
 
-    <div class="w-full max-w-[420px]">
+    <div class="w-full max-w-105">
 
       <!-- Page header -->
       <div class="mb-8 animate-fade-up">

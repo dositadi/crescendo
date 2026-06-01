@@ -1,10 +1,9 @@
-package gethandler
+package auth
 
 import (
 	groupietracker "github.com/dositadi/groupie-tracker"
 	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
 	"github.com/dositadi/groupie-tracker/internal/data"
-	"github.com/dositadi/groupie-tracker/internal/handlers/post_handler/auth"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
 
@@ -18,12 +17,18 @@ type UserModel interface {
 	IDExists(id string) (bool, error)
 }
 
-type Get struct {
-	Auth auth.Auth
+type Auth struct {
+	logger    jsonlog.Logger
+	usermodel UserModel
+	client    artistapi.ArtistInfo
+	embedded  groupietracker.Embedded
 }
 
-func New(usermodel UserModel, client artistapi.ArtistInfo, logger jsonlog.Logger, embedded groupietracker.Embedded) *Get {
-	return &Get{
-		Auth: *auth.New(logger,usermodel),
+func New(usermodel UserModel, client artistapi.ArtistInfo, logger jsonlog.Logger, embedded groupietracker.Embedded) *Auth {
+	return &Auth{
+		usermodel: usermodel,
+		client:    client,
+		logger:    logger,
+		embedded:  embedded,
 	}
 }

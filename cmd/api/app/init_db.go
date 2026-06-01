@@ -7,7 +7,6 @@ import (
 	"os"
 	"time"
 
-	groupietracker "github.com/dositadi/groupie-tracker"
 	"github.com/dositadi/groupie-tracker/internal/helper"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -72,9 +71,7 @@ func (a *App) connectToDB() (*pgx.Conn, error) {
 }
 
 func (a *App) migrate() error {
-	embedded := groupietracker.NewMigrations()
-
-	migratefiles, err := iofs.New(embedded.Get(), "migrations")
+	migratefiles, err := iofs.New(a.embedded.Get(), "migrations")
 	if err != nil {
 		e := helper.WrapError("iofs driver failed", err)
 		a.logger.PrintFatal(e.Error(), map[string]string{

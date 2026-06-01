@@ -1,4 +1,4 @@
-package gethandler
+package auth
 
 import (
 	"net/http"
@@ -6,13 +6,13 @@ import (
 	"testing"
 )
 
-func TestHomeHandler(t *testing.T) {
+func TestLoginHandler(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 
-	handler := Get{}
+	handler := Auth{}
 
-	handler.HomeHandler(recorder, req)
+	handler.LoginHandler(recorder, req)
 
 	if recorder.Code == http.StatusOK {
 		body := recorder.Body

@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	groupietracker "github.com/dositadi/groupie-tracker"
 	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	deletehandler "github.com/dositadi/groupie-tracker/internal/handlers/delete_handler"
@@ -28,13 +29,14 @@ type Handler struct {
 	Get       gethandler.Get
 	Post      posthandler.Post
 	Delete    deletehandler.Delete
+	embedded  groupietracker.Embedded
 }
 
-func New(logger jsonlog.Logger, userModel UserModel, client artistapi.ArtistInfo) *Handler {
+func New(logger jsonlog.Logger, userModel UserModel, client artistapi.ArtistInfo, embedded groupietracker.Embedded) *Handler {
 	return &Handler{
 		logger:    logger,
 		userModel: userModel,
-		Get:       *gethandler.New(userModel, client, logger),
+		Get:       *gethandler.New(userModel, client, logger, embedded),
 		Post:      *posthandler.New(userModel, client, logger),
 		Delete:    *deletehandler.New(userModel, client, logger),
 	}

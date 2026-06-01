@@ -4,19 +4,27 @@ import (
 	"embed"
 )
 
-//go:embed migrations
+//go:embed migrations src/output.css internal/web/static/auth/*
 var embeddedFiles embed.FS
 
-type Migrations struct {
+type Embedded struct {
 	embedded embed.FS
 }
 
-func NewMigrations() *Migrations {
-	return &Migrations{
+func New() *Embedded {
+	return &Embedded{
 		embedded: embeddedFiles,
 	}
 }
 
-func (m *Migrations) Get() embed.FS {
+func (m *Embedded) Get() embed.FS {
 	return m.embedded
+}
+
+func (m *Embedded) GetPath(dir, fileName string) string {
+	switch dir {
+	case "auth":
+		return "internal/web/static/auth/" + fileName
+	}
+	return ""
 }
