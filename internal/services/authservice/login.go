@@ -21,6 +21,7 @@ func (a *AuthService) RenderLoginPage() error {
 		a.logger.PrintError(e.Error(), map[string]string{
 			"Source": sourceR,
 		})
+		return e
 	}
 
 	if err = temp.Execute(a.responseWriter, nil); err != nil {
@@ -28,6 +29,7 @@ func (a *AuthService) RenderLoginPage() error {
 		a.logger.PrintError(e.Error(), map[string]string{
 			"Source": sourceR,
 		})
+		return e
 	}
 	return nil
 }

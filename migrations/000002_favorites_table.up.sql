@@ -13,6 +13,6 @@ CREATE TABLE IF NOT EXISTS favorites (
 
 CREATE EXTENSION pg_trgm;
 
-CREATE INDEX idx_artist_id ON favorites USING gin (artistId gin_trgm_ops);
+CREATE INDEX idx_artist_id ON favorites (artistId);
 
 COMMIT;

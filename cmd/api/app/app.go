@@ -25,13 +25,13 @@ type App struct {
 }
 
 func (a *App) init() {
+	a.embedded = *groupietracker.New()
 	a.router = chi.NewRouter()
 	a.client = artistapi.New()
 	a.client.Init()
 	a.config = newConfig()
 	a.logger = jsonlog.New(os.Stdout, jsonlog.LevelInfo)
 	a.initDB()
-	a.embedded = *groupietracker.New()
 	models := models.New(a.db, *a.logger)
 	a.handler = handlers.New(*a.logger, &models.UserModel, *a.client, a.embedded)
 	a.midleware = middlewares.New(*a.handler, *a.logger)

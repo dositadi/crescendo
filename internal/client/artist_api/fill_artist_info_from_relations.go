@@ -2,6 +2,7 @@ package artistapi
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	"github.com/dositadi/groupie-tracker/internal/helper"
@@ -27,6 +28,16 @@ func (a *ArtistInfo) fillArtistInfoFromRelations(ctx context.Context, chArtistIn
 				})
 
 				chError <- e
+			}
+
+			if err := ctx.Err(); err != nil {
+				e := helper.WrapError("Stopping location fetch worker routine", err)
+
+				logger.PrintFatal(e.Error(), map[string]string{
+					"Source": "Fill artist info from sub infos f(n) under artistapi pkg",
+					"Worker": fmt.Sprintf("Location filler for %v with %v", artInfo, a),
+				})
+				return
 			}
 
 			filledArtistInfo := populateArtistInfo(relation, aInfo)

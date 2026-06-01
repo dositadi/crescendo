@@ -31,6 +31,7 @@ func (a *App) startServer() {
 	go func() {
 		a.logger.PrintInfo("Server running", map[string]string{
 			"Source": sourceServer,
+			"Port":   "http://localhost:8080/auth/session",
 		})
 		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			e := helper.WrapError("Server error", err)

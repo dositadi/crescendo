@@ -13,11 +13,11 @@ func (a *App) fileServer() {
 }
 
 func (a *App) initHandlers() {
-	a.fileServer()
 	a.router.Use(middleware.CleanPath)
+	a.fileServer()
 
 	// Get request routes
 	a.router.Group(func(r chi.Router) {
-		r.With(a.midleware.VerifyAccessToken).Get(utils.LOGIN.String(), a.handler.Get.Auth.LoginHandler)
+		r.Get(utils.LOGIN.String(), a.handler.Get.Auth.LoginHandler)
 	})
 }
