@@ -28,7 +28,7 @@ func (a *AuthService) RenderSignupPage() error {
 	data := struct {
 		SignupUrl, LoginUrl                string
 		PrivacyUrl, TermUrl                string
-		UsernameKey, EmailKey, PasswordKey string
+		UsernameKey, EmailKey, PasswordKey,TermsKey string
 	}{
 		SignupUrl:   utils.REGISTER.String(),
 		LoginUrl:    utils.LOGIN.String(),

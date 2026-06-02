@@ -46,7 +46,7 @@ func ValidateLoginFormValues(email, password string) (authservice.Error, error) 
 }
 
 func validateEmail(email string) bool {
-	valid, _ := regexp.Match(`[a-zA-Z]+[a-zA-Z0-9-_.]*@[a-z]{8}[.]{1}[a-z]{3}`, []byte(email))
+	valid, _ := regexp.Match(`^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`, []byte(email))
 
 	return valid
 }

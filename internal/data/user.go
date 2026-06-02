@@ -11,6 +11,7 @@ type User struct {
 	Username       string
 	Email          string
 	HashedPassword []byte
+	Agreed         bool
 	Version        int
 	CreatedAt      time.Time
 	UpdatedAt      time.Time

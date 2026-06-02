@@ -37,7 +37,7 @@ func New(logger jsonlog.Logger, userModel UserModel, client artistapi.ArtistInfo
 		logger:    logger,
 		userModel: userModel,
 		Get:       *gethandler.New(userModel, client, logger, embedded),
-		Post:      *posthandler.New(userModel, client, logger),
+		Post:      *posthandler.New(userModel, client, logger, embedded),
 		Delete:    *deletehandler.New(userModel, client, logger),
 	}
 }

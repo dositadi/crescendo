@@ -2,6 +2,7 @@ package authservice
 
 import (
 	"html/template"
+	"net/http"
 
 	"github.com/dositadi/groupie-tracker/internal/helper"
 )
@@ -12,6 +13,7 @@ const (
 	NAME_ERROR     Error = "Name Error"
 	EMAIL_ERROR    Error = "Email error"
 	PASSWORD_ERROR Error = "Password error"
+	TERMS_ERROR    Error = "Terms Error"
 	sourceEr             = "Render auth error f(n) under authservice"
 )
 
@@ -35,6 +37,8 @@ func (a *AuthService) RenderAuthError(e Error, message string) error {
 		Error: message,
 	}
 
+	a.responseWriter.WriteHeader(http.StatusBadRequest)
+
 	switch e {
 	case NAME_ERROR:
 		err = temp.ExecuteTemplate(a.responseWriter, "username-error", data)
@@ -42,6 +46,8 @@ func (a *AuthService) RenderAuthError(e Error, message string) error {
 		err = temp.ExecuteTemplate(a.responseWriter, "password-error", data)
 	case EMAIL_ERROR:
 		err = temp.ExecuteTemplate(a.responseWriter, "email-error", data)
+	case TERMS_ERROR:
+		err = temp.ExecuteTemplate(a.responseWriter, "term-error", data)
 	}
 	if err != nil {
 		e := helper.WrapError("Error executing template", err)

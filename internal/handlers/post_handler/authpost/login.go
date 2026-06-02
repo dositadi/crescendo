@@ -1,4 +1,4 @@
-package auth
+package authpost
 
 import (
 	"errors"
@@ -29,6 +29,7 @@ func (a *Auth) LoginHandler(w http.ResponseWriter, r *http.Request) {
 			"Source": sourceLogin,
 		})
 		http.Error(w, e.Error(), http.StatusBadRequest)
+		return
 	}
 
 	email := r.FormValue(utils.EMAIL_KEY)
@@ -52,6 +53,7 @@ func (a *Auth) LoginHandler(w http.ResponseWriter, r *http.Request) {
 				"Source": sourceLogin,
 			})
 		}
+		return
 	}
 
 	user, err := a.usermodel.GetWithEmail(email)
@@ -63,6 +65,7 @@ func (a *Auth) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		})
 
 		http.Error(w, INVALID.Error(), http.StatusUnauthorized)
+		return
 	}
 
 	err = a.compareHashedPassword(user.HashedPassword, []byte(password))
@@ -74,6 +77,7 @@ func (a *Auth) LoginHandler(w http.ResponseWriter, r *http.Request) {
 			"Password": password,
 		})
 		http.Error(w, INVALID.Error(), http.StatusUnauthorized)
+		return
 	}
 
 	var activeUser data.ActiveUser
@@ -89,6 +93,7 @@ func (a *Auth) LoginHandler(w http.ResponseWriter, r *http.Request) {
 			"Password": password,
 		})
 		http.Error(w, SERVER_ERROR.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	http.SetCookie(w, &http.Cookie{

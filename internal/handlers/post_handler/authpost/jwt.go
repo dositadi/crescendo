@@ -1,4 +1,4 @@
-package auth
+package authpost
 
 import (
 	"os"

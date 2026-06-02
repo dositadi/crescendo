@@ -19,8 +19,8 @@ var USER_EXISTS error = fmt.Errorf("User exists already")
 
 func (u *UserModel) Insert(user data.User) error {
 	start := time.Now()
-	query := `INSERT INTO users (id, username, email, hashed_password)
-	VALUES ($1, $2, $3, $4)`
+	query := `INSERT INTO users (id, username, email, hashed_password, agreed)
+	VALUES ($1, $2, $3, $4, $5)`
 
 	ctx, cancel := context.WithTimeout(context.Background(), timeOut*time.Second)
 	defer cancel()
@@ -47,7 +47,7 @@ func (u *UserModel) Insert(user data.User) error {
 		return e
 	}
 
-	_, err = tx.Exec(ctx, query, user.Id, user.Username, user.Email, user.HashedPassword)
+	_, err = tx.Exec(ctx, query, user.Id, user.Username, user.Email, user.HashedPassword, user.Agreed)
 	if err != nil {
 		var e error
 		switch {

@@ -1,4 +1,4 @@
-package auth
+package authpost
 
 import (
 	"net/http"
@@ -12,10 +12,11 @@ import (
 )
 
 const (
-	sourceReg     = "Register handler f(n) under auth pkg"
-	usernameEmpty = "Username field cannot be empty"
-	passwordEmpty = "Password field cannot be empty/Password less than 8 characters"
-	emailEmpty    = "Email field cannot be empty/Invalid Email"
+	sourceReg      = "Register handler f(n) under auth pkg"
+	usernameEmpty  = "Username field cannot be empty"
+	passwordEmpty  = "Password field cannot be empty/Password less than 8 characters"
+	emailEmpty     = "Email field cannot be empty/Invalid Email"
+	termsUnchecked = "Kindly check the terms."
 )
 
 func (a *Auth) RegisterHandler(w http.ResponseWriter, r *http.Request) {
@@ -27,11 +28,13 @@ func (a *Auth) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 			"Source": sourceReg,
 		})
 		http.Error(w, e.Error(), http.StatusBadRequest)
+		return
 	}
 
 	username := r.FormValue(utils.USERNAME_KEY)
 	password := r.FormValue(utils.PASSWORD_KEY)
 	email := r.FormValue(utils.EMAIL_KEY)
+	terms := r.FormValue(utils.TERMS_KEY)
 	check := true
 
 	authService := authservice.New(w, a.embedded, a.logger)
@@ -56,6 +59,16 @@ func (a *Auth) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 				"Source": sourceReg,
 			})
 		}
+		return
+	}
+
+	if !(terms == "true" || terms == "yes") {
+		check = false
+		authService.RenderAuthError(errType, termsUnchecked)
+		a.logger.PrintError("Terms not checked", map[string]string{
+			"Source": sourceReg,
+		})
+		return
 	}
 
 	hashedPassword, err := a.hashPassword([]byte(password))
@@ -65,6 +78,7 @@ func (a *Auth) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 			"Source": sourceReg,
 		})
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	var user data.User
@@ -73,6 +87,7 @@ func (a *Auth) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	user.Email = email
 	user.Username = username
 	user.HashedPassword = hashedPassword
+	user.Agreed = true
 
 	err = a.usermodel.Insert(user)
 	if err != nil {
@@ -82,6 +97,7 @@ func (a *Auth) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 			"Source": sourceReg,
 		})
 		http.Error(w, e.Error(), http.StatusBadRequest)
+		return
 	}
 
 	if check {

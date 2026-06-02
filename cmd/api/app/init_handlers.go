@@ -21,4 +21,10 @@ func (a *App) initHandlers() {
 		r.Get(utils.LOGIN.String(), a.handler.Get.Auth.LoginPageHandler)
 		r.Get(utils.REGISTER.String(), a.handler.Get.Auth.SignupHandler)
 	})
+
+	// Post request routes
+	a.router.Group(func(r chi.Router) {
+		r.With(a.midleware.Recover).Post(utils.REGISTER.String(), a.handler.Post.Auth.RegisterHandler)
+		r.With(a.midleware.Recover).Post(utils.LOGIN.String(), a.handler.Post.Auth.LoginHandler)
+	})
 }
