@@ -103,7 +103,6 @@ func (a *Auth) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		Secure:   true,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
-		Domain:   "http://localhost:8080",
 	})
 
 	if check {

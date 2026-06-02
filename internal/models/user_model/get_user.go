@@ -23,7 +23,7 @@ func (u *UserModel) GetWithEmail(email string) (data.User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeOut*time.Second)
 	defer cancel()
 
-	query := `SELECT id, username, hashed_password WHERE email = $1`
+	query := `SELECT id, username, hashed_password FROM users WHERE email = $1`
 	row := u.db.QueryRow(ctx, query, email)
 
 	err := row.Scan(&user.Id, &user.Username, &user.HashedPassword)

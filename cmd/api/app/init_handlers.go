@@ -18,12 +18,17 @@ func (a *App) initHandlers() {
 
 	// Get request routes
 	a.router.Group(func(r chi.Router) {
+		// Auth routes
 		r.Get(utils.LOGIN.String(), a.handler.Get.Auth.LoginPageHandler)
 		r.Get(utils.REGISTER.String(), a.handler.Get.Auth.SignupHandler)
+
+		// App pages
+		r.With(a.midleware.Recover).With(a.midleware.VerifyAccessToken).Get(utils.HOME.String(), a.handler.Get.Pages.HomeHandler)
 	})
 
 	// Post request routes
 	a.router.Group(func(r chi.Router) {
+		// Auth routes
 		r.With(a.midleware.Recover).Post(utils.REGISTER.String(), a.handler.Post.Auth.RegisterHandler)
 		r.With(a.midleware.Recover).Post(utils.LOGIN.String(), a.handler.Post.Auth.LoginHandler)
 	})

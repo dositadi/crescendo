@@ -16,9 +16,7 @@ const (
 func (a *Auth) generateJWT(claim data.ActiveUser) ([]byte, error) {
 	// Step one: fill in the struct values of the claim.RegisteredClaims type declared in the ActiveUser struct
 	claim.RegisteredClaims = jwt.RegisteredClaims{
-		Issuer:    "http://localhost:8080",
 		Subject:   "Access token",
-		Audience:  jwt.ClaimStrings{claim.Username},
 		IssuedAt:  jwt.NewNumericDate(time.Now()),
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(1 * time.Hour))),
 	}
