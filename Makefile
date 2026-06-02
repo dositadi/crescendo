@@ -9,3 +9,6 @@ docker-down-v:
 
 docker-exec-db:
 	docker exec -it groupie-tracker-db-1 psql -U divine -d groupie-tracker
+
+tailwind-watch:
+	npx @tailwindcss/cli -i ./src/input.css -o ./src/output.css --watch

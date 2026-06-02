@@ -12,9 +12,9 @@ import (
 
 const (
 	sourceReg = "Register handler f(n) under auth pkg"
-	/* usernameEmpty = "Username field cannot be empty"
+	usernameEmpty = "Username field cannot be empty"
 	passwordEmpty = "Password field cannot be empty"
-	emailEmpty    = "Email field cannot be empty" */
+	emailEmpty    = "Email field cannot be empty"
 )
 
 func (a *Auth) RegisterHandler(w http.ResponseWriter, r *http.Request) {

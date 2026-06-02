@@ -1,4 +1,4 @@
-package auth
+package getauth
 
 import (
 	groupietracker "github.com/dositadi/groupie-tracker"

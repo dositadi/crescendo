@@ -1,0 +1,11 @@
+{{define "username-error"}}
+<p class="hidden mt-1.5 text-xs text-red-500" id="name-error" hx-oob="true">{{.Error}}</p>
+{{end}}
+
+{{define "email-error"}}
+<p class="hidden mt-1.5 text-xs text-red-500" id="email-error" hx-oob="true"> {{.Error}} </p>
+{{end}}
+
+{{define "password-error"}}
+<p class="hidden mt-1.5 text-xs text-red-500" id="password-error" hx-oob="true"> {{.Error}} </p>
+{{end}}

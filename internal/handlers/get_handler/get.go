@@ -4,7 +4,7 @@ import (
 	groupietracker "github.com/dositadi/groupie-tracker"
 	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
 	"github.com/dositadi/groupie-tracker/internal/data"
-	"github.com/dositadi/groupie-tracker/internal/handlers/post_handler/auth"
+	"github.com/dositadi/groupie-tracker/internal/handlers/get_handler/getauth"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
 
@@ -19,11 +19,11 @@ type UserModel interface {
 }
 
 type Get struct {
-	Auth auth.Auth
+	Auth getauth.Auth
 }
 
 func New(usermodel UserModel, client artistapi.ArtistInfo, logger jsonlog.Logger, embedded groupietracker.Embedded) *Get {
 	return &Get{
-		Auth: *auth.New(logger,usermodel),
+		Auth: *getauth.New(usermodel, client, logger, embedded),
 	}
 }
