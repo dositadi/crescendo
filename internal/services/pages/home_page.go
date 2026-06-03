@@ -89,7 +89,8 @@ func (p *Pages) RenderHomePage(filterBy Filter, sortBy Sort) error {
 		FilterSortRoute                                        string
 		FilterByName, FilterByCreationDate, FilterByFirstAlbum string
 		FilterKey,
-		SortKey, SortASC, SortDESC string
+		ArtistIDKey string
+		SortKey, SortASC, SortDESC                         string
 		FavoriteArtistUrl, FavKey, Favorited, NotFavorited string
 	}{
 		Artists:              artists,
@@ -107,6 +108,7 @@ func (p *Pages) RenderHomePage(filterBy Filter, sortBy Sort) error {
 		FavKey:               utils.FAV_KEY,
 		Favorited:            string(FAVORITED),
 		NotFavorited:         string(FAVORITED),
+		ArtistIDKey:          utils.ARTIST_ID_KEY,
 	}
 
 	if err := temp.Execute(p.responseWriter, data); err != nil {

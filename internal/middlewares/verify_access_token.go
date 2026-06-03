@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
@@ -52,7 +53,8 @@ func (m *Middleware) VerifyAccessToken(next http.Handler) http.Handler {
 				return
 			}
 
-			next.ServeHTTP(w, r)
+			cxt := context.WithValue(r.Context(), utils.USER_ID_KEY, active.ID)
+			next.ServeHTTP(w, r.WithContext(cxt))
 		},
 	)
 }

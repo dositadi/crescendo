@@ -9,4 +9,6 @@ const (
 	FILTER_KEY       = "filter"
 	SORT_KEY         = "sort"
 	FAV_KEY          = "favorited"
+	ARTIST_ID_KEY    = "artistId"
+	USER_ID_KEY      = "userId"
 )
