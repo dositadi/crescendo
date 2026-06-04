@@ -1,5 +1,5 @@
 {{define "artist-card-main"}}
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+<main id="artists" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
 
     <!-- ── Section header ── -->
     <div class="flex items-center justify-between mb-6">
@@ -27,7 +27,7 @@
     <!-- ─────────────────────────────────────────────────────────── -->
     <!-- ARTIST CARDS GRID                                           -->
     <!-- ─────────────────────────────────────────────────────────── -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 sm:gap-5">
+    <div id="artists-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 sm:gap-5">
 
     <!-- ── CARD ── -->
      {{range .Artists}}
@@ -41,7 +41,7 @@
             class="artist-card-img"
             />
             <!-- Favourite button (OUTLINE — not favourited) -->
-            <button id="{{.Id}}" {{if .IsFavorited}} hx-post="{{$.FavoriteArtistUrl}}?{{$.FavKey}}={{$.Favorited}}&&{{$.ArtistIDKey}}={{.Id}}" {{else}} hx-post="{{$.FavoriteArtistUrl}}?{{$.FavKey}}={{$.NotFavorited}}&{{$.ArtistIDKey}}={{.Id}}" {{end}} hx-swap="outerHTML" hx-target="#body" hx-push-url="true"
+            <button id="{{.Id}}" {{if .IsFavorited}} hx-post="{{$.FavoriteArtistUrl}}?{{$.FavKey}}={{$.Favorited}}&&{{$.ArtistIDKey}}={{.Id}}" {{else}} hx-post="{{$.FavoriteArtistUrl}}?{{$.FavKey}}={{$.NotFavorited}}&{{$.ArtistIDKey}}={{.Id}}" {{end}} hx-swap="outerHTML" hx-target="#artists" hx-push-url="true"
             {{if .IsFavorited}}
             class="fav-btn absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center bg-rose-500 border border-rose-400 text-white hover:bg-rose-600 transition-all duration-200"
             aria-label="Remove from favourites"

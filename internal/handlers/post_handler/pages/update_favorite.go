@@ -119,7 +119,16 @@ func (p *Pages) UpdateFavoriteHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		p.client.SetIsFavorited(artistId, favorite.Status)
 	}
-	http.Redirect(w, r, utils.HOME.String()+"?"+utils.FILTER_KEY+"="+"ID"+"&"+utils.SORT_KEY+"="+"ASC", http.StatusSeeOther)
+
+	page := pages.New(p.logger, w, p.embedded, p.client, r)
+
+	if err := page.RenderArtistsGrid(pages.FILTER_BY_ID, pages.ASCENDING_ORDER); err != nil {
+		e := helper.WrapError("Render artist grid error", err)
+		p.logger.PrintError(e.Error(), map[string]string{
+			"Source": sourceUH,
+		})
+		return
+	}
 }
 
 func (p *Pages) atoi(s string) int {

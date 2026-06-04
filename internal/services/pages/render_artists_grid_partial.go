@@ -10,30 +10,12 @@ import (
 	"github.com/dositadi/groupie-tracker/internal/utils"
 )
 
-type Filter string
-type Sort string
-type Favorite string
-
 const (
-	sourceRHome = "Render Home page f(n) under pages pkg"
-	// Filters
-	FILTER_BY_ID            Filter = "ID"
-	FILTER_BY_NAME          Filter = "NAME"
-	FILTER_BY_CREATION_DATE Filter = "CREATION DATE"
-	FILTER_BY_FIRST_ALBUM   Filter = "FIRST ALBUM"
-
-	// Sort orders
-	ASCENDING_ORDER  Sort = "ASC"
-	DESCENDING_ORDER Sort = "DESC"
-
-	// Favorite
-	FAVORITED     Favorite = "true"
-	NOT_FAVORITED Favorite = "false"
+	sourceAG = "Render artist grid f(n) under pages pkg"
 )
 
-func (p *Pages) RenderHomePage(filterBy Filter, sortBy Sort) error {
+func (p *Pages) RenderArtistsGrid(filterBy Filter, sortBy Sort) error {
 	fs := []string{
-		"internal/web/static/pages/home_page.html",
 		"internal/web/static/partials/pages/home_page_partials.html",
 	}
 
@@ -57,7 +39,7 @@ func (p *Pages) RenderHomePage(filterBy Filter, sortBy Sort) error {
 		},
 	}
 
-	temp, err := template.New("home_page.html").Funcs(funcMap).ParseFS(p.embedded.Get(), fs...)
+	temp, err := template.New("home_page_partials.html").Funcs(funcMap).ParseFS(p.embedded.Get(), fs...)
 	if err != nil {
 		e := helper.WrapError("Error creating template", err)
 		p.logger.PrintError(e.Error(), map[string]string{
@@ -111,26 +93,13 @@ func (p *Pages) RenderHomePage(filterBy Filter, sortBy Sort) error {
 		ArtistIDKey:          utils.ARTIST_ID_KEY,
 	}
 
-	if p.isHTMXRequest() {
-		if err = temp.ExecuteTemplate(p.responseWriter, "artist-card-main", data); err != nil {
-			e := helper.WrapError("Error executing template", err)
-			p.logger.PrintError(e.Error(), map[string]string{
-				"Source": sourceRHome,
-			})
-			return e
-		}
-	} else {
-		if err = temp.Execute(p.responseWriter, data); err != nil {
-			e := helper.WrapError("Error executing template", err)
-			p.logger.PrintError(e.Error(), map[string]string{
-				"Source": sourceRHome,
-			})
-			return e
-		}
+	if err = temp.ExecuteTemplate(p.responseWriter, "artist-card-main", data); err != nil {
+		e := helper.WrapError("Error executing template", err)
+		p.logger.PrintError(e.Error(), map[string]string{
+			"Source": sourceAG,
+		})
+		return e
 	}
-	return nil
-}
 
-func (p *Pages) isHTMXRequest() bool {
-	return p.request.Header.Get("HX-Request") == "true"
+	return nil
 }

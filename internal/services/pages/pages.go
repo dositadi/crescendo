@@ -13,13 +13,15 @@ type Pages struct {
 	responseWriter http.ResponseWriter
 	embedded       groupietracker.Embedded
 	client         artistapi.ArtistInfo
+	request        *http.Request
 }
 
-func New(logger jsonlog.Logger, responseWriter http.ResponseWriter, embedded groupietracker.Embedded, client artistapi.ArtistInfo) *Pages {
+func New(logger jsonlog.Logger, responseWriter http.ResponseWriter, embedded groupietracker.Embedded, client artistapi.ArtistInfo, request *http.Request) *Pages {
 	return &Pages{
 		logger:         logger,
 		responseWriter: responseWriter,
 		embedded:       embedded,
 		client:         client,
+		request:        request,
 	}
 }
