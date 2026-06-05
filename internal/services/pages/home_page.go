@@ -10,25 +10,8 @@ import (
 	"github.com/dositadi/groupie-tracker/internal/utils"
 )
 
-type Filter string
-type Sort string
-type Favorite string
-
 const (
 	sourceRHome = "Render Home page f(n) under pages pkg"
-	// Filters
-	FILTER_BY_ID            Filter = "ID"
-	FILTER_BY_NAME          Filter = "NAME"
-	FILTER_BY_CREATION_DATE Filter = "CREATION DATE"
-	FILTER_BY_FIRST_ALBUM   Filter = "FIRST ALBUM"
-
-	// Sort orders
-	ASCENDING_ORDER  Sort = "ASC"
-	DESCENDING_ORDER Sort = "DESC"
-
-	// Favorite
-	FAVORITED     Favorite = "true"
-	NOT_FAVORITED Favorite = "false"
 )
 
 func (p *Pages) RenderHomePage(filterBy Filter, sortBy Sort) error {

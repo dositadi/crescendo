@@ -48,5 +48,15 @@ func (a *ArtistInfo) SetFavoriteStatus(id int, status bool) {
 
 	temp.IsFavorited = status
 
+	// updating by id
 	byId[id] = temp
+
+	// Updating by creation date
+	byCreationDate[byId[id].CreationDate] = temp
+
+	// Updating by name
+	byName[byId[id].Name] = temp
+
+	// Updating by first album
+	byFirstAlbum[byId[id].FirstAlbum] = temp
 }
