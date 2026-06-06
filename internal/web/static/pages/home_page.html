@@ -187,13 +187,13 @@
               <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
               All Genres
             </div>
-            <a hx-get="{{.FilterSortRoute}}?{{.FilterKey}}={{.FilterByName}}&{{.SortKey}}={{.CurrentSort}}" hx-swap="outerHTML" hx-target="#artists" hx-push-url="true">
+            <a hx-get="{{.FilterSortRoute}}?{{.FilterKey}}={{.FilterByName}}&{{.SortKey}}={{.CurrentSort}}" hx-swap="outerHTML" hx-target="#artists">
                 <div class="dropdown-item">Name</div>
             </a>
-            <a hx-get="{{.FilterSortRoute}}?{{.FilterKey}}={{.FilterByCreationDate}}&{{.SortKey}}={{.CurrentSort}}" hx-swap="outerHTML" hx-target="#artists" hx-push-url="true">
+            <a hx-get="{{.FilterSortRoute}}?{{.FilterKey}}={{.FilterByCreationDate}}&{{.SortKey}}={{.CurrentSort}}" hx-swap="outerHTML" hx-target="#artists">
                 <div class="dropdown-item">Creation Date</div>
             </a>
-            <a hx-get="{{.FilterSortRoute}}?{{.FilterKey}}={{.FilterByFirstAlbum}}&{{.SortKey}}={{.CurrentSort}}" hx-swap="outerHTML" hx-target="#artists" hx-push-url="true">
+            <a hx-get="{{.FilterSortRoute}}?{{.FilterKey}}={{.FilterByFirstAlbum}}&{{.SortKey}}={{.CurrentSort}}" hx-swap="outerHTML" hx-target="#artists">
                 <div class="dropdown-item">First Album</div>
             </a>
           </div>

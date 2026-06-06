@@ -1,9 +1,11 @@
 package pages
 
 import (
+	"fmt"
 	"html/template"
 
 	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
 	"github.com/dositadi/groupie-tracker/internal/utils"
 )
@@ -25,6 +27,7 @@ func (p *Pages) RenderHomePage(filterBy Filter, sortBy Sort) error {
 		})
 		return err
 	}
+	fmt.Println(len(userFavorites), userFavorites)
 
 	temp, err := template.New("home_page.html").Funcs(p.homePageFunc()).ParseFS(p.embedded.Get(), fs...)
 	if err != nil {
@@ -53,7 +56,7 @@ func (p *Pages) RenderHomePage(filterBy Filter, sortBy Sort) error {
 	}
 
 	data := struct {
-		UserFavorites                                          map[int]bool
+		UserFavorites                                          map[int]data.Favorite
 		Artists                                                []artistapi.ArtistInfo
 		CurrentFilter, CurrentSort                             string
 		FilterSortRoute                                        string
@@ -93,17 +96,17 @@ func (p *Pages) RenderHomePage(filterBy Filter, sortBy Sort) error {
 	return nil
 }
 
-func (p *Pages) getUserFavorites() (map[int]bool, error) {
+func (p *Pages) getUserFavorites() (map[int]data.Favorite, error) {
 	favorites, err := p.favoriteModel.GetAll(p.getUserId())
 	if err != nil {
 		e := helper.WrapError("Favorites fetch error", err)
 		return nil, e
 	}
 
-	favMap := make(map[int]bool)
+	favMap := make(map[int]data.Favorite)
 
 	for _, favorite := range favorites {
-		favMap[favorite.ArtistId] = favorite.Status
+		favMap[favorite.ArtistId] = favorite
 	}
 	return favMap, nil
 }

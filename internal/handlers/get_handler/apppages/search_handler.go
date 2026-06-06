@@ -11,12 +11,12 @@ const (
 )
 
 func (p *Pages) SearchHandler(w http.ResponseWriter, r *http.Request) {
-	page := pages.New(p.logger,w,p.embedded,p.client,r,p.favoriteModel)
+	page := pages.New(p.logger, w, p.embedded, p.client, r, p.favoriteModel)
 
 	if err := page.RenderSearch(); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		p.logger.PrintError(err.Error(), map[string]string{
-			"Source": sourceHH,
+			"Source": sourceSH,
 		})
 	}
 }

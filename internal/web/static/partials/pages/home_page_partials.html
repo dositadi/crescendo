@@ -30,7 +30,7 @@
     <div id="artists-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 sm:gap-5">
 
     <!-- ── CARD ── -->
-     {{range .Artists | UpdateFavoriteField .UserFavorites}}
+     {{range .Artists}}
         <article class="artist-card visible card-d1 group relative flex flex-col">
 
         <!-- Image container -->
@@ -41,14 +41,14 @@
             class="artist-card-img"
             />
             <!-- Favourite button (OUTLINE — not favourited) -->
-            <button id="fav-{{.Id}}" {{if .IsFavorited}} hx-post="{{$.FavoriteArtistUrl}}?{{$.FavKey}}={{$.Favorited}}&&{{$.ArtistIDKey}}={{.Id}}" {{else}} hx-post="{{$.FavoriteArtistUrl}}?{{$.FavKey}}={{$.NotFavorited}}&{{$.ArtistIDKey}}={{.Id}}" {{end}} hx-swap="outerHTML" hx-target="#artists"
-            {{if .IsFavorited}}
+            <button id="fav-{{.Id}}" {{if CheckFav .Id $.UserFavorites}} hx-post="{{$.FavoriteArtistUrl}}?{{$.FavKey}}={{$.Favorited}}&{{$.ArtistIDKey}}={{.Id}}" {{else}} hx-post="{{$.FavoriteArtistUrl}}?{{$.FavKey}}={{$.NotFavorited}}&{{$.ArtistIDKey}}={{.Id}}" {{end}} hx-swap="outerHTML" hx-target="#artists"
+            {{if CheckFav .Id $.UserFavorites}}
             class="fav-btn absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center bg-rose-500 border border-rose-400 text-white hover:bg-rose-600 transition-all duration-200"
             aria-label="Remove from favourites"
             {{else}}
             class="fav-btn absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center bg-black/25 backdrop-blur-sm border border-white/20 text-white hover:bg-white hover:text-rose-500 transition-all duration-200"
-            {{end}}
             aria-label="Add to favourites"
+            {{end}}
             >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>

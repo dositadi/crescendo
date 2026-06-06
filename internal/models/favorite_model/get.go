@@ -57,7 +57,7 @@ func (f *FavoriteModel) GetAll(userId string) ([]data.Favorite, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout*time.Second)
 	defer cancel()
 
-	query := `SELECT artistId FROM favorites WHERE userId = $1`
+	query := `SELECT artistId, status FROM favorites WHERE userId = $1`
 
 	rows, err := f.db.Query(ctx, query, userId)
 	if err != nil {
@@ -85,7 +85,7 @@ func (f *FavoriteModel) GetAll(userId string) ([]data.Favorite, error) {
 	for rows.Next() {
 		var favorite data.Favorite
 
-		if err := rows.Scan(&favorite.ArtistId); err != nil {
+		if err := rows.Scan(&favorite.ArtistId,&favorite.Status); err != nil {
 			var e error
 			switch {
 			case errors.Is(err, context.Canceled):

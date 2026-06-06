@@ -90,11 +90,11 @@ func (p *Pages) homePageFunc() template.FuncMap {
 
 			return strings.Join(sl, " ")
 		},
-		"UpdateFavoriteField": func(artist artistapi.ArtistInfo, favorites map[int]bool) artistapi.ArtistInfo {
-			if status, ok := favorites[artist.Id]; ok {
-				artist.IsFavorited = status
+		"CheckFav": func(id int, favorites map[int]data.Favorite) bool {
+			if status, ok := favorites[id]; ok {
+				return status.Status
 			}
-			return artist
+			return false
 		},
 	}
 }

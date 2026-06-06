@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
 	"github.com/dositadi/groupie-tracker/internal/utils"
 )
@@ -49,7 +50,7 @@ func (p *Pages) RenderSearch() error {
 	}
 
 	data := struct {
-		UserFavorites                                          map[int]bool
+		UserFavorites                                          map[int]data.Favorite
 		Artists                                                []artistapi.ArtistInfo
 		CurrentFilter, CurrentSort                             string
 		FilterSortRoute                                        string
