@@ -34,7 +34,7 @@ func (a *Pages) HomeHandler(w http.ResponseWriter, r *http.Request) {
 		sort = string(pages.ASCENDING_ORDER)
 	}
 
-	if err := page.RenderHomePage(pages.Filter(filter), pages.Sort(sort)); err != nil {
+	if err := page.RenderHomePage(); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		a.logger.PrintError(err.Error(), map[string]string{
 			"Source": sourceHH,

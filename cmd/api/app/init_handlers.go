@@ -25,7 +25,6 @@ func (a *App) initHandlers() {
 
 		// App pages
 		r.With(a.midleware.VerifyAccessToken).Get(utils.HOME.String(), a.handler.Get.Pages.HomeHandler)
-		r.With(a.midleware.VerifyAccessToken).Get(utils.FILTER_SORT_ROUTE.String(), a.handler.Post.Pages.FilterSortHandler)
 	})
 
 	// Post request routes
@@ -33,6 +32,7 @@ func (a *App) initHandlers() {
 		// Auth routes
 		r.Post(utils.REGISTER.String(), a.handler.Post.Auth.RegisterHandler)
 		r.Post(utils.LOGIN.String(), a.handler.Post.Auth.LoginHandler)
+		r.With(a.midleware.VerifyAccessToken).Post(utils.FILTER_SORT_ROUTE.String(), a.handler.Post.Pages.FilterSortHandler)
 
 		// App post request
 		r.With(a.midleware.VerifyAccessToken).Post(utils.FAVORITE.String(), a.handler.Post.Pages.UpdateFavoriteHandler)

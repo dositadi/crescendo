@@ -1,7 +1,6 @@
 package pages
 
 import (
-	"fmt"
 	"html/template"
 
 	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
@@ -14,12 +13,10 @@ const (
 	sourceAG = "Render artist grid f(n) under pages pkg"
 )
 
-func (p *Pages) RenderArtistsGrid(filterBy Filter, sortBy Sort) error {
+func (p *Pages) RenderArtistsGrid() error {
 	fs := []string{
 		"internal/web/static/partials/pages/home_page_partials.html",
 	}
-
-	fmt.Println(filterBy," : ",sortBy)
 
 	temp, err := template.New("home_page_partials.html").Funcs(p.homePageFunc()).ParseFS(p.embedded.Get(), fs...)
 	if err != nil {
@@ -38,21 +35,25 @@ func (p *Pages) RenderArtistsGrid(filterBy Filter, sortBy Sort) error {
 		return err
 	}
 
+	userPreference, err := p.getUserPreference()
+	if err != nil {
+		p.logger.PrintError(err.Error(), map[string]string{
+			"Source": sourceAG,
+		})
+		return err
+	}
+
 	var artists []artistapi.ArtistInfo
 
-	switch filterBy {
+	switch Filter(userPreference.Filter) {
 	case FILTER_BY_ID:
-		artists = sortArtists(p.client.GetByIdKey(), sortBy)
+		artists = sortArtists(p.client.GetByIdKey(), Sort(userPreference.Sort))
 	case FILTER_BY_NAME:
-		artists = sortArtists(p.client.GetByName(), sortBy)
+		artists = sortArtists(p.client.GetByName(), Sort(userPreference.Sort))
 	case FILTER_BY_FIRST_ALBUM:
-		artists = sortArtists(p.client.GetByFirstAlbum(), sortBy)
+		artists = sortArtists(p.client.GetByFirstAlbum(), Sort(userPreference.Sort))
 	case FILTER_BY_CREATION_DATE:
-		artists = sortArtists(p.client.GetByCreationDate(), sortBy)
-	default:
-		filterBy = FILTER_BY_ID
-		sortBy = ASCENDING_ORDER
-		artists = sortArtists(p.client.GetByIdKey(), sortBy)
+		artists = sortArtists(p.client.GetByCreationDate(), Sort(userPreference.Sort))
 	}
 
 	data := struct {
@@ -68,8 +69,8 @@ func (p *Pages) RenderArtistsGrid(filterBy Filter, sortBy Sort) error {
 	}{
 		UserFavorites:        userFavorites,
 		Artists:              artists,
-		CurrentFilter:        string(filterBy),
-		CurrentSort:          string(sortBy),
+		CurrentFilter:        userPreference.Filter,
+		CurrentSort:          userPreference.Sort,
 		FilterSortRoute:      utils.FILTER_SORT_ROUTE.String(),
 		FilterByName:         string(FILTER_BY_NAME),
 		FilterByCreationDate: string(FILTER_BY_CREATION_DATE),

@@ -30,7 +30,7 @@ func (p *Pages) FilterSortHandler(w http.ResponseWriter, r *http.Request) {
 	switch exists {
 	case true:
 		prefUpdate := data.PreferenceUpdate{
-			Id:     userId,
+			UserId: userId,
 			Filter: &filter,
 			Sort:   &sort,
 		}
@@ -59,9 +59,9 @@ func (p *Pages) FilterSortHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	page := pages.New(p.logger, w, p.embedded, p.client, r, p.favoriteModel,p.preferenceModel)
+	page := pages.New(p.logger, w, p.embedded, p.client, r, p.favoriteModel, p.preferenceModel)
 
-	if err := page.RenderArtistsGrid(pages.Filter(filter), pages.Sort(sort)); err != nil {
+	if err := page.RenderArtistsGrid(); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		p.logger.PrintError(err.Error(), map[string]string{
 			"Source": sourceFS,

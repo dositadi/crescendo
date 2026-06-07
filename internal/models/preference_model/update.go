@@ -58,7 +58,7 @@ func (p *PreferenceModel) Update(preference data.PreferenceUpdate) error {
 		    version integer NOT NULL DEFAULT 1,
 	*/
 
-	query := "UPDATE preferences SET filter = $1, sort = $2 version = version + 1, updated_at = now() WHERE userId = $3 AND version = $4"
+	query := "UPDATE preferences SET filter = $1, sort = $2, version = version + 1, updateAt = now() WHERE userId = $3 AND version = $4"
 
 	_, err = tx.Exec(ctx, query, filter, sort, preference.UserId, data.Version)
 	if err != nil {

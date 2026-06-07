@@ -1,6 +1,7 @@
 package pages
 
 import (
+	"fmt"
 	"html/template"
 
 	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
@@ -13,7 +14,7 @@ const (
 	sourceRHome = "Render Home page f(n) under pages pkg"
 )
 
-func (p *Pages) RenderHomePage(filterBy Filter, sortBy Sort) error {
+func (p *Pages) RenderHomePage() error {
 	fs := []string{
 		"internal/web/static/pages/home_page.html",
 		"internal/web/static/partials/pages/home_page_partials.html",
@@ -46,19 +47,15 @@ func (p *Pages) RenderHomePage(filterBy Filter, sortBy Sort) error {
 
 	var artists []artistapi.ArtistInfo
 
-	switch filterBy {
+	switch Filter(userPreferences.Filter) {
 	case FILTER_BY_ID:
-		artists = sortArtists(p.client.GetByIdKey(), sortBy)
+		artists = sortArtists(p.client.GetByIdKey(), Sort(userPreferences.Sort))
 	case FILTER_BY_NAME:
-		artists = sortArtists(p.client.GetByName(), sortBy)
+		artists = sortArtists(p.client.GetByName(), Sort(userPreferences.Sort))
 	case FILTER_BY_FIRST_ALBUM:
-		artists = sortArtists(p.client.GetByFirstAlbum(), sortBy)
+		artists = sortArtists(p.client.GetByFirstAlbum(), Sort(userPreferences.Sort))
 	case FILTER_BY_CREATION_DATE:
-		artists = sortArtists(p.client.GetByCreationDate(), sortBy)
-	default:
-		filterBy = FILTER_BY_ID
-		sortBy = ASCENDING_ORDER
-		artists = sortArtists(p.client.GetByIdKey(), sortBy)
+		artists = sortArtists(p.client.GetByCreationDate(), Sort(userPreferences.Sort))
 	}
 
 	data := struct {
@@ -119,6 +116,7 @@ func (p *Pages) getUserFavorites() (map[int]data.Favorite, error) {
 
 func (p *Pages) getUserPreference() (data.Preference, error) {
 	pref, err := p.preferenceModel.Get(p.getUserId())
+	fmt.Println(p.getUserId())
 	if err != nil {
 		e := helper.WrapError("Preference fetch error", err)
 		return data.Preference{}, e
