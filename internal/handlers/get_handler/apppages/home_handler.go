@@ -1,9 +1,11 @@
 package apppages
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/dositadi/groupie-tracker/internal/services/pages"
+	"github.com/dositadi/groupie-tracker/internal/utils"
 )
 
 const (
@@ -23,10 +25,22 @@ func (a *Pages) HomeHandler(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	if err := page.RenderHomePage(false); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		a.logger.PrintError(err.Error(), map[string]string{
-			"Source": sourceHH,
-		})
+	pageNo := r.FormValue(utils.PAGE_KEY)
+	fmt.Println(pageNo)
+
+	if pageNo == "" {
+		if err := page.RenderHomePage(false); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			a.logger.PrintError(err.Error(), map[string]string{
+				"Source": sourceHH,
+			})
+		}
+	} else {
+		if err := page.RenderHomePage(true); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			a.logger.PrintError(err.Error(), map[string]string{
+				"Source": sourceHH,
+			})
+		}
 	}
 }

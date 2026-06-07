@@ -14,6 +14,7 @@ const (
 )
 
 var currentPage = 1
+var currentIndex = 0
 
 func (p *Pages) RenderHomePage(partial bool) error {
 	fs := []string{
@@ -47,25 +48,53 @@ func (p *Pages) RenderHomePage(partial bool) error {
 	}
 
 	var artists []artistapi.ArtistInfo
+	var paginatedArtists []artistapi.ArtistInfo
 
 	artists = sortArtist(mapToSlice(p.client.GetByIdKey()), Sort(userPreference.Sort), Filter(userPreference.Filter))
 
-	limit := 5
+	page := p.request.FormValue(utils.PAGE_KEY)
+
+	if page != "" {
+		p := p.atoi(page)
+		if p < 0 {
+			currentPage += p
+		} else {
+			currentPage = p
+		}
+	}
+
+	var disableNextButton bool
+	var disablePrevButton bool
+	artistsLen := len(artists) - 1
+
+	limit := 10
 	//totalPages := len(artists) / limit
 	offset := (currentPage - 1) * limit
+	currentIndex = offset + limit
 
-	paginatedArtists := artists[offset : offset+5]
+	if currentIndex < artistsLen {
+		paginatedArtists = artists[offset : offset+limit]
+	} else {
+		if offset < artistsLen {
+			paginatedArtists = artists[offset:]
+			disableNextButton = true
+		} else if offset == artistsLen {
+			disableNextButton = true
+		}
+	}
 
 	data := struct {
+		NextPage, PreviousPage                                 int
 		UserFavorites                                          map[int]data.Favorite
 		Artists                                                []artistapi.ArtistInfo
 		CurrentFilter, CurrentSort                             string
 		FilterSortRoute                                        string
 		FilterByName, FilterByCreationDate, FilterByFirstAlbum string
-		FilterKey, ArtistIDKey, SearchKey                      string
+		FilterKey, ArtistIDKey, SearchKey, PageKey             string
 		SortKey, SortASC, SortDESC                             string
 		FavoriteArtistUrl, FavKey, Favorited, NotFavorited     string
-		SearchUrl                                              string
+		SearchUrl, ArtistUrl                                   string
+		DisableNextbutton, DisablePrevButton                   bool
 	}{
 		UserFavorites:        userFavorites,
 		Artists:              paginatedArtists,
@@ -86,6 +115,12 @@ func (p *Pages) RenderHomePage(partial bool) error {
 		ArtistIDKey:          utils.ARTIST_ID_KEY,
 		SearchUrl:            utils.ARTIST_SEARCH.String(),
 		SearchKey:            utils.SEARCH_KEY,
+		ArtistUrl:            utils.HOME.String(),
+		PageKey:              utils.PAGE_KEY,
+		NextPage:             currentPage + 1,
+		PreviousPage:         -1,
+		DisableNextbutton:    disableNextButton,
+		DisablePrevButton:    disablePrevButton,
 	}
 
 	if partial {
