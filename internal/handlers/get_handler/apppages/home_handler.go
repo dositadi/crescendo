@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/dositadi/groupie-tracker/internal/services/pages"
+	pages "github.com/dositadi/groupie-tracker/internal/services/pages/home_page"
 	"github.com/dositadi/groupie-tracker/internal/utils"
 )
 
