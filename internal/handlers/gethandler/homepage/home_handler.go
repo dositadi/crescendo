@@ -1,4 +1,4 @@
-package apppages
+package homepage
 
 import (
 	"fmt"

@@ -1,4 +1,4 @@
-package pages
+package homepagepost
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ const (
 	sourceUH = "Update favorite handler under pages pkg"
 )
 
-func (p *Pages) UpdateFavoriteHandler(w http.ResponseWriter, r *http.Request) {
+func (p *HomePage) UpdateFavoriteHandler(w http.ResponseWriter, r *http.Request) {
 	favStatus := r.FormValue(utils.FAV_KEY)
 	val := r.FormValue(utils.ARTIST_ID_KEY)
 	artistId := p.atoi(val)
@@ -120,7 +120,7 @@ func (p *Pages) UpdateFavoriteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (p *Pages) atoi(s string) int {
+func (p *HomePage) atoi(s string) int {
 	out, err := strconv.Atoi(s)
 	if err != nil {
 		p.logger.PrintError("Atoi conversion error: Not a valid number", map[string]string{

@@ -1,4 +1,4 @@
-package pages
+package homepagepost
 
 import (
 	"fmt"
@@ -14,7 +14,7 @@ const (
 	sourceFS = "Filter-Sort handler f(n) under apppages pkg"
 )
 
-func (p *Pages) FilterSortHandler(w http.ResponseWriter, r *http.Request) {
+func (p *HomePage) FilterSortHandler(w http.ResponseWriter, r *http.Request) {
 	filter := r.FormValue(utils.FILTER_KEY)
 	sort := r.FormValue(utils.SORT_KEY)
 	fmt.Println("handler: ", filter, " ", sort)

@@ -1,4 +1,4 @@
-package apppages
+package homepage
 
 import (
 	groupietracker "github.com/dositadi/groupie-tracker"

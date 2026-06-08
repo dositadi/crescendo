@@ -6,10 +6,10 @@ import (
 	groupietracker "github.com/dositadi/groupie-tracker"
 	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
 	"github.com/dositadi/groupie-tracker/internal/data"
-	deletehandler "github.com/dositadi/groupie-tracker/internal/handlers/delete_handler"
-	gethandler "github.com/dositadi/groupie-tracker/internal/handlers/get_handler"
-	posthandler "github.com/dositadi/groupie-tracker/internal/handlers/post_handler"
-	"github.com/dositadi/groupie-tracker/internal/handlers/post_handler/pages"
+	"github.com/dositadi/groupie-tracker/internal/handlers/deletehandler"
+	"github.com/dositadi/groupie-tracker/internal/handlers/gethandler"
+	"github.com/dositadi/groupie-tracker/internal/handlers/posthandler"
+	"github.com/dositadi/groupie-tracker/internal/handlers/posthandler/homepagepost"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
 
@@ -33,7 +33,7 @@ type Handler struct {
 	embedded  groupietracker.Embedded
 }
 
-func New(logger jsonlog.Logger, userModel UserModel, favoriteModel pages.FavoriteModel, preferenceModel pages.PreferenceModel, client artistapi.ArtistInfo, embedded groupietracker.Embedded) *Handler {
+func New(logger jsonlog.Logger, userModel UserModel, favoriteModel homepagepost.FavoriteModel, preferenceModel homepagepost.PreferenceModel, client artistapi.ArtistInfo, embedded groupietracker.Embedded) *Handler {
 	return &Handler{
 		logger:    logger,
 		userModel: userModel,

@@ -1,4 +1,4 @@
-package pages
+package homepagepost
 
 import (
 	"net/http"
@@ -37,7 +37,7 @@ type FavoriteModel interface {
 	Update(fav data.FavoriteUpdate) error
 }
 
-type Pages struct {
+type HomePage struct {
 	logger          jsonlog.Logger
 	usermodel       UserModel
 	favoriteModel   FavoriteModel
@@ -46,8 +46,8 @@ type Pages struct {
 	client          artistapi.ArtistInfo
 }
 
-func New(logger jsonlog.Logger, userModel UserModel, favoriteModel FavoriteModel, preferenceModel PreferenceModel, embedded groupietracker.Embedded, client artistapi.ArtistInfo) *Pages {
-	return &Pages{
+func New(logger jsonlog.Logger, userModel UserModel, favoriteModel FavoriteModel, preferenceModel PreferenceModel, embedded groupietracker.Embedded, client artistapi.ArtistInfo) *HomePage {
+	return &HomePage{
 		logger:          logger,
 		usermodel:       userModel,
 		embedded:        embedded,
@@ -57,7 +57,7 @@ func New(logger jsonlog.Logger, userModel UserModel, favoriteModel FavoriteModel
 	}
 }
 
-func (p *Pages) getUserId(r *http.Request) string {
+func (p *HomePage) getUserId(r *http.Request) string {
 	idVal := r.Context().Value(utils.USER_ID_KEY)
 	var userId = ""
 	if id, ok := idVal.(string); ok {

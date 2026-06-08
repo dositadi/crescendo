@@ -4,8 +4,8 @@ import (
 	groupietracker "github.com/dositadi/groupie-tracker"
 	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
 	"github.com/dositadi/groupie-tracker/internal/data"
-	"github.com/dositadi/groupie-tracker/internal/handlers/post_handler/authpost"
-	"github.com/dositadi/groupie-tracker/internal/handlers/post_handler/pages"
+	"github.com/dositadi/groupie-tracker/internal/handlers/posthandler/authpost"
+	"github.com/dositadi/groupie-tracker/internal/handlers/posthandler/homepagepost"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
 
@@ -25,16 +25,16 @@ type Post struct {
 	client    artistapi.ArtistInfo
 	embedded  groupietracker.Embedded
 	Auth      authpost.Auth
-	Pages     pages.Pages
+	HomePage  homepagepost.HomePage
 }
 
-func New(userModel UserModel, favoriteModel pages.FavoriteModel, preferenceModel pages.PreferenceModel, client artistapi.ArtistInfo, logger jsonlog.Logger, embedded groupietracker.Embedded) *Post {
+func New(userModel UserModel, favoriteModel homepagepost.FavoriteModel, preferenceModel homepagepost.PreferenceModel, client artistapi.ArtistInfo, logger jsonlog.Logger, embedded groupietracker.Embedded) *Post {
 	return &Post{
 		userModel: userModel,
 		logger:    logger,
 		client:    client,
 		embedded:  embedded,
-		Auth:      *authpost.New(logger, userModel, preferenceModel,embedded),
-		Pages:     *pages.New(logger, userModel, favoriteModel, preferenceModel, embedded, client),
+		Auth:      *authpost.New(logger, userModel, preferenceModel, embedded),
+		HomePage:  *homepagepost.New(logger, userModel, favoriteModel, preferenceModel, embedded, client),
 	}
 }
