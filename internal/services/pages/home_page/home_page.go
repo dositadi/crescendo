@@ -3,6 +3,7 @@ package pages
 import (
 	"html/template"
 	"net/http"
+	"strings"
 
 	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
 	"github.com/dositadi/groupie-tracker/internal/data"
@@ -91,6 +92,7 @@ func (p *Pages) RenderHomePage(partial bool) error {
 	}
 
 	data := struct {
+		Username                                               string
 		NextPage, PreviousPage, Count, Total                   int
 		UserFavorites                                          map[int]data.Favorite
 		Artists                                                []artistapi.ArtistInfo
@@ -103,6 +105,7 @@ func (p *Pages) RenderHomePage(partial bool) error {
 		SearchUrl, Url, ArtistDetailUrl                        string
 		DisableNextbutton, DisablePrevButton, IsSearch         bool
 	}{
+		Username:             strings.Fields(p.getUser().Username)[0],
 		UserFavorites:        userFavorites,
 		Artists:              paginatedArtists,
 		CurrentFilter:        userPreference.Filter,
