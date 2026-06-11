@@ -69,10 +69,11 @@ func New(logger jsonlog.Logger, responseWriter http.ResponseWriter, embedded gro
 	}
 }
 
-func (p *Pages) getUserId() string {
-	id := p.request.Context().Value(utils.USER_ID_KEY)
-	if userId, ok := id.(string); ok {
-		return userId
+func (p *Pages) getUser() data.User {
+	val := p.request.Context().Value(utils.USER_ID_KEY)
+
+	if user, ok := val.(data.User); ok {
+		return user
 	}
-	return ""
+	return data.User{}
 }

@@ -101,7 +101,8 @@ func sortArtist(artists []artistapi.ArtistInfo, sort Sort, filter Filter) []arti
 }
 
 func (p *Pages) getUserFavorites() (map[int]data.Favorite, error) {
-	favorites, err := p.favoriteModel.GetAll(p.getUserId())
+	user := p.getUser()
+	favorites, err := p.favoriteModel.GetAll(user.Id)
 	if err != nil {
 		e := helper.WrapError("Favorites fetch error", err)
 		return nil, e
@@ -116,7 +117,8 @@ func (p *Pages) getUserFavorites() (map[int]data.Favorite, error) {
 }
 
 func (p *Pages) getUserPreference() (data.Preference, error) {
-	pref, err := p.preferenceModel.Get(p.getUserId())
+	user := p.getUser()
+	pref, err := p.preferenceModel.Get(user.Id)
 	if err != nil {
 		e := helper.WrapError("Preference fetch error", err)
 		return data.Preference{}, e

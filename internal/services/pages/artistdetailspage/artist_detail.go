@@ -24,13 +24,6 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 		"internal/web/static/pages/artist_profile.html",
 	}
 
-	locations := []Location{
-		{Name: "Lagos Island", Lat: 6.4541, Lng: 3.3947},
-		{Name: "Ikeja", Lat: 6.6018, Lng: 3.3515},
-	}
-
-	jsObject := helper.Marshal(locations)
-
 	id := a.atoi(chi.URLParam(a.request, "id"))
 
 	artistInfo := a.client.GetByIdKey()[id]
@@ -46,10 +39,7 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 		AllArtists:       a.client.GetByIdKey(),
 		ArtistDetailUrl:  utils.ARTIST_DETAILS.String(),
 		AllEventsPageUrl: utils.ALL_EVENTS_ROUTES.String(),
-		JsObject:         template.JS(jsObject),
 	}
-
-	/* New("artist_profile.html").Funcs(a.detailPageFuncMap()).ParseFS(a.embedded.Get(), fs...) */
 
 	temp := template.Must(template.New("artist_profile.html").Funcs(a.detailPageFuncMap()).ParseFS(a.embedded.Get(), fs...))
 

@@ -1,7 +1,6 @@
 package homepage
 
 import (
-	"fmt"
 	"net/http"
 
 	pages "github.com/dositadi/groupie-tracker/internal/services/pages/home_page"
@@ -26,7 +25,6 @@ func (a *HomePage) HomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	pageNo := r.FormValue(utils.PAGE_KEY)
-	fmt.Println(pageNo)
 
 	if pageNo == "" {
 		if err := page.RenderHomePage(false); err != nil {

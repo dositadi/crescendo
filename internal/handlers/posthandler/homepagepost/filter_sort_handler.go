@@ -19,9 +19,9 @@ func (p *HomePage) FilterSortHandler(w http.ResponseWriter, r *http.Request) {
 	sort := r.FormValue(utils.SORT_KEY)
 	fmt.Println("handler: ", filter, " ", sort)
 
-	userId := p.getUserId(r)
+	user := p.getUserId(r)
 
-	exists, err := p.preferenceModel.Exists(userId)
+	exists, err := p.preferenceModel.Exists(user.Id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		p.logger.PrintError(err.Error(), map[string]string{
@@ -32,7 +32,7 @@ func (p *HomePage) FilterSortHandler(w http.ResponseWriter, r *http.Request) {
 	switch exists {
 	case true:
 		prefUpdate := data.PreferenceUpdate{
-			UserId: userId,
+			UserId: user.Id,
 			Filter: &filter,
 			Sort:   &sort,
 		}
@@ -47,7 +47,7 @@ func (p *HomePage) FilterSortHandler(w http.ResponseWriter, r *http.Request) {
 	case false:
 		pref := data.Preference{
 			Id:     uuid.NewString(),
-			UserId: userId,
+			UserId: user.Id,
 			Filter: filter,
 			Sort:   sort,
 		}

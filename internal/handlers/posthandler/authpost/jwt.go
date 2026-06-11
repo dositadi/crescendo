@@ -18,7 +18,7 @@ func (a *Auth) generateJWT(claim data.ActiveUser) ([]byte, error) {
 	claim.RegisteredClaims = jwt.RegisteredClaims{
 		Subject:   "Access token",
 		IssuedAt:  jwt.NewNumericDate(time.Now()),
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(1 * time.Hour))),
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(1 * time.Minute))),
 	}
 
 	// Step two: Generate the token using the new with claims function

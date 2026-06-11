@@ -21,7 +21,7 @@ func (p *HomePage) UpdateFavoriteHandler(w http.ResponseWriter, r *http.Request)
 	val := r.FormValue(utils.ARTIST_ID_KEY)
 	artistId := p.atoi(val)
 	page := pages.New(p.logger, w, p.embedded, p.client, r, p.favoriteModel, p.preferenceModel)
-	userId := p.getUserId(r)
+	user := p.getUserId(r)
 
 	switch favStatus {
 	case string(pages.FAVORITED):
@@ -37,7 +37,7 @@ func (p *HomePage) UpdateFavoriteHandler(w http.ResponseWriter, r *http.Request)
 		id := uuid.NewString()
 		favorite := data.Favorite{
 			Id:       id,
-			UserId:   userId,
+			UserId:   user.Id,
 			ArtistId: artistId,
 			Status:   false,
 		}
@@ -55,7 +55,7 @@ func (p *HomePage) UpdateFavoriteHandler(w http.ResponseWriter, r *http.Request)
 			fmt.Println("Entered true Fav")
 			status := false
 			favUpdate := data.FavoriteUpdate{
-				UserId:   userId,
+				UserId:   user.Id,
 				ArtistId: artistId,
 				Status:   &status,
 			}
@@ -81,7 +81,7 @@ func (p *HomePage) UpdateFavoriteHandler(w http.ResponseWriter, r *http.Request)
 		id := uuid.NewString()
 		favorite := data.Favorite{
 			Id:       id,
-			UserId:   userId,
+			UserId:   user.Id,
 			ArtistId: artistId,
 			Status:   true,
 		}
@@ -98,7 +98,7 @@ func (p *HomePage) UpdateFavoriteHandler(w http.ResponseWriter, r *http.Request)
 		case true:
 			var status bool = true
 			favUpdate := data.FavoriteUpdate{
-				UserId:   userId,
+				UserId:   user.Id,
 				ArtistId: artistId,
 				Status:   &status,
 			}

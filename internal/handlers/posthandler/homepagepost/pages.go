@@ -57,11 +57,11 @@ func New(logger jsonlog.Logger, userModel UserModel, favoriteModel FavoriteModel
 	}
 }
 
-func (p *HomePage) getUserId(r *http.Request) string {
-	idVal := r.Context().Value(utils.USER_ID_KEY)
-	var userId = ""
-	if id, ok := idVal.(string); ok {
-		userId = id
+func (p *HomePage) getUserId(r *http.Request) data.User {
+	val := r.Context().Value(utils.USER_ID_KEY)
+	var user data.User
+	if v, ok := val.(data.User); ok {
+		user = v
 	}
-	return userId
+	return user
 }

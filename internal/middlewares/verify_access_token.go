@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
@@ -40,7 +39,14 @@ func (m *Middleware) VerifyAccessToken(next http.Handler) http.Handler {
 				logger.PrintError(e.Error()+" "+tokenString, map[string]string{
 					"Source": "Verify access token f(n) under middleware pkg",
 				})
-				http.Redirect(w, r, utils.LOGIN.String(), http.StatusSeeOther)
+				page := authservice.New(w, m.embedded, m.logger)
+
+				if err := page.RenderSessionTimeOutPage(); err != nil {
+					e := fmt.Errorf("Server error")
+					m.logger.PrintError(e.Error(), map[string]string{
+						"Source": "Verify access token f(n) under middleware pkg",
+					})
+				}
 				return
 			}
 
@@ -50,25 +56,6 @@ func (m *Middleware) VerifyAccessToken(next http.Handler) http.Handler {
 				logger.PrintError(e.Error(), map[string]string{
 					"Source": "Verify access token f(n) under middleware pkg",
 				})
-				http.Redirect(w, r, utils.LOGIN.String(), http.StatusSeeOther)
-				return
-			}
-
-			expiryTime, err := token.Claims.GetExpirationTime()
-			if err != nil {
-				e := helper.WrapError("Unauthorized access", err)
-				logger.PrintError(e.Error(), map[string]string{
-					"Source": "Verify access token f(n) under middleware pkg",
-				})
-				http.Redirect(w, r, utils.LOGIN.String(), http.StatusSeeOther)
-			}
-
-			if expiryTime.After(time.Now()) {
-				e := helper.WrapError("Unauthorized access", err)
-				logger.PrintError(e.Error(), map[string]string{
-					"Source": "Verify access token f(n) under middleware pkg",
-				})
-
 				page := authservice.New(w, m.embedded, m.logger)
 
 				if err := page.RenderSessionTimeOutPage(); err != nil {
@@ -77,6 +64,7 @@ func (m *Middleware) VerifyAccessToken(next http.Handler) http.Handler {
 						"Source": "Verify access token f(n) under middleware pkg",
 					})
 				}
+				return
 			}
 
 			cxt := context.WithValue(r.Context(), utils.USER_ID_KEY, data.User{Username: active.Username, Email: active.Email, Id: active.Id})
