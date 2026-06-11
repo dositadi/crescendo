@@ -3,14 +3,14 @@ package opencage
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"net/url"
+	"os"
 
 	"github.com/dositadi/groupie-tracker/internal/helper"
 )
 
-func /* (p *OpenCage) */ FetchGeoLocations(query string) (GeoLocation, error) {
+func FetchGeoLocations(query string) (GeoLocation, error) {
 	baseUrl, err := url.Parse("https://api.opencagedata.com")
 	if err != nil {
 		e := helper.WrapError("Url Parse error", err)
@@ -25,7 +25,7 @@ func /* (p *OpenCage) */ FetchGeoLocations(query string) (GeoLocation, error) {
 	params := url.Values{}
 
 	//Set parameter values
-	params.Add("key", "51db440653e74f1097011b60838ede9d")
+	params.Add("key", os.Getenv("OPEN_CAGE_KEY"))
 	params.Add("q", query)
 	params.Add("limit", "1")
 
@@ -61,8 +61,6 @@ func /* (p *OpenCage) */ FetchGeoLocations(query string) (GeoLocation, error) {
 		})
 		return GeoLocation{}, e
 	}
-
-	fmt.Println("Open cage: ", openCageResp)
 
 	geoLocations, err := parseGeoLocation(query, openCageResp)
 	if err != nil {
