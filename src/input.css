@@ -180,6 +180,74 @@ body {
   background-color: theme(--color-surface);   /* #FAF9F7 */
 }
 
+/* ── Card ───────────────────────────────────────────────────────────── */
+.expire-card {
+  width: 100%;
+  max-width: 420px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem 2.25rem 2.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: fade-up 0.55s ease-out both;
+}
+
+/* ── Icon ring ──────────────────────────────────────────────────────── */
+.icon-ring {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+ /* Outer pulse rings */
+.icon-ring::before,
+.icon-ring::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(79, 70, 229, 0.18);
+  animation: pulse-ring 2.4s ease-out infinite;
+}
+.icon-ring::after {
+  animation-delay: 1.2s;
+}
+
+.icon-bg {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #EEF2FF;
+  border: 1.5px solid #C7D2FE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Page centre layout ─────────────────────────────────────────────── */
+    .page-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      background-color: #FAF9F7;
+      /* Subtle dot grid — gives a quiet musical-manuscript feel */
+      background-image: radial-gradient(circle, #D1D5DB 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
 /* ─── Shared component: field-input ──────────────────────────────────────── */
 /*
   Used on all text / email / password inputs across both pages.
@@ -387,6 +455,67 @@ body {
   padding: 80px 24px;
   color: var(--color-ink-muted);
   gap: 12px;
+}
+
+/* ── CTA button ─────────────────────────────────────────────────────── */
+.btn-login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  background: #4F46E5;
+  color: #FFFFFF;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.22);
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+}
+.btn-login:hover {
+  background: #4338CA;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+}
+.btn-login:active {
+  background: #3730A3;
+  transform: translateY(0);
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.22);
+}
+
+/* ── Waveform bars (decorative footer) ──────────────────────────────── */
+.footer-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  margin-top: 2.5rem;
+  opacity: 0.35;
+}
+
+/* ── Subtle note float animation ────────────────────────────────────── */
+.float-note {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  color: #4F46E5;
+  font-size: 1rem;
+  opacity: 0;
+}
+.float-note-1 { top: 18%; left: 12%; animation: note-float 3.4s ease-out infinite 0s; }
+.float-note-2 { top: 22%; right: 10%; animation: note-float 3.4s ease-out infinite 1.2s; }
+.float-note-3 { bottom: 20%; left: 15%; animation: note-float 3.4s ease-out infinite 2.3s; }
+.float-note-4 { bottom: 18%; right: 14%; animation: note-float 3.4s ease-out infinite 0.7s; }
+
+
+/* ── Divider ────────────────────────────────────────────────────────── */
+.card-divider {
+  width: 100%;
+  height: 1px;
+  background: #EEF1F4;
+  margin: 1.5rem 0;
 }
 
 /* ─── Artist Profile Page ─────────────────────────────────────────────────── */

@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
+	"github.com/dositadi/groupie-tracker/internal/services/authservice"
 	"github.com/dositadi/groupie-tracker/internal/utils"
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -18,12 +20,11 @@ func (m *Middleware) VerifyAccessToken(next http.Handler) http.Handler {
 			// Step 1: get the token string form either header or cookie
 			tokenString := m.getToken(r)
 			if tokenString == "" {
-				// Direct to the page for expired session page
-				e := fmt.Errorf("1. Unauthorized access %s", tokenString)
+				e := fmt.Errorf("Unauthorized access %s", tokenString)
 				m.logger.PrintError(e.Error(), map[string]string{
 					"Source": "Verify access token f(n) under middleware pkg",
 				})
-				http.Error(w, e.Error(), http.StatusUnauthorized)
+				http.Redirect(w, r, utils.LOGIN.String(), http.StatusSeeOther)
 				return
 			}
 
@@ -35,26 +36,51 @@ func (m *Middleware) VerifyAccessToken(next http.Handler) http.Handler {
 			})
 			if err != nil {
 				// Direct to the page for expired session page
-				e := helper.WrapError("2. Unauthorized access", err)
+				e := helper.WrapError("Unauthorized access", err)
 				logger.PrintError(e.Error()+" "+tokenString, map[string]string{
 					"Source": "Verify access token f(n) under middleware pkg",
 				})
-				http.Error(w, e.Error(), http.StatusUnauthorized)
+				http.Redirect(w, r, utils.LOGIN.String(), http.StatusSeeOther)
 				return
 			}
 
 			// Check that the token is valid and is of the active user type
 			if _, ok := token.Claims.(*data.ActiveUser); !ok && !token.Valid {
-				e := helper.WrapError("3. Unauthorized access", err)
+				e := helper.WrapError("Unauthorized access", err)
 				logger.PrintError(e.Error(), map[string]string{
 					"Source": "Verify access token f(n) under middleware pkg",
 				})
-				http.Error(w, e.Error(), http.StatusUnauthorized)
+				http.Redirect(w, r, utils.LOGIN.String(), http.StatusSeeOther)
 				return
 			}
 
-			cxt := context.WithValue(r.Context(), utils.USER_ID_KEY, active.Id)
-			fmt.Println(active.Id)
+			expiryTime, err := token.Claims.GetExpirationTime()
+			if err != nil {
+				e := helper.WrapError("Unauthorized access", err)
+				logger.PrintError(e.Error(), map[string]string{
+					"Source": "Verify access token f(n) under middleware pkg",
+				})
+				http.Redirect(w, r, utils.LOGIN.String(), http.StatusSeeOther)
+			}
+
+			if expiryTime.After(time.Now()) {
+				e := helper.WrapError("Unauthorized access", err)
+				logger.PrintError(e.Error(), map[string]string{
+					"Source": "Verify access token f(n) under middleware pkg",
+				})
+
+				page := authservice.New(w, m.embedded, m.logger)
+
+				if err := page.RenderSessionTimeOutPage(); err != nil {
+					e := fmt.Errorf("Server error")
+					m.logger.PrintError(e.Error(), map[string]string{
+						"Source": "Verify access token f(n) under middleware pkg",
+					})
+				}
+			}
+
+			cxt := context.WithValue(r.Context(), utils.USER_ID_KEY, data.User{Username: active.Username, Email: active.Email, Id: active.Id})
+
 			next.ServeHTTP(w, r.WithContext(cxt))
 		},
 	)

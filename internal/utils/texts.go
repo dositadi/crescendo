@@ -10,7 +10,7 @@ const (
 	SORT_KEY         = "sort"
 	FAV_KEY          = "favorited"
 	ARTIST_ID_KEY    = "artistId"
-	USER_ID_KEY      = "userId"
+	USER_ID_KEY      = "user"
 	SEARCH_KEY       = "search"
 	PAGE_KEY         = "page"
 )
