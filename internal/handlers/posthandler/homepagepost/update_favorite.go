@@ -23,17 +23,17 @@ func (p *HomePage) UpdateFavoriteHandler(w http.ResponseWriter, r *http.Request)
 	page := pages.New(p.logger, w, p.embedded, p.client, r, p.favoriteModel, p.preferenceModel)
 	user := p.getUserId(r)
 
+	exists, err := p.favoriteModel.Exists(artistId, user.Id)
+	if err != nil {
+		e := helper.WrapError("Update favorite error", err)
+		p.logger.PrintError(e.Error(), map[string]string{
+			"Source": sourceUH,
+		})
+		return
+	}
+
 	switch favStatus {
 	case string(pages.FAVORITED):
-		exists, err := p.favoriteModel.Exists(artistId)
-		if err != nil {
-			e := helper.WrapError("Update favorite error", err)
-			p.logger.PrintError(e.Error(), map[string]string{
-				"Source": sourceUH,
-			})
-			return
-		}
-
 		id := uuid.NewString()
 		favorite := data.Favorite{
 			Id:       id,
@@ -69,15 +69,6 @@ func (p *HomePage) UpdateFavoriteHandler(w http.ResponseWriter, r *http.Request)
 		}
 
 	case string(pages.NOT_FAVORITED):
-		exists, err := p.favoriteModel.Exists(artistId)
-		if err != nil {
-			e := helper.WrapError("Update favorite error", err)
-			p.logger.PrintError(e.Error(), map[string]string{
-				"Source": sourceUH,
-			})
-			return
-		}
-
 		id := uuid.NewString()
 		favorite := data.Favorite{
 			Id:       id,

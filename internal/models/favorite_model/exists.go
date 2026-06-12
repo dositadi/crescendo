@@ -13,14 +13,14 @@ const (
 	sourceExists = "Exists f(n) under favoritesmodel"
 )
 
-func (f *FavoriteModel) Exists(artistId int) (bool, error) {
+func (f *FavoriteModel) Exists(artistId int, userId string) (bool, error) {
 	//  Remember to create an index for the artist id
 	ctx, cancel := context.WithTimeout(context.Background(), timeout*time.Second)
 	defer cancel()
 
-	query := `SELECT EXISTS (SELECT 1 FROM favorites WHERE artistId = $1)`
+	query := `SELECT EXISTS (SELECT 1 FROM favorites WHERE artistId = $1 AND userId = $2)`
 
-	row := f.db.QueryRow(ctx, query, artistId)
+	row := f.db.QueryRow(ctx, query, artistId, userId)
 
 	var exists bool
 

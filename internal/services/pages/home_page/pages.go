@@ -33,7 +33,7 @@ const (
 type FavoriteModel interface {
 	DeleteAll(userId string) error
 	Delete(userId string, artistId string) error
-	Exists(artistId int) (bool, error)
+	Exists(artistId int, userId string) (bool, error)
 	Get(artistId int, userId string) (data.Favorite, error)
 	GetAll(userId string) ([]data.Favorite, error)
 	Insert(favorite data.Favorite) error

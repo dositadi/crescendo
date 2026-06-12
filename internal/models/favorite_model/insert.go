@@ -41,7 +41,7 @@ func (f *FavoriteModel) Insert(favorite data.Favorite) error {
 		return e
 	}
 
-	exists, err := f.Exists(favorite.ArtistId)
+	exists, err := f.Exists(favorite.ArtistId, favorite.UserId)
 	if err != nil {
 		return err
 	}
