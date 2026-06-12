@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/dositadi/groupie-tracker/internal/helper"
+	"github.com/dositadi/groupie-tracker/internal/services/ordercache"
 )
 
 const (
@@ -25,10 +26,9 @@ func (a *App) startServer() {
 		IdleTimeout:  5 * time.Second,
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	
+	// Initializing Order cache
+	cacheCtx, cancelCache := context.WithCancel(context.Background())
+	ordercache.Init(cacheCtx)
 
 	chSignal := make(chan os.Signal, 1)
 	signal.Notify(chSignal, syscall.SIGINT, syscall.SIGTERM)
@@ -49,6 +49,10 @@ func (a *App) startServer() {
 
 	<-chSignal
 
+	cancelCache()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 	chError := make(chan error)
 
 	go func() {

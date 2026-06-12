@@ -31,7 +31,7 @@ func key(userId, location string, artistId int) string {
 	return fmt.Sprintf("%s-%v-%s", userId, artistId, location)
 }
 
-func (c *Cache) Init(ctx context.Context) {
+func Init(ctx context.Context) {
 	go global.evictLoop(ctx)
 }
 
@@ -39,11 +39,11 @@ func (c *Cache) evictLoop(ctx context.Context) {
 	ticker := time.NewTicker(30 * time.Second)
 	defer ticker.Stop()
 
-	for range ticker.C {
+	for {
 		select {
 		case <-ctx.Done():
 			return
-		default:
+		case <-ticker.C:
 			now := time.Now()
 			c.mu.Lock()
 			for key := range c.store {
