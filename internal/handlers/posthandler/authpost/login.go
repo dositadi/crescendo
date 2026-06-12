@@ -101,7 +101,7 @@ func (a *Auth) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		Name:     utils.ACCESS_TOKEN_KEY,
 		Value:    string(token),
 		Path:     "/",
-		Secure:   true,
+		Secure:   false,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	})

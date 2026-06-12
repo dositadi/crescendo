@@ -18,7 +18,7 @@ const (
 
 func (a *App) startServer() {
 	server := http.Server{
-		Addr:         ":8080",
+		Addr:         "0.0.0.0:8080",
 		Handler:      a.router,
 		WriteTimeout: 10 * time.Second,
 		ReadTimeout:  10 * time.Second,
