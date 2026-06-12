@@ -25,6 +25,11 @@ func (a *App) startServer() {
 		IdleTimeout:  5 * time.Second,
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	
+
 	chSignal := make(chan os.Signal, 1)
 	signal.Notify(chSignal, syscall.SIGINT, syscall.SIGTERM)
 
@@ -44,8 +49,6 @@ func (a *App) startServer() {
 
 	<-chSignal
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
 	chError := make(chan error)
 
 	go func() {

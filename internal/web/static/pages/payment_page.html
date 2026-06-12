@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment — Crescendo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand:           '#4F46E5',
+            'brand-hover':   '#4338CA',
+            'brand-active':  '#3730A3',
+            'brand-light':   '#EEF2FF',
+            ink:             '#111827',
+            'ink-secondary': '#4B5563',
+            'ink-muted':     '#6B7280',
+            'ink-disabled':  '#9CA3AF',
+            surface:         '#FAF9F7',
+            'surface-white': '#FFFFFF',
+            'surface-alt':   '#F5F6F8',
+            border:          '#E5E7EB',
+            'border-soft':   '#EEF1F4',
+            'border-focus':  '#C7D2FE',
+          },
+          fontFamily: {
+            display: ['"DM Serif Display"', 'Georgia', 'serif'],
+            sans:    ['"DM Sans"', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            sm:         '0 1px 2px rgba(0,0,0,.04)',
+            md:         '0 4px 12px rgba(0,0,0,.06)',
+            lg:         '0 10px 30px rgba(0,0,0,.08)',
+            'brand-sm': '0 4px 14px rgba(79,70,229,.18)',
+          },
+          keyframes: {
+            'bar-bounce': {
+              '0%,100%': { transform: 'scaleY(0.3)' },
+              '50%':     { transform: 'scaleY(1)' },
+            },
+            'fade-up': {
+              '0%':   { opacity: '0', transform: 'translateY(18px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            'slide-in-left': {
+              '0%':   { opacity: '0', transform: 'translateX(-24px)' },
+              '100%': { opacity: '1', transform: 'translateX(0)' },
+            },
+            'receipt-reveal': {
+              '0%':   { opacity: '0', transform: 'translateY(28px) scale(0.97)' },
+              '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+            },
+            'check-pop': {
+              '0%':   { transform: 'scale(0)',   opacity: '0' },
+              '60%':  { transform: 'scale(1.15)', opacity: '1' },
+              '100%': { transform: 'scale(1)',   opacity: '1' },
+            },
+            'note-float': {
+              '0%':   { opacity: '0', transform: 'translateY(0) rotate(-8deg)' },
+              '30%':  { opacity: '0.55' },
+              '100%': { opacity: '0', transform: 'translateY(-52px) rotate(10deg)' },
+            },
+            'confetti-fall': {
+              '0%':   { transform: 'translateY(-10px) rotate(0deg)',  opacity: '1' },
+              '100%': { transform: 'translateY(60px) rotate(360deg)', opacity: '0' },
+            },
+          },
+          animation: {
+            'bar1':           'bar-bounce 1.1s ease-in-out 0s infinite',
+            'bar2':           'bar-bounce 1.1s ease-in-out 0.18s infinite',
+            'bar3':           'bar-bounce 1.1s ease-in-out 0.36s infinite',
+            'bar4':           'bar-bounce 1.1s ease-in-out 0.54s infinite',
+            'bar5':           'bar-bounce 1.1s ease-in-out 0.72s infinite',
+            'fade-up':        'fade-up 0.65s ease-out both',
+            'fade-up-d1':     'fade-up 0.65s ease-out 0.08s both',
+            'fade-up-d2':     'fade-up 0.65s ease-out 0.16s both',
+            'fade-up-d3':     'fade-up 0.65s ease-out 0.24s both',
+            'fade-up-d4':     'fade-up 0.65s ease-out 0.32s both',
+            'fade-up-d5':     'fade-up 0.65s ease-out 0.40s both',
+            'slide-left':     'slide-in-left 0.7s ease-out both',
+            'receipt-reveal': 'receipt-reveal 0.7s cubic-bezier(0.22,1,0.36,1) 0.1s both',
+            'check-pop':      'check-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.3s both',
+            'note1':          'note-float 3.2s ease-out infinite 0s',
+            'note2':          'note-float 3.2s ease-out infinite 1.1s',
+            'note3':          'note-float 3.2s ease-out infinite 2.2s',
+            'confetti1':      'confetti-fall 1.4s ease-in 0.4s both',
+            'confetti2':      'confetti-fall 1.6s ease-in 0.6s both',
+            'confetti3':      'confetti-fall 1.2s ease-in 0.8s both',
+            'confetti4':      'confetti-fall 1.5s ease-in 0.5s both',
+            'confetti5':      'confetti-fall 1.3s ease-in 0.7s both',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    /* ── Page background — same quiet dot-grid as Phase 1 ──────────────── */
+    body {
+      background-color: #FAF9F7;
+      background-image: radial-gradient(circle, #D1D5DB 1px, transparent 1px);
+      background-size: 26px 26px;
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+
+    /* ── Noise overlay (header) ─────────────────────────────────────────── */
+    .noise-overlay {
+      position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      background-size: 180px; opacity: 0.45;
+    }
+
+    /* ── Waveform bars (logo) ───────────────────────────────────────────── */
+    .wbar {
+      display: inline-block; width: 3px;
+      border-radius: 9999px; transform-origin: bottom center;
+    }
+
+    /* ── Step indicator — same system as Phase 1 ────────────────────────── */
+    .step-dot {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 600; flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+    .step-dot.done    { background:#EEF2FF; color:#4F46E5; border:1.5px solid #C7D2FE; }
+    .step-dot.active  { background:#4F46E5; color:#fff; box-shadow:0 0 0 4px rgba(79,70,229,0.15); }
+    .step-dot.pending { background:#F3F4F6; color:#9CA3AF; border:1.5px solid #E5E7EB; }
+    .step-line        { flex:1; height:1.5px; background:#E5E7EB; position:relative; overflow:hidden; }
+    .step-line.done::after { content:''; position:absolute; inset:0; background:#4F46E5; }
+
+    /* ── Stripe-style card field ────────────────────────────────────────── */
+    .stripe-field {
+      width: 100%;
+      padding: 0.65rem 0.875rem;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      color: #111827;
+      background: #FFFFFF;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+    .stripe-field::placeholder { color: #9CA3AF; }
+    .stripe-field:focus {
+      border-color: #C7D2FE;
+      box-shadow: 0 0 0 3px rgba(79,70,229,0.09);
+    }
+    /* simulated card number — mono feel */
+    .stripe-field.card-num { letter-spacing: 0.08em; }
+
+    /* ── Card brand icon slot ───────────────────────────────────────────── */
+    .card-field-wrap { position: relative; }
+    .card-field-wrap .card-icon {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      display: flex; gap: 4px; align-items: center;
+    }
+
+    /* ── Pay button ─────────────────────────────────────────────────────── */
+    .btn-pay {
+      width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 0.9rem 1.5rem;
+      border-radius: 14px;
+      background: #4F46E5;
+      color: #fff;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      border: none; cursor: pointer;
+      box-shadow: 0 4px 14px rgba(79,70,229,.22);
+      transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.15s ease;
+    }
+    .btn-pay:hover  { background:#4338CA; box-shadow:0 6px 20px rgba(79,70,229,.28); transform:translateY(-1px); }
+    .btn-pay:active { background:#3730A3; transform:translateY(0); }
+
+    /* ── Order mini-summary (right column) ─────────────────────────────── */
+    .summary-row {
+      display:flex; align-items:center; justify-content:space-between;
+      font-size:0.875rem; color:#4B5563; padding:0.45rem 0;
+    }
+    .summary-row.total {
+      font-size:1rem; font-weight:700; color:#111827;
+      border-top:1.5px solid #EEF1F4; padding-top:0.85rem; margin-top:0.4rem;
+    }
+
+    /* ── Tear / perforation line (receipt) ─────────────────────────────── */
+    .tear-line {
+      position:relative; height:1px;
+      background:transparent; border-top:2px dashed #E5E7EB;
+      margin:0 -1px;
+    }
+    .tear-line::before, .tear-line::after {
+      content:''; position:absolute; top:-9px;
+      width:16px; height:16px; border-radius:50%;
+      background:#FAF9F7; border:1px solid #E5E7EB;
+    }
+    .tear-line::before { left:-8px; }
+    .tear-line::after  { right:-8px; }
+
+    /* ── Receipt card ───────────────────────────────────────────────────── */
+    .receipt-card {
+      background:#FFFFFF; border:1px solid #E5E7EB;
+      border-radius:20px; overflow:hidden;
+      box-shadow:0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    /* ── Receipt hero ───────────────────────────────────────────────────── */
+    .receipt-hero {
+      background-color:#1e1b4b;
+      background-image:
+        radial-gradient(ellipse at 20% 50%, rgba(99,91,255,0.22) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 30%, rgba(79,70,229,0.14) 0%, transparent 55%);
+      position:relative; overflow:hidden;
+    }
+
+    /* ── QR code placeholder ────────────────────────────────────────────── */
+    .qr-placeholder {
+      width:96px; height:96px;
+      border:2px solid #E5E7EB; border-radius:12px;
+      background:#F5F6F8;
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0;
+    }
+
+    /* ── CSS-only view toggle (payment form ↔ receipt) ──────────────────── */
+    /* Hidden radio controls which "view" is shown */
+    #view-payment, #view-receipt { display:none; }
+
+    /* Default — show payment, hide receipt */
+    #view-payment:not(:checked) ~ .page-payment { display:block; }
+    #view-payment:not(:checked) ~ .page-receipt  { display:none; }
+
+    /* When receipt radio is checked — swap */
+    #view-receipt:checked ~ .page-payment { display:none; }
+    #view-receipt:checked ~ .page-receipt  { display:block; }
+
+    /* ── Confetti dots ──────────────────────────────────────────────────── */
+    .confetti-dot {
+      position:absolute; border-radius:50%; pointer-events:none;
+    }
+
+    /* ── Music note ─────────────────────────────────────────────────────── */
+    .mnote {
+      position:absolute; pointer-events:none; user-select:none; color:#4F46E5;
+    }
+
+    /* ── Guarantee badge ────────────────────────────────────────────────── */
+    .guarantee-badge {
+      display:flex; align-items:flex-start; gap:10px;
+      background:#F0FDF4; border:1px solid #BBF7D0;
+      border-radius:12px; padding:0.75rem 1rem;
+    }
+
+    /* ── Receipt row ────────────────────────────────────────────────────── */
+    .receipt-row {
+      display:flex; justify-content:space-between; align-items:baseline;
+      padding:0.55rem 0; font-size:0.8125rem;
+      border-bottom:1px solid #EEF1F4;
+    }
+    .receipt-row:last-child { border-bottom:none; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-ink">
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       CSS-ONLY VIEW TOGGLE RADIOS  (must be siblings of .page-* wrappers)
+  ════════════════════════════════════════════════════════════════════════════ -->
+  <input type="radio" name="view" id="view-payment" checked />
+  <input type="radio" name="view" id="view-receipt" />
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       HEADER
+  ════════════════════════════════════════════════════════════════════════════ -->
+  <header class="bg-[#1e1b4b] sticky top-0 z-50">
+    <div class="noise-overlay" style="border-radius:0;"></div>
+    <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse at 20% 50%,rgba(99,91,255,0.18) 0%,transparent 60%);"></div>
+
+    <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+
+      <!-- Back -->
+      <a href="#" class="inline-flex items-center gap-1.5 text-white/65 hover:text-white
+                         text-sm font-medium transition-colors duration-200 group animate-slide-left">
+        <svg class="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-0.5"
+             fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back
+      </a>
+
+      <!-- Logo -->
+      <div class="absolute left-1/2 -translate-x-1/2">
+        <a href="#" class="inline-flex items-center gap-2.5">
+          <div class="flex items-end gap-0.5" style="height:26px">
+            <div class="wbar bg-white animate-bar1" style="height:38%;opacity:.75"></div>
+            <div class="wbar bg-white animate-bar2" style="height:68%;opacity:.80"></div>
+            <div class="wbar bg-white animate-bar3" style="height:100%;opacity:.90"></div>
+            <div class="wbar bg-white animate-bar4" style="height:62%;opacity:.80"></div>
+            <div class="wbar bg-white animate-bar5" style="height:34%;opacity:.70"></div>
+          </div>
+          <span class="font-display text-white text-[1.6rem] tracking-tight">Crescendo</span>
+        </a>
+      </div>
+
+      <!-- Spacer -->
+      <div class="w-16"></div>
+    </div>
+  </header>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       STEP INDICATOR
+  ════════════════════════════════════════════════════════════════════════════ -->
+  <div class="bg-surface-white border-b border-border-soft">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex items-center gap-2 max-w-xs mx-auto sm:max-w-sm">
+        <!-- Step 1 — done -->
+        <div class="step-dot done">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <span class="text-xs text-ink-muted mr-1 hidden sm:inline">Tickets</span>
+        <div class="step-line done"></div>
+
+        <!-- Step 2 — active -->
+        <div class="step-dot active">2</div>
+        <span class="text-xs text-brand font-semibold mr-1 hidden sm:inline">Payment</span>
+        <div class="step-line"></div>
+
+        <!-- Step 3 — pending -->
+        <div class="step-dot pending">3</div>
+        <span class="text-xs text-ink-disabled hidden sm:inline">Confirmation</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       PAGE — PAYMENT FORM
+  ════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-payment">
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
+
+      <!-- Page title -->
+      <div class="mb-8 animate-fade-up">
+        <h1 class="font-display text-3xl lg:text-4xl text-ink tracking-tight">Secure Checkout</h1>
+        <p class="text-sm text-ink-muted mt-1">Complete your purchase below. Your card details are never stored.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
+
+        <!-- ── LEFT — Stripe payment form ──────────────────────────────── -->
+        <div class="space-y-5">
+
+          <!-- Contact card -->
+          <div class="bg-surface-white rounded-2xl border border-border p-6 animate-fade-up-d1"
+               style="box-shadow:0 4px 12px rgba(0,0,0,.06);">
+            <h2 class="text-xs font-semibold text-ink-muted uppercase tracking-widest mb-4">Contact Info</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-ink-secondary mb-1.5">First name</label>
+                <input type="text" placeholder="Alex" class="stripe-field" />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-ink-secondary mb-1.5">Last name</label>
+                <input type="text" placeholder="Johnson" class="stripe-field" />
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-medium text-ink-secondary mb-1.5">Email address</label>
+                <input type="email" placeholder="alex@example.com" class="stripe-field" />
+                <p class="text-[11px] text-ink-muted mt-1.5">Your tickets will be sent to this address.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stripe payment card -->
+          <div class="bg-surface-white rounded-2xl border border-border p-6 animate-fade-up-d2"
+               style="box-shadow:0 4px 12px rgba(0,0,0,.06);">
+
+            <!-- Section heading + Stripe badge -->
+            <div class="flex items-center justify-between mb-5">
+              <h2 class="text-xs font-semibold text-ink-muted uppercase tracking-widest">Payment</h2>
+              <!-- Stripe logo -->
+              <div class="flex items-center gap-1.5 bg-surface-alt border border-border rounded-lg px-2.5 py-1.5">
+                <svg class="w-3.5 h-3.5 text-ink-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+                </svg>
+                <span class="text-[11px] text-ink-muted font-medium">Secured by</span>
+                <!-- Stripe wordmark -->
+                <svg height="13" viewBox="0 0 60 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5.5 10.2c0-.8.7-1.1 1.8-1.1 1.6 0 3.6.5 5.2 1.4V6.3C10.8 5.7 9 5.4 7.3 5.4 3.5 5.4 1 7.4 1 10.4c0 4.6 6.4 3.9 6.4 5.9 0 .9-.8 1.2-2 1.2-1.7 0-3.9-.7-5.6-1.7v4.2c1.9.8 3.8 1.2 5.6 1.2 3.9 0 6.6-1.9 6.6-5 0-5-6.5-4.1-6.5-6zm14.7-9.1L16 2l-.1 13.5c0 2.5 1.9 4.3 4.4 4.3 1.4 0 2.4-.2 3-.6v-3.4c-.5.2-3.2.9-3.2-1.4V9.7h3.2V6.1h-3.2l.1-5zM30 6.8c-1.4 0-2.3.6-2.8 1.1l-.2-1h-3.8v19l4.3-.9.1-4.6c.5.4 1.3.9 2.5.9 2.5 0 4.8-2 4.8-6.3-.1-4-2.4-6.2-4.9-6.2zm-.9 9.5c-.8 0-1.3-.3-1.7-.7l-.1-5.4c.4-.5.9-.8 1.7-.8 1.3 0 2.2 1.5 2.2 3.4.1 2-.8 3.5-2.1 3.5zM39.5 5l-4.3.9v3.4l4.3-.9V5zm-4.3 14.8h4.3V6.1h-4.3v13.7zM49 6.8c-1.1 0-1.8.5-2.2.9l-.1-.8h-3.8v13h4.3v-8.6c.5-.7 1.4-1.1 2.3-.7V6.9c-.2-.1-.3-.1-.5-.1zm4.2 8.5c0 3.1 2.4 5 6 5 1.7 0 2.9-.4 3.8-.8l-1-2.9c-.7.3-1.5.5-2.3.5-1.4 0-2.3-.8-2.3-1.9v-.1h6v-1.2c0-3.2-1.9-5.1-5-5.1-3.3.1-5.2 2.3-5.2 5.5zm5.1-3c1 0 1.7.6 1.7 1.8h-3.6c.1-1.2.9-1.8 1.9-1.8z" fill="#6772E5"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Stripe-style card element mockup -->
+            <div class="space-y-3">
+
+              <!-- Card number -->
+              <div>
+                <label class="block text-xs font-medium text-ink-secondary mb-1.5">Card number</label>
+                <div class="card-field-wrap">
+                  <input type="text" placeholder="1234  5678  9012  3456"
+                         class="stripe-field card-num pr-20" maxlength="19" />
+                  <!-- Card brand icons -->
+                  <div class="card-icon">
+                    <!-- Visa -->
+                    <svg width="32" height="20" viewBox="0 0 32 20" fill="none">
+                      <rect width="32" height="20" rx="3" fill="#1A1F71"/>
+                      <path d="M13.5 13.5H11.5L12.8 6.5H14.8L13.5 13.5Z" fill="white"/>
+                      <path d="M10.2 6.5L8.3 11.4L8.1 10.4L7.4 7.2C7.3 6.8 7 6.5 6.6 6.5H3.5V6.7C4.4 6.9 5.2 7.2 5.9 7.7L7.7 13.5H9.8L13 6.5H10.2Z" fill="white"/>
+                      <path d="M26.5 13.5H28.4L26.8 6.5H25.1C24.7 6.5 24.4 6.7 24.3 7.1L21.3 13.5H23.4L23.8 12.4H26.3L26.5 13.5ZM24.4 10.8L25.4 8.1L26 10.8H24.4Z" fill="white"/>
+                      <path d="M21 8.7C21 8.7 19.8 8.1 18.5 8.1C17.5 8.1 17 8.5 17 9C17 9.6 17.7 9.8 18.7 10.2C20.2 10.8 20.9 11.5 20.9 12.5C20.9 14 19.5 14.7 17.8 14.7C16.5 14.7 15.5 14.4 15.5 14.4L15.8 12.9C15.8 12.9 16.8 13.3 17.9 13.3C18.7 13.3 19.2 13 19.2 12.4C19.2 11.9 18.7 11.7 17.7 11.3C16.3 10.8 15.4 10.1 15.4 9C15.4 7.6 16.7 6.7 18.5 6.7C19.8 6.7 20.6 7 20.6 7L21 8.7Z" fill="white"/>
+                    </svg>
+                    <!-- Mastercard -->
+                    <svg width="28" height="20" viewBox="0 0 28 20" fill="none">
+                      <rect width="28" height="20" rx="3" fill="#252525"/>
+                      <circle cx="11" cy="10" r="6" fill="#EB001B"/>
+                      <circle cx="17" cy="10" r="6" fill="#F79E1B"/>
+                      <path d="M14 5.5A6 6 0 0 1 17 10a6 6 0 0 1-3 4.5A6 6 0 0 1 11 10a6 6 0 0 1 3-4.5Z" fill="#FF5F00"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Expiry + CVC -->
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-medium text-ink-secondary mb-1.5">Expiry date</label>
+                  <input type="text" placeholder="MM / YY" class="stripe-field" maxlength="7" />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-ink-secondary mb-1.5">CVC</label>
+                  <div class="card-field-wrap">
+                    <input type="text" placeholder="•••" class="stripe-field pr-10" maxlength="4" />
+                    <div class="card-icon">
+                      <svg class="w-5 h-5 text-ink-disabled" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor"/>
+                        <path d="M2 10h20" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cardholder name -->
+              <div>
+                <label class="block text-xs font-medium text-ink-secondary mb-1.5">Cardholder name</label>
+                <input type="text" placeholder="Name on card" class="stripe-field" />
+              </div>
+
+            </div>
+
+            <!-- Divider -->
+            <div class="border-t border-border-soft my-5"></div>
+
+            <!-- Pay now button — label triggers receipt view (CSS-only) -->
+            <label for="view-receipt" class="btn-pay cursor-pointer select-none">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+              </svg>
+              Pay €121.62 securely
+            </label>
+
+            <!-- Fine print -->
+            <p class="text-center text-[11px] text-ink-disabled mt-3 leading-relaxed">
+              By clicking Pay you agree to Crescendo's
+              <a href="#" class="underline underline-offset-2 hover:text-ink-muted transition-colors">Terms of Service</a>
+              and
+              <a href="#" class="underline underline-offset-2 hover:text-ink-muted transition-colors">Refund Policy</a>.
+            </p>
+          </div>
+
+        </div><!-- /left col -->
+
+
+        <!-- ── RIGHT — mini order summary ─────────────────────────────── -->
+        <div class="space-y-4">
+
+          <!-- Summary card -->
+          <div class="bg-surface-white rounded-2xl border border-border p-5 animate-fade-up-d2"
+               style="box-shadow:0 4px 12px rgba(0,0,0,.06);">
+
+            <h2 class="text-sm font-semibold text-ink mb-4 flex items-center gap-2">
+              <svg class="w-4 h-4 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 14.25l6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0c1.1.128 1.907 1.077 1.907 2.185Z"/>
+              </svg>
+              Order Summary
+            </h2>
+
+            <!-- Event snapshot -->
+            <div class="flex items-start gap-3 mb-4 pb-4 border-b border-border-soft">
+              <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center"
+                   style="background:#1e1b4b;">
+                <svg class="w-5 h-5 text-white/70" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"/>
+                </svg>
+              </div>
+              <div class="min-w-0">
+                <p class="text-sm font-semibold text-ink leading-snug">Music of the Spheres World Tour</p>
+                <p class="text-xs text-ink-muted mt-0.5">Coldplay</p>
+                <div class="flex items-center gap-1.5 mt-1.5">
+                  <svg class="w-3 h-3 text-ink-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
+                  </svg>
+                  <span class="text-xs text-ink-muted">14 Jun 2025</span>
+                  <span class="text-ink-disabled">·</span>
+                  <svg class="w-3 h-3 text-ink-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+                  </svg>
+                  <span class="text-xs text-ink-muted truncate">Wembley, London</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Price rows -->
+            <div class="divide-y divide-border-soft">
+              <div class="summary-row py-2">
+                <span class="text-ink-secondary">General Admission × 2</span>
+                <span class="font-medium text-ink">€98.00</span>
+              </div>
+              <div class="summary-row py-2">
+                <span class="text-ink-secondary">Booking fee × 2</span>
+                <span class="font-medium text-ink">€5.00</span>
+              </div>
+              <div class="summary-row py-2">
+                <span class="text-ink-secondary">VAT (19%)</span>
+                <span class="font-medium text-ink">€18.62</span>
+              </div>
+            </div>
+            <div class="summary-row total">
+              <span>Total</span>
+              <span class="text-brand">€121.62</span>
+            </div>
+          </div>
+
+          <!-- Guarantee -->
+          <div class="guarantee-badge animate-fade-up-d3">
+            <svg class="w-4 h-4 text-green-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+            </svg>
+            <div>
+              <p class="text-xs font-semibold text-green-800">Buyer Guarantee</p>
+              <p class="text-xs text-green-700 mt-0.5 leading-snug">Full refund if the event is cancelled. Tickets delivered instantly to your email.</p>
+            </div>
+          </div>
+
+          <!-- Support -->
+          <p class="text-center text-xs text-ink-disabled animate-fade-up-d4">
+            Need help?
+            <a href="#" class="text-brand hover:text-brand-hover underline underline-offset-2 ml-0.5 transition-colors duration-200">Contact support</a>
+          </p>
+
+        </div><!-- /right col -->
+
+      </div><!-- /grid -->
+    </main>
+  </div><!-- /page-payment -->
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       PAGE — ORDER CONFIRMATION / RECEIPT
+  ════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-receipt">
+
+    <!-- Step indicator — confirmation active -->
+    <div class="bg-surface-white border-b border-border-soft">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex items-center gap-2 max-w-xs mx-auto sm:max-w-sm">
+          <div class="step-dot done">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+          </div>
+          <span class="text-xs text-ink-muted mr-1 hidden sm:inline">Tickets</span>
+          <div class="step-line done"></div>
+          <div class="step-dot done">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+          </div>
+          <span class="text-xs text-ink-muted mr-1 hidden sm:inline">Payment</span>
+          <div class="step-line done"></div>
+          <div class="step-dot active">3</div>
+          <span class="text-xs text-brand font-semibold hidden sm:inline">Confirmation</span>
+        </div>
+      </div>
+    </div>
+
+    <main class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
+
+      <!-- ── Success header ──────────────────────────────────────────── -->
+      <div class="text-center mb-8 animate-receipt-reveal">
+        <!-- Check circle with confetti -->
+        <div class="relative inline-flex items-center justify-center mb-5">
+          <!-- Confetti dots -->
+          <span class="confetti-dot animate-confetti1" style="width:8px;height:8px;background:#4F46E5;top:-4px;left:10px;"></span>
+          <span class="confetti-dot animate-confetti2" style="width:6px;height:6px;background:#818CF8;top:0;right:8px;"></span>
+          <span class="confetti-dot animate-confetti3" style="width:5px;height:5px;background:#A5B4FC;top:8px;left:-4px;"></span>
+          <span class="confetti-dot animate-confetti4" style="width:7px;height:7px;background:#C7D2FE;top:-6px;right:16px;"></span>
+          <span class="confetti-dot animate-confetti5" style="width:5px;height:5px;background:#6366F1;top:4px;right:-4px;"></span>
+
+          <!-- Floating music notes -->
+          <span class="mnote animate-note1 text-brand/40 text-base" style="left:-18px;top:0;">♩</span>
+          <span class="mnote animate-note2 text-brand/40 text-sm" style="right:-16px;top:8px;">♪</span>
+
+          <!-- Check icon -->
+          <div class="w-20 h-20 rounded-full bg-brand-light border-2 border-brand/20 flex items-center justify-center animate-check-pop relative z-10"
+               style="box-shadow:0 0 0 8px rgba(79,70,229,0.07);">
+            <svg class="w-9 h-9 text-brand" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+            </svg>
+          </div>
+        </div>
+
+        <h1 class="font-display text-3xl lg:text-4xl text-ink tracking-tight mb-2">You're going!</h1>
+        <p class="text-sm text-ink-muted leading-relaxed max-w-sm mx-auto">
+          Payment confirmed. Your tickets have been sent to
+          <span class="font-semibold text-ink">alex@example.com</span>
+        </p>
+
+        <!-- Order ref pill -->
+        <div class="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full bg-surface-alt border border-border">
+          <span class="text-xs text-ink-muted">Order ref</span>
+          <span class="text-xs font-mono font-bold text-ink tracking-wider">CRS-2025-00847</span>
+          <button class="text-ink-muted hover:text-brand transition-colors duration-200" title="Copy">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+
+      <!-- ── TICKET RECEIPT CARD ──────────────────────────────────────── -->
+      <div class="receipt-card animate-receipt-reveal">
+
+        <!-- Hero banner -->
+        <div class="receipt-hero px-6 py-6 relative">
+          <!-- Subtle music note floaters in dark hero -->
+          <span class="mnote text-white/10 text-4xl" style="top:8px;right:24px;">♫</span>
+          <span class="mnote text-white/06 text-2xl" style="bottom:10px;left:16px;">♩</span>
+
+          <div class="flex items-start justify-between gap-4 relative z-10">
+            <div>
+              <p class="text-white/50 text-[10px] uppercase tracking-widest font-semibold mb-1.5">Confirmed · 14 Jun 2025</p>
+              <h2 class="font-display text-white text-2xl tracking-tight leading-tight">
+                Music of the Spheres<br/>World Tour
+              </h2>
+              <p class="text-white/60 text-sm mt-1.5">Coldplay</p>
+            </div>
+            <!-- Waveform icon -->
+            <div class="flex items-end gap-0.5 mt-1" style="height:32px">
+              <div class="wbar bg-white animate-bar1" style="height:38%;opacity:.4"></div>
+              <div class="wbar bg-white animate-bar2" style="height:68%;opacity:.5"></div>
+              <div class="wbar bg-white animate-bar3" style="height:100%;opacity:.6"></div>
+              <div class="wbar bg-white animate-bar4" style="height:62%;opacity:.5"></div>
+              <div class="wbar bg-white animate-bar5" style="height:34%;opacity:.4"></div>
+            </div>
+          </div>
+
+          <!-- Event meta row -->
+          <div class="flex flex-wrap items-center gap-4 mt-5 relative z-10">
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5"/>
+              </svg>
+              <span class="text-white/70 text-xs">Saturday, 14 June 2025</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+              </svg>
+              <span class="text-white/70 text-xs">Wembley Stadium, London, UK</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span class="text-white/70 text-xs">Doors open 6:30 PM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Perforation tear line -->
+        <div class="tear-line"></div>
+
+        <!-- Receipt body -->
+        <div class="px-6 py-5">
+
+          <!-- Tickets + QR row -->
+          <div class="flex items-start justify-between gap-6 mb-6">
+            <!-- Ticket details -->
+            <div class="flex-1 min-w-0">
+              <p class="text-[10px] uppercase tracking-widest font-semibold text-ink-muted mb-3">Your Tickets</p>
+
+              <!-- Ticket chip 1 -->
+              <div class="flex items-center gap-3 mb-2.5">
+                <div class="w-8 h-8 rounded-lg bg-brand-light border border-brand/20 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4 text-brand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a3 3 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-ink">General Admission</p>
+                  <p class="text-xs text-ink-muted">Standing floor · Ticket #01 of 02</p>
+                </div>
+              </div>
+
+              <!-- Ticket chip 2 -->
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-surface-alt border border-border flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4 text-ink-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a3 3 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-ink">General Admission</p>
+                  <p class="text-xs text-ink-muted">Standing floor · Ticket #02 of 02</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- QR code -->
+            <div class="flex flex-col items-center gap-1.5">
+              <div class="qr-placeholder">
+                <!-- SVG QR pattern placeholder -->
+                <svg viewBox="0 0 96 96" width="72" height="72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Top-left finder -->
+                  <rect x="8" y="8" width="24" height="24" rx="2" fill="#E5E7EB"/>
+                  <rect x="12" y="12" width="16" height="16" rx="1" fill="#9CA3AF"/>
+                  <rect x="16" y="16" width="8" height="8" rx="0.5" fill="#4B5563"/>
+                  <!-- Top-right finder -->
+                  <rect x="64" y="8" width="24" height="24" rx="2" fill="#E5E7EB"/>
+                  <rect x="68" y="12" width="16" height="16" rx="1" fill="#9CA3AF"/>
+                  <rect x="72" y="16" width="8" height="8" rx="0.5" fill="#4B5563"/>
+                  <!-- Bottom-left finder -->
+                  <rect x="8" y="64" width="24" height="24" rx="2" fill="#E5E7EB"/>
+                  <rect x="12" y="68" width="16" height="16" rx="1" fill="#9CA3AF"/>
+                  <rect x="16" y="72" width="8" height="8" rx="0.5" fill="#4B5563"/>
+                  <!-- Data dots -->
+                  <rect x="40" y="8"  width="6" height="6" rx="0.5" fill="#D1D5DB"/>
+                  <rect x="48" y="8"  width="6" height="6" rx="0.5" fill="#9CA3AF"/>
+                  <rect x="40" y="16" width="6" height="6" rx="0.5" fill="#6B7280"/>
+                  <rect x="8"  y="40" width="6" height="6" rx="0.5" fill="#9CA3AF"/>
+                  <rect x="16" y="40" width="6" height="6" rx="0.5" fill="#D1D5DB"/>
+                  <rect x="40" y="40" width="6" height="6" rx="0.5" fill="#6B7280"/>
+                  <rect x="48" y="40" width="6" height="6" rx="0.5" fill="#9CA3AF"/>
+                  <rect x="56" y="40" width="6" height="6" rx="0.5" fill="#D1D5DB"/>
+                  <rect x="64" y="40" width="6" height="6" rx="0.5" fill="#6B7280"/>
+                  <rect x="40" y="48" width="6" height="6" rx="0.5" fill="#D1D5DB"/>
+                  <rect x="56" y="48" width="6" height="6" rx="0.5" fill="#9CA3AF"/>
+                  <rect x="40" y="56" width="6" height="6" rx="0.5" fill="#6B7280"/>
+                  <rect x="48" y="56" width="6" height="6" rx="0.5" fill="#D1D5DB"/>
+                  <rect x="64" y="56" width="6" height="6" rx="0.5" fill="#9CA3AF"/>
+                  <rect x="72" y="48" width="6" height="6" rx="0.5" fill="#D1D5DB"/>
+                  <rect x="80" y="56" width="6" height="6" rx="0.5" fill="#6B7280"/>
+                </svg>
+              </div>
+              <p class="text-[10px] text-ink-muted text-center leading-tight">Scan at<br/>the gate</p>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div class="border-t border-border-soft mb-5"></div>
+
+          <!-- Payment breakdown -->
+          <p class="text-[10px] uppercase tracking-widest font-semibold text-ink-muted mb-3">Payment Summary</p>
+          <div>
+            <div class="receipt-row">
+              <span class="text-ink-secondary">General Admission × 2</span>
+              <span class="font-medium text-ink">€98.00</span>
+            </div>
+            <div class="receipt-row">
+              <span class="text-ink-secondary">Booking fee × 2</span>
+              <span class="font-medium text-ink">€5.00</span>
+            </div>
+            <div class="receipt-row">
+              <span class="text-ink-secondary">VAT (19%)</span>
+              <span class="font-medium text-ink">€18.62</span>
+            </div>
+            <div class="receipt-row" style="border-bottom:none;padding-top:0.75rem;margin-top:0.25rem;border-top:1.5px solid #EEF1F4;">
+              <span class="font-bold text-ink">Total paid</span>
+              <span class="font-bold text-brand text-base">€121.62</span>
+            </div>
+          </div>
+
+          <!-- Payment method row -->
+          <div class="mt-3 flex items-center gap-2 text-xs text-ink-muted">
+            <svg class="w-3.5 h-3.5 text-ink-disabled" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/>
+            </svg>
+            <span>Visa ending ···· 3456 · Charged 14 Jun 2025 via Stripe</span>
+          </div>
+        </div>
+
+        <!-- Tear line bottom -->
+        <div class="tear-line"></div>
+
+        <!-- Receipt footer -->
+        <div class="px-6 py-4 bg-surface-alt/50 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="text-center sm:text-left">
+            <p class="text-xs text-ink-muted">A copy has been sent to <span class="font-semibold text-ink">alex@example.com</span></p>
+          </div>
+          <!-- Get Receipt button -->
+          <label for="view-receipt"
+                 class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand text-white
+                        text-sm font-semibold cursor-pointer select-none
+                        hover:bg-brand-hover transition-colors duration-200"
+                 style="box-shadow:0 4px 14px rgba(79,70,229,.18);">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+            </svg>
+            Get Receipt
+          </label>
+        </div>
+
+      </div><!-- /receipt-card -->
+
+
+      <!-- ── Below receipt actions ───────────────────────────────────── -->
+      <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 animate-fade-up-d4">
+        <a href="#"
+           class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface-white border border-border
+                  text-sm font-medium text-ink-secondary hover:border-brand/30 hover:bg-brand-light hover:text-brand
+                  transition-all duration-200">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+          </svg>
+          Back to Artist
+        </a>
+        <a href="#"
+           class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface-white border border-border
+                  text-sm font-medium text-ink-secondary hover:border-brand/30 hover:bg-brand-light hover:text-brand
+                  transition-all duration-200">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+          </svg>
+          Share event
+        </a>
+      </div>
+
+    </main>
+  </div><!-- /page-receipt -->
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════════════════════════════════════ -->
+  <footer class="border-t border-border-soft bg-surface-white mt-12">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+
+        <a href="/" class="inline-flex items-center gap-2 shrink-0">
+          <div class="flex items-end gap-0.5" style="height:14px">
+            <div class="wbar bg-ink-disabled animate-bar1" style="height:35%;"></div>
+            <div class="wbar bg-ink-disabled animate-bar2" style="height:65%;"></div>
+            <div class="wbar bg-ink-disabled animate-bar3" style="height:100%;"></div>
+            <div class="wbar bg-ink-disabled animate-bar4" style="height:60%;"></div>
+            <div class="wbar bg-ink-disabled animate-bar5" style="height:30%;"></div>
+          </div>
+          <span class="font-display text-ink-disabled text-sm tracking-tight">Crescendo</span>
+        </a>
+
+        <nav class="flex items-center gap-4 text-xs text-ink-muted">
+          <a href="#" class="hover:text-ink transition-colors">Privacy</a>
+          <a href="#" class="hover:text-ink transition-colors">Terms</a>
+          <a href="#" class="hover:text-ink transition-colors">Refund Policy</a>
+          <a href="#" class="hover:text-ink transition-colors">Support</a>
+        </nav>
+
+        <p class="text-xs text-ink-disabled">&copy; 2025 Crescendo.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment — Crescendo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand:           '#4F46E5',
+            'brand-hover':   '#4338CA',
+            'brand-active':  '#3730A3',
+            'brand-light':   '#EEF2FF',
+            ink:             '#111827',
+            'ink-secondary': '#4B5563',
+            'ink-muted':     '#6B7280',
+            'ink-disabled':  '#9CA3AF',
+            surface:         '#FAF9F7',
+            'surface-white': '#FFFFFF',
+            'surface-alt':   '#F5F6F8',
+            border:          '#E5E7EB',
+            'border-soft':   '#EEF1F4',
+            'border-focus':  '#C7D2FE',
+          },
+          fontFamily: {
+            display: ['"DM Serif Display"', 'Georgia', 'serif'],
+            sans:    ['"DM Sans"', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            sm:         '0 1px 2px rgba(0,0,0,.04)',
+            md:         '0 4px 12px rgba(0,0,0,.06)',
+            lg:         '0 10px 30px rgba(0,0,0,.08)',
+            'brand-sm': '0 4px 14px rgba(79,70,229,.18)',
+          },
+          keyframes: {
+            'bar-bounce': {
+              '0%,100%': { transform: 'scaleY(0.3)' },
+              '50%':     { transform: 'scaleY(1)' },
+            },
+            'fade-up': {
+              '0%':   { opacity: '0', transform: 'translateY(18px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            'slide-in-left': {
+              '0%':   { opacity: '0', transform: 'translateX(-24px)' },
+              '100%': { opacity: '1', transform: 'translateX(0)' },
+            },
+            'receipt-reveal': {
+              '0%':   { opacity: '0', transform: 'translateY(28px) scale(0.97)' },
+              '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+            },
+            'check-pop': {
+              '0%':   { transform: 'scale(0)',   opacity: '0' },
+              '60%':  { transform: 'scale(1.15)', opacity: '1' },
+              '100%': { transform: 'scale(1)',   opacity: '1' },
+            },
+            'note-float': {
+              '0%':   { opacity: '0', transform: 'translateY(0) rotate(-8deg)' },
+              '30%':  { opacity: '0.55' },
+              '100%': { opacity: '0', transform: 'translateY(-52px) rotate(10deg)' },
+            },
+            'confetti-fall': {
+              '0%':   { transform: 'translateY(-10px) rotate(0deg)',  opacity: '1' },
+              '100%': { transform: 'translateY(60px) rotate(360deg)', opacity: '0' },
+            },
+          },
+          animation: {
+            'bar1':           'bar-bounce 1.1s ease-in-out 0s infinite',
+            'bar2':           'bar-bounce 1.1s ease-in-out 0.18s infinite',
+            'bar3':           'bar-bounce 1.1s ease-in-out 0.36s infinite',
+            'bar4':           'bar-bounce 1.1s ease-in-out 0.54s infinite',
+            'bar5':           'bar-bounce 1.1s ease-in-out 0.72s infinite',
+            'fade-up':        'fade-up 0.65s ease-out both',
+            'fade-up-d1':     'fade-up 0.65s ease-out 0.08s both',
+            'fade-up-d2':     'fade-up 0.65s ease-out 0.16s both',
+            'fade-up-d3':     'fade-up 0.65s ease-out 0.24s both',
+            'fade-up-d4':     'fade-up 0.65s ease-out 0.32s both',
+            'fade-up-d5':     'fade-up 0.65s ease-out 0.40s both',
+            'slide-left':     'slide-in-left 0.7s ease-out both',
+            'receipt-reveal': 'receipt-reveal 0.7s cubic-bezier(0.22,1,0.36,1) 0.1s both',
+            'check-pop':      'check-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.3s both',
+            'note1':          'note-float 3.2s ease-out infinite 0s',
+            'note2':          'note-float 3.2s ease-out infinite 1.1s',
+            'note3':          'note-float 3.2s ease-out infinite 2.2s',
+            'confetti1':      'confetti-fall 1.4s ease-in 0.4s both',
+            'confetti2':      'confetti-fall 1.6s ease-in 0.6s both',
+            'confetti3':      'confetti-fall 1.2s ease-in 0.8s both',
+            'confetti4':      'confetti-fall 1.5s ease-in 0.5s both',
+            'confetti5':      'confetti-fall 1.3s ease-in 0.7s both',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    /* ── Page background — same quiet dot-grid as Phase 1 ──────────────── */
+    body {
+      background-color: #FAF9F7;
+      background-image: radial-gradient(circle, #D1D5DB 1px, transparent 1px);
+      background-size: 26px 26px;
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+
+    /* ── Noise overlay (header) ─────────────────────────────────────────── */
+    .noise-overlay {
+      position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      background-size: 180px; opacity: 0.45;
+    }
+
+    /* ── Waveform bars (logo) ───────────────────────────────────────────── */
+    .wbar {
+      display: inline-block; width: 3px;
+      border-radius: 9999px; transform-origin: bottom center;
+    }
+
+    /* ── Step indicator — same system as Phase 1 ────────────────────────── */
+    .step-dot {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 600; flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+    .step-dot.done    { background:#EEF2FF; color:#4F46E5; border:1.5px solid #C7D2FE; }
+    .step-dot.active  { background:#4F46E5; color:#fff; box-shadow:0 0 0 4px rgba(79,70,229,0.15); }
+    .step-dot.pending { background:#F3F4F6; color:#9CA3AF; border:1.5px solid #E5E7EB; }
+    .step-line        { flex:1; height:1.5px; background:#E5E7EB; position:relative; overflow:hidden; }
+    .step-line.done::after { content:''; position:absolute; inset:0; background:#4F46E5; }
+
+    /* ── Stripe-style card field ────────────────────────────────────────── */
+    .stripe-field {
+      width: 100%;
+      padding: 0.65rem 0.875rem;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      color: #111827;
+      background: #FFFFFF;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+    .stripe-field::placeholder { color: #9CA3AF; }
+    .stripe-field:focus {
+      border-color: #C7D2FE;
+      box-shadow: 0 0 0 3px rgba(79,70,229,0.09);
+    }
+    /* simulated card number — mono feel */
+    .stripe-field.card-num { letter-spacing: 0.08em; }
+
+    /* ── Card brand icon slot ───────────────────────────────────────────── */
+    .card-field-wrap { position: relative; }
+    .card-field-wrap .card-icon {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      display: flex; gap: 4px; align-items: center;
+    }
+
+    /* ── Pay button ─────────────────────────────────────────────────────── */
+    .btn-pay {
+      width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 0.9rem 1.5rem;
+      border-radius: 14px;
+      background: #4F46E5;
+      color: #fff;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      border: none; cursor: pointer;
+      box-shadow: 0 4px 14px rgba(79,70,229,.22);
+      transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.15s ease;
+    }
+    .btn-pay:hover  { background:#4338CA; box-shadow:0 6px 20px rgba(79,70,229,.28); transform:translateY(-1px); }
+    .btn-pay:active { background:#3730A3; transform:translateY(0); }
+
+    /* ── Order mini-summary (right column) ─────────────────────────────── */
+    .summary-row {
+      display:flex; align-items:center; justify-content:space-between;
+      font-size:0.875rem; color:#4B5563; padding:0.45rem 0;
+    }
+    .summary-row.total {
+      font-size:1rem; font-weight:700; color:#111827;
+      border-top:1.5px solid #EEF1F4; padding-top:0.85rem; margin-top:0.4rem;
+    }
+
+    /* ── Tear / perforation line (receipt) ─────────────────────────────── */
+    .tear-line {
+      position:relative; height:1px;
+      background:transparent; border-top:2px dashed #E5E7EB;
+      margin:0 -1px;
+    }
+    .tear-line::before, .tear-line::after {
+      content:''; position:absolute; top:-9px;
+      width:16px; height:16px; border-radius:50%;
+      background:#FAF9F7; border:1px solid #E5E7EB;
+    }
+    .tear-line::before { left:-8px; }
+    .tear-line::after  { right:-8px; }
+
+    /* ── Receipt card ───────────────────────────────────────────────────── */
+    .receipt-card {
+      background:#FFFFFF; border:1px solid #E5E7EB;
+      border-radius:20px; overflow:hidden;
+      box-shadow:0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    /* ── Receipt hero ───────────────────────────────────────────────────── */
+    .receipt-hero {
+      background-color:#1e1b4b;
+      background-image:
+        radial-gradient(ellipse at 20% 50%, rgba(99,91,255,0.22) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 30%, rgba(79,70,229,0.14) 0%, transparent 55%);
+      position:relative; overflow:hidden;
+    }
+
+    /* ── QR code placeholder ────────────────────────────────────────────── */
+    .qr-placeholder {
+      width:96px; height:96px;
+      border:2px solid #E5E7EB; border-radius:12px;
+      background:#F5F6F8;
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0;
+    }
+
+    /* ── CSS-only view toggle (payment form ↔ receipt) ──────────────────── */
+    /* Hidden radio controls which "view" is shown */
+    #view-payment, #view-receipt { display:none; }
+
+    /* Default — show payment, hide receipt */
+    #view-payment:not(:checked) ~ .page-payment { display:block; }
+    #view-payment:not(:checked) ~ .page-receipt  { display:none; }
+
+    /* When receipt radio is checked — swap */
+    #view-receipt:checked ~ .page-payment { display:none; }
+    #view-receipt:checked ~ .page-receipt  { display:block; }
+
+    /* ── Confetti dots ──────────────────────────────────────────────────── */
+    .confetti-dot {
+      position:absolute; border-radius:50%; pointer-events:none;
+    }
+
+    /* ── Music note ─────────────────────────────────────────────────────── */
+    .mnote {
+      position:absolute; pointer-events:none; user-select:none; color:#4F46E5;
+    }
+
+    /* ── Guarantee badge ────────────────────────────────────────────────── */
+    .guarantee-badge {
+      display:flex; align-items:flex-start; gap:10px;
+      background:#F0FDF4; border:1px solid #BBF7D0;
+      border-radius:12px; padding:0.75rem 1rem;
+    }
+
+    /* ── Receipt row ────────────────────────────────────────────────────── */
+    .receipt-row {
+      display:flex; justify-content:space-between; align-items:baseline;
+      padding:0.55rem 0; font-size:0.8125rem;
+      border-bottom:1px solid #EEF1F4;
+    }
+    .receipt-row:last-child { border-bottom:none; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-ink">
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       CSS-ONLY VIEW TOGGLE RADIOS  (must be siblings of .page-* wrappers)
+  ════════════════════════════════════════════════════════════════════════════ -->
+  <input type="radio" name="view" id="view-payment" checked />
+  <input type="radio" name="view" id="view-receipt" />
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       HEADER
+  ════════════════════════════════════════════════════════════════════════════ -->
+  <header class="bg-[#1e1b4b] sticky top-0 z-50">
+    <div class="noise-overlay" style="border-radius:0;"></div>
+    <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse at 20% 50%,rgba(99,91,255,0.18) 0%,transparent 60%);"></div>
+
+    <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+
+      <!-- Back -->
+      <a href="#" class="inline-flex items-center gap-1.5 text-white/65 hover:text-white
+                         text-sm font-medium transition-colors duration-200 group animate-slide-left">
+        <svg class="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-0.5"
+             fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back
+      </a>
+
+      <!-- Logo -->
+      <div class="absolute left-1/2 -translate-x-1/2">
+        <a href="#" class="inline-flex items-center gap-2.5">
+          <div class="flex items-end gap-0.5" style="height:26px">
+            <div class="wbar bg-white animate-bar1" style="height:38%;opacity:.75"></div>
+            <div class="wbar bg-white animate-bar2" style="height:68%;opacity:.80"></div>
+            <div class="wbar bg-white animate-bar3" style="height:100%;opacity:.90"></div>
+            <div class="wbar bg-white animate-bar4" style="height:62%;opacity:.80"></div>
+            <div class="wbar bg-white animate-bar5" style="height:34%;opacity:.70"></div>
+          </div>
+          <span class="font-display text-white text-[1.6rem] tracking-tight">Crescendo</span>
+        </a>
+      </div>
+
+      <!-- Spacer -->
+      <div class="w-16"></div>
+    </div>
+  </header>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       STEP INDICATOR
+  ════════════════════════════════════════════════════════════════════════════ -->
+  <div class="bg-surface-white border-b border-border-soft">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex items-center gap-2 max-w-xs mx-auto sm:max-w-sm">
+        <!-- Step 1 — done -->
+        <div class="step-dot done">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <span class="text-xs text-ink-muted mr-1 hidden sm:inline">Tickets</span>
+        <div class="step-line done"></div>
+
+        <!-- Step 2 — active -->
+        <div class="step-dot active">2</div>
+        <span class="text-xs text-brand font-semibold mr-1 hidden sm:inline">Payment</span>
+        <div class="step-line"></div>
+
+        <!-- Step 3 — pending -->
+        <div class="step-dot pending">3</div>
+        <span class="text-xs text-ink-disabled hidden sm:inline">Confirmation</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       PAGE — PAYMENT FORM
+  ════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-payment">
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
+
+      <!-- Page title -->
+      <div class="mb-8 animate-fade-up">
+        <h1 class="font-display text-3xl lg:text-4xl text-ink tracking-tight">Secure Checkout</h1>
+        <p class="text-sm text-ink-muted mt-1">Complete your purchase below. Your card details are never stored.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
+
+        <!-- ── LEFT — Stripe payment form ──────────────────────────────── -->
+        <div class="space-y-5">
+
+          <!-- Contact card -->
+          <div class="bg-surface-white rounded-2xl border border-border p-6 animate-fade-up-d1"
+               style="box-shadow:0 4px 12px rgba(0,0,0,.06);">
+            <h2 class="text-xs font-semibold text-ink-muted uppercase tracking-widest mb-4">Contact Info</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-ink-secondary mb-1.5">First name</label>
+                <input type="text" placeholder="Alex" class="stripe-field" />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-ink-secondary mb-1.5">Last name</label>
+                <input type="text" placeholder="Johnson" class="stripe-field" />
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-medium text-ink-secondary mb-1.5">Email address</label>
+                <input type="email" placeholder="alex@example.com" class="stripe-field" />
+                <p class="text-[11px] text-ink-muted mt-1.5">Your tickets will be sent to this address.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stripe payment card -->
+          <div class="bg-surface-white rounded-2xl border border-border p-6 animate-fade-up-d2"
+               style="box-shadow:0 4px 12px rgba(0,0,0,.06);">
+
+            <!-- Section heading + Stripe badge -->
+            <div class="flex items-center justify-between mb-5">
+              <h2 class="text-xs font-semibold text-ink-muted uppercase tracking-widest">Payment</h2>
+              <!-- Stripe logo -->
+              <div class="flex items-center gap-1.5 bg-surface-alt border border-border rounded-lg px-2.5 py-1.5">
+                <svg class="w-3.5 h-3.5 text-ink-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+                </svg>
+                <span class="text-[11px] text-ink-muted font-medium">Secured by</span>
+                <!-- Stripe wordmark -->
+                <svg height="13" viewBox="0 0 60 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5.5 10.2c0-.8.7-1.1 1.8-1.1 1.6 0 3.6.5 5.2 1.4V6.3C10.8 5.7 9 5.4 7.3 5.4 3.5 5.4 1 7.4 1 10.4c0 4.6 6.4 3.9 6.4 5.9 0 .9-.8 1.2-2 1.2-1.7 0-3.9-.7-5.6-1.7v4.2c1.9.8 3.8 1.2 5.6 1.2 3.9 0 6.6-1.9 6.6-5 0-5-6.5-4.1-6.5-6zm14.7-9.1L16 2l-.1 13.5c0 2.5 1.9 4.3 4.4 4.3 1.4 0 2.4-.2 3-.6v-3.4c-.5.2-3.2.9-3.2-1.4V9.7h3.2V6.1h-3.2l.1-5zM30 6.8c-1.4 0-2.3.6-2.8 1.1l-.2-1h-3.8v19l4.3-.9.1-4.6c.5.4 1.3.9 2.5.9 2.5 0 4.8-2 4.8-6.3-.1-4-2.4-6.2-4.9-6.2zm-.9 9.5c-.8 0-1.3-.3-1.7-.7l-.1-5.4c.4-.5.9-.8 1.7-.8 1.3 0 2.2 1.5 2.2 3.4.1 2-.8 3.5-2.1 3.5zM39.5 5l-4.3.9v3.4l4.3-.9V5zm-4.3 14.8h4.3V6.1h-4.3v13.7zM49 6.8c-1.1 0-1.8.5-2.2.9l-.1-.8h-3.8v13h4.3v-8.6c.5-.7 1.4-1.1 2.3-.7V6.9c-.2-.1-.3-.1-.5-.1zm4.2 8.5c0 3.1 2.4 5 6 5 1.7 0 2.9-.4 3.8-.8l-1-2.9c-.7.3-1.5.5-2.3.5-1.4 0-2.3-.8-2.3-1.9v-.1h6v-1.2c0-3.2-1.9-5.1-5-5.1-3.3.1-5.2 2.3-5.2 5.5zm5.1-3c1 0 1.7.6 1.7 1.8h-3.6c.1-1.2.9-1.8 1.9-1.8z" fill="#6772E5"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Stripe-style card element mockup -->
+            <div class="space-y-3">
+
+              <!-- Card number -->
+              <div>
+                <label class="block text-xs font-medium text-ink-secondary mb-1.5">Card number</label>
+                <div class="card-field-wrap">
+                  <input type="text" placeholder="1234  5678  9012  3456"
+                         class="stripe-field card-num pr-20" maxlength="19" />
+                  <!-- Card brand icons -->
+                  <div class="card-icon">
+                    <!-- Visa -->
+                    <svg width="32" height="20" viewBox="0 0 32 20" fill="none">
+                      <rect width="32" height="20" rx="3" fill="#1A1F71"/>
+                      <path d="M13.5 13.5H11.5L12.8 6.5H14.8L13.5 13.5Z" fill="white"/>
+                      <path d="M10.2 6.5L8.3 11.4L8.1 10.4L7.4 7.2C7.3 6.8 7 6.5 6.6 6.5H3.5V6.7C4.4 6.9 5.2 7.2 5.9 7.7L7.7 13.5H9.8L13 6.5H10.2Z" fill="white"/>
+                      <path d="M26.5 13.5H28.4L26.8 6.5H25.1C24.7 6.5 24.4 6.7 24.3 7.1L21.3 13.5H23.4L23.8 12.4H26.3L26.5 13.5ZM24.4 10.8L25.4 8.1L26 10.8H24.4Z" fill="white"/>
+                      <path d="M21 8.7C21 8.7 19.8 8.1 18.5 8.1C17.5 8.1 17 8.5 17 9C17 9.6 17.7 9.8 18.7 10.2C20.2 10.8 20.9 11.5 20.9 12.5C20.9 14 19.5 14.7 17.8 14.7C16.5 14.7 15.5 14.4 15.5 14.4L15.8 12.9C15.8 12.9 16.8 13.3 17.9 13.3C18.7 13.3 19.2 13 19.2 12.4C19.2 11.9 18.7 11.7 17.7 11.3C16.3 10.8 15.4 10.1 15.4 9C15.4 7.6 16.7 6.7 18.5 6.7C19.8 6.7 20.6 7 20.6 7L21 8.7Z" fill="white"/>
+                    </svg>
+                    <!-- Mastercard -->
+                    <svg width="28" height="20" viewBox="0 0 28 20" fill="none">
+                      <rect width="28" height="20" rx="3" fill="#252525"/>
+                      <circle cx="11" cy="10" r="6" fill="#EB001B"/>
+                      <circle cx="17" cy="10" r="6" fill="#F79E1B"/>
+                      <path d="M14 5.5A6 6 0 0 1 17 10a6 6 0 0 1-3 4.5A6 6 0 0 1 11 10a6 6 0 0 1 3-4.5Z" fill="#FF5F00"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Expiry + CVC -->
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-medium text-ink-secondary mb-1.5">Expiry date</label>
+                  <input type="text" placeholder="MM / YY" class="stripe-field" maxlength="7" />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-ink-secondary mb-1.5">CVC</label>
+                  <div class="card-field-wrap">
+                    <input type="text" placeholder="•••" class="stripe-field pr-10" maxlength="4" />
+                    <div class="card-icon">
+                      <svg class="w-5 h-5 text-ink-disabled" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor"/>
+                        <path d="M2 10h20" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cardholder name -->
+              <div>
+                <label class="block text-xs font-medium text-ink-secondary mb-1.5">Cardholder name</label>
+                <input type="text" placeholder="Name on card" class="stripe-field" />
+              </div>
+
+            </div>
+
+            <!-- Divider -->
+            <div class="border-t border-border-soft my-5"></div>
+
+            <!-- Pay now button — label triggers receipt view (CSS-only) -->
+            <label for="view-receipt" class="btn-pay cursor-pointer select-none">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+              </svg>
+              Pay €121.62 securely
+            </label>
+
+            <!-- Fine print -->
+            <p class="text-center text-[11px] text-ink-disabled mt-3 leading-relaxed">
+              By clicking Pay you agree to Crescendo's
+              <a href="#" class="underline underline-offset-2 hover:text-ink-muted transition-colors">Terms of Service</a>
+              and
+              <a href="#" class="underline underline-offset-2 hover:text-ink-muted transition-colors">Refund Policy</a>.
+            </p>
+          </div>
+
+        </div><!-- /left col -->
+
+
+        <!-- ── RIGHT — mini order summary ─────────────────────────────── -->
+        <div class="space-y-4">
+
+          <!-- Summary card -->
+          <div class="bg-surface-white rounded-2xl border border-border p-5 animate-fade-up-d2"
+               style="box-shadow:0 4px 12px rgba(0,0,0,.06);">
+
+            <h2 class="text-sm font-semibold text-ink mb-4 flex items-center gap-2">
+              <svg class="w-4 h-4 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 14.25l6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0c1.1.128 1.907 1.077 1.907 2.185Z"/>
+              </svg>
+              Order Summary
+            </h2>
+
+            <!-- Event snapshot -->
+            <div class="flex items-start gap-3 mb-4 pb-4 border-b border-border-soft">
+              <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center"
+                   style="background:#1e1b4b;">
+                <svg class="w-5 h-5 text-white/70" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"/>
+                </svg>
+              </div>
+              <div class="min-w-0">
+                <p class="text-sm font-semibold text-ink leading-snug">Music of the Spheres World Tour</p>
+                <p class="text-xs text-ink-muted mt-0.5">Coldplay</p>
+                <div class="flex items-center gap-1.5 mt-1.5">
+                  <svg class="w-3 h-3 text-ink-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
+                  </svg>
+                  <span class="text-xs text-ink-muted">14 Jun 2025</span>
+                  <span class="text-ink-disabled">·</span>
+                  <svg class="w-3 h-3 text-ink-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+                  </svg>
+                  <span class="text-xs text-ink-muted truncate">Wembley, London</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Price rows -->
+            <div class="divide-y divide-border-soft">
+              <div class="summary-row py-2">
+                <span class="text-ink-secondary">General Admission × 2</span>
+                <span class="font-medium text-ink">€98.00</span>
+              </div>
+              <div class="summary-row py-2">
+                <span class="text-ink-secondary">Booking fee × 2</span>
+                <span class="font-medium text-ink">€5.00</span>
+              </div>
+              <div class="summary-row py-2">
+                <span class="text-ink-secondary">VAT (19%)</span>
+                <span class="font-medium text-ink">€18.62</span>
+              </div>
+            </div>
+            <div class="summary-row total">
+              <span>Total</span>
+              <span class="text-brand">€121.62</span>
+            </div>
+          </div>
+
+          <!-- Guarantee -->
+          <div class="guarantee-badge animate-fade-up-d3">
+            <svg class="w-4 h-4 text-green-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+            </svg>
+            <div>
+              <p class="text-xs font-semibold text-green-800">Buyer Guarantee</p>
+              <p class="text-xs text-green-700 mt-0.5 leading-snug">Full refund if the event is cancelled. Tickets delivered instantly to your email.</p>
+            </div>
+          </div>
+
+          <!-- Support -->
+          <p class="text-center text-xs text-ink-disabled animate-fade-up-d4">
+            Need help?
+            <a href="#" class="text-brand hover:text-brand-hover underline underline-offset-2 ml-0.5 transition-colors duration-200">Contact support</a>
+          </p>
+
+        </div><!-- /right col -->
+
+      </div><!-- /grid -->
+    </main>
+  </div><!-- /page-payment -->
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       PAGE — ORDER CONFIRMATION / RECEIPT
+  ════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-receipt">
+
+    <!-- Step indicator — confirmation active -->
+    <div class="bg-surface-white border-b border-border-soft">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex items-center gap-2 max-w-xs mx-auto sm:max-w-sm">
+          <div class="step-dot done">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+          </div>
+          <span class="text-xs text-ink-muted mr-1 hidden sm:inline">Tickets</span>
+          <div class="step-line done"></div>
+          <div class="step-dot done">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+          </div>
+          <span class="text-xs text-ink-muted mr-1 hidden sm:inline">Payment</span>
+          <div class="step-line done"></div>
+          <div class="step-dot active">3</div>
+          <span class="text-xs text-brand font-semibold hidden sm:inline">Confirmation</span>
+        </div>
+      </div>
+    </div>
+
+    <main class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
+
+      <!-- ── Success header ──────────────────────────────────────────── -->
+      <div class="text-center mb-8 animate-receipt-reveal">
+        <!-- Check circle with confetti -->
+        <div class="relative inline-flex items-center justify-center mb-5">
+          <!-- Confetti dots -->
+          <span class="confetti-dot animate-confetti1" style="width:8px;height:8px;background:#4F46E5;top:-4px;left:10px;"></span>
+          <span class="confetti-dot animate-confetti2" style="width:6px;height:6px;background:#818CF8;top:0;right:8px;"></span>
+          <span class="confetti-dot animate-confetti3" style="width:5px;height:5px;background:#A5B4FC;top:8px;left:-4px;"></span>
+          <span class="confetti-dot animate-confetti4" style="width:7px;height:7px;background:#C7D2FE;top:-6px;right:16px;"></span>
+          <span class="confetti-dot animate-confetti5" style="width:5px;height:5px;background:#6366F1;top:4px;right:-4px;"></span>
+
+          <!-- Floating music notes -->
+          <span class="mnote animate-note1 text-brand/40 text-base" style="left:-18px;top:0;">♩</span>
+          <span class="mnote animate-note2 text-brand/40 text-sm" style="right:-16px;top:8px;">♪</span>
+
+          <!-- Check icon -->
+          <div class="w-20 h-20 rounded-full bg-brand-light border-2 border-brand/20 flex items-center justify-center animate-check-pop relative z-10"
+               style="box-shadow:0 0 0 8px rgba(79,70,229,0.07);">
+            <svg class="w-9 h-9 text-brand" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+            </svg>
+          </div>
+        </div>
+
+        <h1 class="font-display text-3xl lg:text-4xl text-ink tracking-tight mb-2">You're going!</h1>
+        <p class="text-sm text-ink-muted leading-relaxed max-w-sm mx-auto">
+          Payment confirmed. Your tickets have been sent to
+          <span class="font-semibold text-ink">alex@example.com</span>
+        </p>
+
+        <!-- Order ref pill -->
+        <div class="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full bg-surface-alt border border-border">
+          <span class="text-xs text-ink-muted">Order ref</span>
+          <span class="text-xs font-mono font-bold text-ink tracking-wider">CRS-2025-00847</span>
+          <button class="text-ink-muted hover:text-brand transition-colors duration-200" title="Copy">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+
+      <!-- ── TICKET RECEIPT CARD ──────────────────────────────────────── -->
+      <div class="receipt-card animate-receipt-reveal">
+
+        <!-- Hero banner -->
+        <div class="receipt-hero px-6 py-6 relative">
+          <!-- Subtle music note floaters in dark hero -->
+          <span class="mnote text-white/10 text-4xl" style="top:8px;right:24px;">♫</span>
+          <span class="mnote text-white/06 text-2xl" style="bottom:10px;left:16px;">♩</span>
+
+          <div class="flex items-start justify-between gap-4 relative z-10">
+            <div>
+              <p class="text-white/50 text-[10px] uppercase tracking-widest font-semibold mb-1.5">Confirmed · 14 Jun 2025</p>
+              <h2 class="font-display text-white text-2xl tracking-tight leading-tight">
+                Music of the Spheres<br/>World Tour
+              </h2>
+              <p class="text-white/60 text-sm mt-1.5">Coldplay</p>
+            </div>
+            <!-- Waveform icon -->
+            <div class="flex items-end gap-0.5 mt-1" style="height:32px">
+              <div class="wbar bg-white animate-bar1" style="height:38%;opacity:.4"></div>
+              <div class="wbar bg-white animate-bar2" style="height:68%;opacity:.5"></div>
+              <div class="wbar bg-white animate-bar3" style="height:100%;opacity:.6"></div>
+              <div class="wbar bg-white animate-bar4" style="height:62%;opacity:.5"></div>
+              <div class="wbar bg-white animate-bar5" style="height:34%;opacity:.4"></div>
+            </div>
+          </div>
+
+          <!-- Event meta row -->
+          <div class="flex flex-wrap items-center gap-4 mt-5 relative z-10">
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5"/>
+              </svg>
+              <span class="text-white/70 text-xs">Saturday, 14 June 2025</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+              </svg>
+              <span class="text-white/70 text-xs">Wembley Stadium, London, UK</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span class="text-white/70 text-xs">Doors open 6:30 PM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Perforation tear line -->
+        <div class="tear-line"></div>
+
+        <!-- Receipt body -->
+        <div class="px-6 py-5">
+
+          <!-- Tickets + QR row -->
+          <div class="flex items-start justify-between gap-6 mb-6">
+            <!-- Ticket details -->
+            <div class="flex-1 min-w-0">
+              <p class="text-[10px] uppercase tracking-widest font-semibold text-ink-muted mb-3">Your Tickets</p>
+
+              <!-- Ticket chip 1 -->
+              <div class="flex items-center gap-3 mb-2.5">
+                <div class="w-8 h-8 rounded-lg bg-brand-light border border-brand/20 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4 text-brand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a3 3 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-ink">General Admission</p>
+                  <p class="text-xs text-ink-muted">Standing floor · Ticket #01 of 02</p>
+                </div>
+              </div>
+
+              <!-- Ticket chip 2 -->
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-surface-alt border border-border flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4 text-ink-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a3 3 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-ink">General Admission</p>
+                  <p class="text-xs text-ink-muted">Standing floor · Ticket #02 of 02</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- QR code -->
+            <div class="flex flex-col items-center gap-1.5">
+              <div class="qr-placeholder">
+                <!-- SVG QR pattern placeholder -->
+                <svg viewBox="0 0 96 96" width="72" height="72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Top-left finder -->
+                  <rect x="8" y="8" width="24" height="24" rx="2" fill="#E5E7EB"/>
+                  <rect x="12" y="12" width="16" height="16" rx="1" fill="#9CA3AF"/>
+                  <rect x="16" y="16" width="8" height="8" rx="0.5" fill="#4B5563"/>
+                  <!-- Top-right finder -->
+                  <rect x="64" y="8" width="24" height="24" rx="2" fill="#E5E7EB"/>
+                  <rect x="68" y="12" width="16" height="16" rx="1" fill="#9CA3AF"/>
+                  <rect x="72" y="16" width="8" height="8" rx="0.5" fill="#4B5563"/>
+                  <!-- Bottom-left finder -->
+                  <rect x="8" y="64" width="24" height="24" rx="2" fill="#E5E7EB"/>
+                  <rect x="12" y="68" width="16" height="16" rx="1" fill="#9CA3AF"/>
+                  <rect x="16" y="72" width="8" height="8" rx="0.5" fill="#4B5563"/>
+                  <!-- Data dots -->
+                  <rect x="40" y="8"  width="6" height="6" rx="0.5" fill="#D1D5DB"/>
+                  <rect x="48" y="8"  width="6" height="6" rx="0.5" fill="#9CA3AF"/>
+                  <rect x="40" y="16" width="6" height="6" rx="0.5" fill="#6B7280"/>
+                  <rect x="8"  y="40" width="6" height="6" rx="0.5" fill="#9CA3AF"/>
+                  <rect x="16" y="40" width="6" height="6" rx="0.5" fill="#D1D5DB"/>
+                  <rect x="40" y="40" width="6" height="6" rx="0.5" fill="#6B7280"/>
+                  <rect x="48" y="40" width="6" height="6" rx="0.5" fill="#9CA3AF"/>
+                  <rect x="56" y="40" width="6" height="6" rx="0.5" fill="#D1D5DB"/>
+                  <rect x="64" y="40" width="6" height="6" rx="0.5" fill="#6B7280"/>
+                  <rect x="40" y="48" width="6" height="6" rx="0.5" fill="#D1D5DB"/>
+                  <rect x="56" y="48" width="6" height="6" rx="0.5" fill="#9CA3AF"/>
+                  <rect x="40" y="56" width="6" height="6" rx="0.5" fill="#6B7280"/>
+                  <rect x="48" y="56" width="6" height="6" rx="0.5" fill="#D1D5DB"/>
+                  <rect x="64" y="56" width="6" height="6" rx="0.5" fill="#9CA3AF"/>
+                  <rect x="72" y="48" width="6" height="6" rx="0.5" fill="#D1D5DB"/>
+                  <rect x="80" y="56" width="6" height="6" rx="0.5" fill="#6B7280"/>
+                </svg>
+              </div>
+              <p class="text-[10px] text-ink-muted text-center leading-tight">Scan at<br/>the gate</p>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div class="border-t border-border-soft mb-5"></div>
+
+          <!-- Payment breakdown -->
+          <p class="text-[10px] uppercase tracking-widest font-semibold text-ink-muted mb-3">Payment Summary</p>
+          <div>
+            <div class="receipt-row">
+              <span class="text-ink-secondary">General Admission × 2</span>
+              <span class="font-medium text-ink">€98.00</span>
+            </div>
+            <div class="receipt-row">
+              <span class="text-ink-secondary">Booking fee × 2</span>
+              <span class="font-medium text-ink">€5.00</span>
+            </div>
+            <div class="receipt-row">
+              <span class="text-ink-secondary">VAT (19%)</span>
+              <span class="font-medium text-ink">€18.62</span>
+            </div>
+            <div class="receipt-row" style="border-bottom:none;padding-top:0.75rem;margin-top:0.25rem;border-top:1.5px solid #EEF1F4;">
+              <span class="font-bold text-ink">Total paid</span>
+              <span class="font-bold text-brand text-base">€121.62</span>
+            </div>
+          </div>
+
+          <!-- Payment method row -->
+          <div class="mt-3 flex items-center gap-2 text-xs text-ink-muted">
+            <svg class="w-3.5 h-3.5 text-ink-disabled" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/>
+            </svg>
+            <span>Visa ending ···· 3456 · Charged 14 Jun 2025 via Stripe</span>
+          </div>
+        </div>
+
+        <!-- Tear line bottom -->
+        <div class="tear-line"></div>
+
+        <!-- Receipt footer -->
+        <div class="px-6 py-4 bg-surface-alt/50 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="text-center sm:text-left">
+            <p class="text-xs text-ink-muted">A copy has been sent to <span class="font-semibold text-ink">alex@example.com</span></p>
+          </div>
+          <!-- Get Receipt button -->
+          <label for="view-receipt"
+                 class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand text-white
+                        text-sm font-semibold cursor-pointer select-none
+                        hover:bg-brand-hover transition-colors duration-200"
+                 style="box-shadow:0 4px 14px rgba(79,70,229,.18);">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+            </svg>
+            Get Receipt
+          </label>
+        </div>
+
+      </div><!-- /receipt-card -->
+
+
+      <!-- ── Below receipt actions ───────────────────────────────────── -->
+      <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 animate-fade-up-d4">
+        <a href="#"
+           class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface-white border border-border
+                  text-sm font-medium text-ink-secondary hover:border-brand/30 hover:bg-brand-light hover:text-brand
+                  transition-all duration-200">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+          </svg>
+          Back to Artist
+        </a>
+        <a href="#"
+           class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface-white border border-border
+                  text-sm font-medium text-ink-secondary hover:border-brand/30 hover:bg-brand-light hover:text-brand
+                  transition-all duration-200">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+          </svg>
+          Share event
+        </a>
+      </div>
+
+    </main>
+  </div><!-- /page-receipt -->
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════════════════════════════════════ -->
+  <footer class="border-t border-border-soft bg-surface-white mt-12">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+
+        <a href="/" class="inline-flex items-center gap-2 shrink-0">
+          <div class="flex items-end gap-0.5" style="height:14px">
+            <div class="wbar bg-ink-disabled animate-bar1" style="height:35%;"></div>
+            <div class="wbar bg-ink-disabled animate-bar2" style="height:65%;"></div>
+            <div class="wbar bg-ink-disabled animate-bar3" style="height:100%;"></div>
+            <div class="wbar bg-ink-disabled animate-bar4" style="height:60%;"></div>
+            <div class="wbar bg-ink-disabled animate-bar5" style="height:30%;"></div>
+          </div>
+          <span class="font-display text-ink-disabled text-sm tracking-tight">Crescendo</span>
+        </a>
+
+        <nav class="flex items-center gap-4 text-xs text-ink-muted">
+          <a href="#" class="hover:text-ink transition-colors">Privacy</a>
+          <a href="#" class="hover:text-ink transition-colors">Terms</a>
+          <a href="#" class="hover:text-ink transition-colors">Refund Policy</a>
+          <a href="#" class="hover:text-ink transition-colors">Support</a>
+        </nav>
+
+        <p class="text-xs text-ink-disabled">&copy; 2025 Crescendo.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

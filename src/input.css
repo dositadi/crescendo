@@ -178,6 +178,8 @@
 /* ─── Base styles ─────────────────────────────────────────────────────────── */
 body {
   background-color: theme(--color-surface);   /* #FAF9F7 */
+  background-image: radial-gradient(circle, #D1D5DB 1px, transparent 1px);
+  background-size: 26px 26px;
 }
 
 /* ── Card ───────────────────────────────────────────────────────────── */
@@ -220,6 +222,14 @@ body {
 .icon-ring::after {
   animation-delay: 1.2s;
 }
+
+ /* ── Stagger animations ───────────────────────────────────────────── */
+.ph1-d1 { animation: fade-up 0.55s ease-out 0.05s both; }
+.ph1-d2 { animation: fade-up 0.55s ease-out 0.13s both; }
+.ph1-d3 { animation: fade-up 0.55s ease-out 0.21s both; }
+.ph1-d4 { animation: fade-up 0.55s ease-out 0.29s both; }
+.ph1-d5 { animation: fade-up 0.55s ease-out 0.37s both; }
+.ph1-d6 { animation: fade-up 0.55s ease-out 0.45s both; }
 
 .icon-bg {
   width: 64px;
@@ -322,6 +332,190 @@ body {
     radial-gradient(ellipse at 80% 30%, rgba(79,70,229,0.14) 0%, transparent 55%);
 }
 
+
+/* ── Step indicator ───────────────────────────────────────────────── */
+.step-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+.step-dot.active {
+  background: #4F46E5;
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(79,70,229,0.15);
+}
+.step-dot.done {
+  background: #EEF2FF;
+  color: #4F46E5;
+  border: 1.5px solid #C7D2FE;
+}
+.step-dot.pending {
+  background: #F3F4F6;
+  color: #9CA3AF;
+  border: 1.5px solid #E5E7EB;
+}
+.step-line {
+  flex: 1;
+  height: 1.5px;
+  background: #E5E7EB;
+  position: relative;
+  overflow: hidden;
+}
+.step-line.done::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #4F46E5;
+}
+
+/* ── Ticket card ──────────────────────────────────────────────────── */
+.ticket-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+/* Hero banner inside the ticket — dark panel */
+.ticket-hero {
+  background-color: #1e1b4b;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(99,91,255,0.22) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 30%, rgba(79,70,229,0.14) 0%, transparent 55%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Tear / perforation line ──────────────────────────────────────── */
+.tear-line {
+  position: relative;
+  height: 1px;
+  background: transparent;
+  border-top: 2px dashed #E5E7EB;
+  margin: 0 -1px; /* bleed to card edge */
+}
+/* The two half-circle notches at each end */
+.tear-line::before,
+.tear-line::after {
+  content: '';
+  position: absolute;
+  top: -9px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #FAF9F7;
+  border: 1px solid #E5E7EB;
+}
+.tear-line::before { left: -8px; }
+.tear-line::after  { right: -8px; }
+
+/* ── Ticket type selector ─────────────────────────────────────────── */
+.ticket-type-radio { display: none; }
+
+.ticket-type-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 1.5px solid #E5E7EB;
+  background: #FAFAFA;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  position: relative;
+}
+.ticket-type-label:hover {
+  border-color: #C7D2FE;
+  background: #F5F7FF;
+}
+.ticket-type-radio:checked + .ticket-type-label {
+  border-color: #4F46E5;
+  background: #EEF2FF;
+}
+/* Checkmark badge on selected */
+.ticket-type-radio:checked + .ticket-type-label::after {
+  content: '✓';
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #4F46E5;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 18px;
+  text-align: center;
+}
+
+/* ── Quantity stepper ─────────────────────────────────────────────── */
+.qty-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1.5px solid #E5E7EB;
+  background: #FFFFFF;
+  color: #4B5563;
+  font-size: 1.1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  user-select: none;
+}
+.qty-btn:hover {
+  border-color: #C7D2FE;
+  color: #4F46E5;
+  background: #EEF2FF;
+}
+
+/* ── Order summary rows ───────────────────────────────────────────── */
+.summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: #4B5563;
+  padding: 0.45rem 0;
+}
+.summary-row.total {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111827;
+  border-top: 1.5px solid #EEF1F4;
+  padding-top: 0.85rem;
+  margin-top: 0.4rem;
+}
+
+/* ── Guarantee badge ──────────────────────────────────────────────── */
+.guarantee-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+}
+
+
 /* ── "Now playing" ticker dot ────────────────────────────────── */
 .live-dot {
   width: 7px; height: 7px;
@@ -337,6 +531,11 @@ body {
   -ms-overflow-style: none;
 }
 .pill-scroll::-webkit-scrollbar { display: none; }
+
+/* ── Scrollbar ────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 3px; }
 
 /* ── Search bar focus ────────────────────────────────────────── */
 .search-input:focus {

@@ -100,14 +100,11 @@ func (a *ArtistDetail) detailPageFuncMap() template.FuncMap {
 			out := make(map[string][]string)
 
 			for _, key := range keys {
-				if len(relations[key]) > 3 {
-					sl := relations[key][0:3]
-					//out[key] = sl
-					if len(sl) > 3 {
-						out[key] = sl[:3]
-					} else {
-						out[key] = sl
-					}
+				if len(out) > 2 {
+					break
+				}
+				if len(relations[key]) >= 2 {
+					out[key] = relations[key][0:2]
 					break
 				} else {
 					out[key] = relations[key][:]

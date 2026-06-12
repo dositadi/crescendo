@@ -29,11 +29,18 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 	artistInfo := a.client.GetByIdKey()[id]
 
 	data := struct {
-		HomeUrl, ArtistDetailUrl, AllEventsPageUrl string
-		ArtistInfo                                 artistapi.ArtistInfo
-		AllArtists                                 map[int]artistapi.ArtistInfo
-		JsObject                                   template.JS
+		HomeUrl, ArtistDetailUrl, AllEventsPageUrl, TicketUrl, PathUrl string
+		ArtistInfo                                                     artistapi.ArtistInfo
+		AllArtists                                                     map[int]artistapi.ArtistInfo
+		JsObject                                                       template.JS
+		ArtistIdKey, DateKey, PathKey, LocationKey                     string
 	}{
+		LocationKey:      utils.LOCATION_KEY,
+		PathKey:          utils.PATH_KEY,
+		DateKey:          utils.DATE_KEY,
+		ArtistIdKey:      utils.ARTIST_ID_KEY,
+		PathUrl:          a.request.URL.EscapedPath(),
+		TicketUrl:        utils.TICKET.String(),
 		HomeUrl:          utils.HOME.String(),
 		ArtistInfo:       artistInfo,
 		AllArtists:       a.client.GetByIdKey(),
@@ -46,7 +53,7 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 	if err := temp.Execute(a.responseWriter, data); err != nil {
 		e := helper.WrapError("Template execute error", err)
 		a.logger.PrintError(e.Error(), map[string]string{
-			"Status": sourceR,
+			"Source": sourceR,
 		})
 	}
 	return nil
