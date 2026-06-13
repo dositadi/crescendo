@@ -498,7 +498,7 @@
 
             <!-- Event snapshot -->
             <div class="flex items-start gap-3 mb-4 pb-4 border-b border-border-soft">
-              <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center"
+              <div class="w-10 h-10 rounded-xl shrink-0 flex items-center justify-center"
                    style="background:#1e1b4b;">
                 <svg class="w-5 h-5 text-white/70" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"/>
@@ -706,7 +706,7 @@
 
               <!-- Ticket chip 1 -->
               <div class="flex items-center gap-3 mb-2.5">
-                <div class="w-8 h-8 rounded-lg bg-brand-light border border-brand/20 flex items-center justify-center flex-shrink-0">
+                <div class="w-8 h-8 rounded-lg bg-brand-light border border-brand/20 flex items-center justify-center shrink-0">
                   <svg class="w-4 h-4 text-brand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a3 3 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z"/>
                   </svg>
@@ -719,7 +719,7 @@
 
               <!-- Ticket chip 2 -->
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-surface-alt border border-border flex items-center justify-center flex-shrink-0">
+                <div class="w-8 h-8 rounded-lg bg-surface-alt border border-border flex items-center justify-center shrink-0">
                   <svg class="w-4 h-4 text-ink-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a3 3 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z"/>
                   </svg>
@@ -894,264 +894,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand:           '#4F46E5',
-            'brand-hover':   '#4338CA',
-            'brand-active':  '#3730A3',
-            'brand-light':   '#EEF2FF',
-            ink:             '#111827',
-            'ink-secondary': '#4B5563',
-            'ink-muted':     '#6B7280',
-            'ink-disabled':  '#9CA3AF',
-            surface:         '#FAF9F7',
-            'surface-white': '#FFFFFF',
-            'surface-alt':   '#F5F6F8',
-            border:          '#E5E7EB',
-            'border-soft':   '#EEF1F4',
-            'border-focus':  '#C7D2FE',
-          },
-          fontFamily: {
-            display: ['"DM Serif Display"', 'Georgia', 'serif'],
-            sans:    ['"DM Sans"', 'system-ui', 'sans-serif'],
-          },
-          boxShadow: {
-            sm:         '0 1px 2px rgba(0,0,0,.04)',
-            md:         '0 4px 12px rgba(0,0,0,.06)',
-            lg:         '0 10px 30px rgba(0,0,0,.08)',
-            'brand-sm': '0 4px 14px rgba(79,70,229,.18)',
-          },
-          keyframes: {
-            'bar-bounce': {
-              '0%,100%': { transform: 'scaleY(0.3)' },
-              '50%':     { transform: 'scaleY(1)' },
-            },
-            'fade-up': {
-              '0%':   { opacity: '0', transform: 'translateY(18px)' },
-              '100%': { opacity: '1', transform: 'translateY(0)' },
-            },
-            'slide-in-left': {
-              '0%':   { opacity: '0', transform: 'translateX(-24px)' },
-              '100%': { opacity: '1', transform: 'translateX(0)' },
-            },
-            'receipt-reveal': {
-              '0%':   { opacity: '0', transform: 'translateY(28px) scale(0.97)' },
-              '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
-            },
-            'check-pop': {
-              '0%':   { transform: 'scale(0)',   opacity: '0' },
-              '60%':  { transform: 'scale(1.15)', opacity: '1' },
-              '100%': { transform: 'scale(1)',   opacity: '1' },
-            },
-            'note-float': {
-              '0%':   { opacity: '0', transform: 'translateY(0) rotate(-8deg)' },
-              '30%':  { opacity: '0.55' },
-              '100%': { opacity: '0', transform: 'translateY(-52px) rotate(10deg)' },
-            },
-            'confetti-fall': {
-              '0%':   { transform: 'translateY(-10px) rotate(0deg)',  opacity: '1' },
-              '100%': { transform: 'translateY(60px) rotate(360deg)', opacity: '0' },
-            },
-          },
-          animation: {
-            'bar1':           'bar-bounce 1.1s ease-in-out 0s infinite',
-            'bar2':           'bar-bounce 1.1s ease-in-out 0.18s infinite',
-            'bar3':           'bar-bounce 1.1s ease-in-out 0.36s infinite',
-            'bar4':           'bar-bounce 1.1s ease-in-out 0.54s infinite',
-            'bar5':           'bar-bounce 1.1s ease-in-out 0.72s infinite',
-            'fade-up':        'fade-up 0.65s ease-out both',
-            'fade-up-d1':     'fade-up 0.65s ease-out 0.08s both',
-            'fade-up-d2':     'fade-up 0.65s ease-out 0.16s both',
-            'fade-up-d3':     'fade-up 0.65s ease-out 0.24s both',
-            'fade-up-d4':     'fade-up 0.65s ease-out 0.32s both',
-            'fade-up-d5':     'fade-up 0.65s ease-out 0.40s both',
-            'slide-left':     'slide-in-left 0.7s ease-out both',
-            'receipt-reveal': 'receipt-reveal 0.7s cubic-bezier(0.22,1,0.36,1) 0.1s both',
-            'check-pop':      'check-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.3s both',
-            'note1':          'note-float 3.2s ease-out infinite 0s',
-            'note2':          'note-float 3.2s ease-out infinite 1.1s',
-            'note3':          'note-float 3.2s ease-out infinite 2.2s',
-            'confetti1':      'confetti-fall 1.4s ease-in 0.4s both',
-            'confetti2':      'confetti-fall 1.6s ease-in 0.6s both',
-            'confetti3':      'confetti-fall 1.2s ease-in 0.8s both',
-            'confetti4':      'confetti-fall 1.5s ease-in 0.5s both',
-            'confetti5':      'confetti-fall 1.3s ease-in 0.7s both',
-          },
-        },
-      },
-    }
-  </script>
-  <style>
-    /* ── Page background — same quiet dot-grid as Phase 1 ──────────────── */
-    body {
-      background-color: #FAF9F7;
-      background-image: radial-gradient(circle, #D1D5DB 1px, transparent 1px);
-      background-size: 26px 26px;
-      font-family: 'DM Sans', system-ui, sans-serif;
-    }
-
-    /* ── Noise overlay (header) ─────────────────────────────────────────── */
-    .noise-overlay {
-      position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-      background-size: 180px; opacity: 0.45;
-    }
-
-    /* ── Waveform bars (logo) ───────────────────────────────────────────── */
-    .wbar {
-      display: inline-block; width: 3px;
-      border-radius: 9999px; transform-origin: bottom center;
-    }
-
-    /* ── Step indicator — same system as Phase 1 ────────────────────────── */
-    .step-dot {
-      width: 28px; height: 28px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.75rem; font-weight: 600; flex-shrink: 0;
-      transition: all 0.2s ease;
-    }
-    .step-dot.done    { background:#EEF2FF; color:#4F46E5; border:1.5px solid #C7D2FE; }
-    .step-dot.active  { background:#4F46E5; color:#fff; box-shadow:0 0 0 4px rgba(79,70,229,0.15); }
-    .step-dot.pending { background:#F3F4F6; color:#9CA3AF; border:1.5px solid #E5E7EB; }
-    .step-line        { flex:1; height:1.5px; background:#E5E7EB; position:relative; overflow:hidden; }
-    .step-line.done::after { content:''; position:absolute; inset:0; background:#4F46E5; }
-
-    /* ── Stripe-style card field ────────────────────────────────────────── */
-    .stripe-field {
-      width: 100%;
-      padding: 0.65rem 0.875rem;
-      border: 1.5px solid #E5E7EB;
-      border-radius: 10px;
-      font-size: 0.875rem;
-      color: #111827;
-      background: #FFFFFF;
-      outline: none;
-      transition: border-color 0.18s ease, box-shadow 0.18s ease;
-      font-family: 'DM Sans', system-ui, sans-serif;
-    }
-    .stripe-field::placeholder { color: #9CA3AF; }
-    .stripe-field:focus {
-      border-color: #C7D2FE;
-      box-shadow: 0 0 0 3px rgba(79,70,229,0.09);
-    }
-    /* simulated card number — mono feel */
-    .stripe-field.card-num { letter-spacing: 0.08em; }
-
-    /* ── Card brand icon slot ───────────────────────────────────────────── */
-    .card-field-wrap { position: relative; }
-    .card-field-wrap .card-icon {
-      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-      display: flex; gap: 4px; align-items: center;
-    }
-
-    /* ── Pay button ─────────────────────────────────────────────────────── */
-    .btn-pay {
-      width: 100%;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      padding: 0.9rem 1.5rem;
-      border-radius: 14px;
-      background: #4F46E5;
-      color: #fff;
-      font-size: 0.9375rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      border: none; cursor: pointer;
-      box-shadow: 0 4px 14px rgba(79,70,229,.22);
-      transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.15s ease;
-    }
-    .btn-pay:hover  { background:#4338CA; box-shadow:0 6px 20px rgba(79,70,229,.28); transform:translateY(-1px); }
-    .btn-pay:active { background:#3730A3; transform:translateY(0); }
-
-    /* ── Order mini-summary (right column) ─────────────────────────────── */
-    .summary-row {
-      display:flex; align-items:center; justify-content:space-between;
-      font-size:0.875rem; color:#4B5563; padding:0.45rem 0;
-    }
-    .summary-row.total {
-      font-size:1rem; font-weight:700; color:#111827;
-      border-top:1.5px solid #EEF1F4; padding-top:0.85rem; margin-top:0.4rem;
-    }
-
-    /* ── Tear / perforation line (receipt) ─────────────────────────────── */
-    .tear-line {
-      position:relative; height:1px;
-      background:transparent; border-top:2px dashed #E5E7EB;
-      margin:0 -1px;
-    }
-    .tear-line::before, .tear-line::after {
-      content:''; position:absolute; top:-9px;
-      width:16px; height:16px; border-radius:50%;
-      background:#FAF9F7; border:1px solid #E5E7EB;
-    }
-    .tear-line::before { left:-8px; }
-    .tear-line::after  { right:-8px; }
-
-    /* ── Receipt card ───────────────────────────────────────────────────── */
-    .receipt-card {
-      background:#FFFFFF; border:1px solid #E5E7EB;
-      border-radius:20px; overflow:hidden;
-      box-shadow:0 10px 30px rgba(0,0,0,0.08);
-    }
-
-    /* ── Receipt hero ───────────────────────────────────────────────────── */
-    .receipt-hero {
-      background-color:#1e1b4b;
-      background-image:
-        radial-gradient(ellipse at 20% 50%, rgba(99,91,255,0.22) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 30%, rgba(79,70,229,0.14) 0%, transparent 55%);
-      position:relative; overflow:hidden;
-    }
-
-    /* ── QR code placeholder ────────────────────────────────────────────── */
-    .qr-placeholder {
-      width:96px; height:96px;
-      border:2px solid #E5E7EB; border-radius:12px;
-      background:#F5F6F8;
-      display:flex; align-items:center; justify-content:center;
-      flex-shrink:0;
-    }
-
-    /* ── CSS-only view toggle (payment form ↔ receipt) ──────────────────── */
-    /* Hidden radio controls which "view" is shown */
-    #view-payment, #view-receipt { display:none; }
-
-    /* Default — show payment, hide receipt */
-    #view-payment:not(:checked) ~ .page-payment { display:block; }
-    #view-payment:not(:checked) ~ .page-receipt  { display:none; }
-
-    /* When receipt radio is checked — swap */
-    #view-receipt:checked ~ .page-payment { display:none; }
-    #view-receipt:checked ~ .page-receipt  { display:block; }
-
-    /* ── Confetti dots ──────────────────────────────────────────────────── */
-    .confetti-dot {
-      position:absolute; border-radius:50%; pointer-events:none;
-    }
-
-    /* ── Music note ─────────────────────────────────────────────────────── */
-    .mnote {
-      position:absolute; pointer-events:none; user-select:none; color:#4F46E5;
-    }
-
-    /* ── Guarantee badge ────────────────────────────────────────────────── */
-    .guarantee-badge {
-      display:flex; align-items:flex-start; gap:10px;
-      background:#F0FDF4; border:1px solid #BBF7D0;
-      border-radius:12px; padding:0.75rem 1rem;
-    }
-
-    /* ── Receipt row ────────────────────────────────────────────────────── */
-    .receipt-row {
-      display:flex; justify-content:space-between; align-items:baseline;
-      padding:0.55rem 0; font-size:0.8125rem;
-      border-bottom:1px solid #EEF1F4;
-    }
-    .receipt-row:last-child { border-bottom:none; }
-  </style>
+  <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/htmx-ext-response-targets@2.0.4" integrity="sha384-T41oglUPvXLGBVyRdZsVRxNWnOOqCynaPubjUVjxhsjFTKrFJGEMm3/0KGmNQ+Pg" crossorigin="anonymous"></script>
 </head>
 <body class="min-h-screen flex flex-col text-ink">
 
@@ -1385,7 +1129,7 @@
 
             <!-- Event snapshot -->
             <div class="flex items-start gap-3 mb-4 pb-4 border-b border-border-soft">
-              <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center"
+              <div class="w-10 h-10 rounded-xl shrink-0 flex items-center justify-center"
                    style="background:#1e1b4b;">
                 <svg class="w-5 h-5 text-white/70" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"/>
@@ -1593,7 +1337,7 @@
 
               <!-- Ticket chip 1 -->
               <div class="flex items-center gap-3 mb-2.5">
-                <div class="w-8 h-8 rounded-lg bg-brand-light border border-brand/20 flex items-center justify-center flex-shrink-0">
+                <div class="w-8 h-8 rounded-lg bg-brand-light border border-brand/20 flex items-center justify-center shrink-0">
                   <svg class="w-4 h-4 text-brand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a3 3 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z"/>
                   </svg>
@@ -1606,7 +1350,7 @@
 
               <!-- Ticket chip 2 -->
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-surface-alt border border-border flex items-center justify-center flex-shrink-0">
+                <div class="w-8 h-8 rounded-lg bg-surface-alt border border-border flex items-center justify-center shrink-0">
                   <svg class="w-4 h-4 text-ink-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a3 3 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z"/>
                   </svg>

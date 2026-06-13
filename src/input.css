@@ -89,6 +89,15 @@
   --animate-sl-d3:       slide-in-left 0.7s ease-out 0.40s both;
   --animate-sl-d4:       slide-in-left 0.7s ease-out 0.55s both;
 
+  /* Payment animation */
+  --animate-reciept-reveal: receipt-reveal 0.7s cubic-bezier(0.22,1,0.36,1) 0.1s both;
+  --animate-check-pop: check-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;
+  --animate-confetti1: confetti-fall 1.4s ease-in 0.4s both;
+  --animate-confetti2: confetti-fall 1.6s ease-in 0.6s both;
+  --animate-confetti3: confetti-fall 1.2s ease-in 0.8s both;
+  --animate-confetti4: confetti-fall 1.5s ease-in 0.5s both;
+  --animate-confetti5: confetti-fall 1.3s ease-in 0.7s both
+
   /* Login bar-dance (same timing as bar-bounce but with login delays) */
   --animate-bar6:        bar-bounce 1.0s ease-in-out 0.70s infinite;
 
@@ -161,6 +170,31 @@
 @keyframes slide-in-left {
   0%   { opacity: 0; transform: translateX(-24px); }
   100% { opacity: 1; transform: translateX(0);      }
+}
+
+/* Reciept reveal */
+@keyframes receipt-reveal {
+  0% {opacity: 0; transform: translateY(28px) scale(0.97);}
+  100% {opacity: 1; transform: translateY(0) scale(1);}
+}
+
+/* Check pop */
+@keyframes check-pop {
+  0% {transform: scale(0);   opacity: 0;}
+  60% {transform: scale(1.15); opacity: 0;}
+  100% {transform: scale(1); opacity: 1;}
+}
+
+/* note-float */
+@keyframes note-float {
+  0% {transform: translateY(0) rotate(-8deg); opacity: 0; }
+  30% {opacity: 0.55;}
+  100% {transform: translateY(-52px) rotate(10deg);}
+}
+
+@keyframes confetti-fall {
+  0% {transform: translateY(-10px) rotate(0deg);}
+  100% {transform: translateY(60px) rotate(360deg); opacity: 0;}
 }
 
 /* Login tonearm needle sway */
@@ -243,6 +277,14 @@ body {
   position: relative;
   z-index: 1;
 }
+
+/* ── Receipt row ────────────────────────────────────────────────────── */
+.receipt-row {
+  display:flex; justify-content:space-between; align-items:baseline;
+  padding:0.55rem 0; font-size:0.8125rem;
+  border-bottom:1px solid #EEF1F4;
+}
+.receipt-row:last-child { border-bottom:none; }
 
 /* ── Page centre layout ─────────────────────────────────────────────── */
     .page-shell {
@@ -833,6 +875,19 @@ body {
   transform-origin: bottom center;
 }
 
+/* ── Step indicator — same system as Phase 1 ────────────────────────── */
+.step-dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 600; flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+.step-dot.done    { background:#EEF2FF; color:#4F46E5; border:1.5px solid #C7D2FE; }
+.step-dot.active  { background:#4F46E5; color:#fff; box-shadow:0 0 0 4px rgba(79,70,229,0.15); }
+.step-dot.pending { background:#F3F4F6; color:#9CA3AF; border:1.5px solid #E5E7EB; }
+.step-line        { flex:1; height:1.5px; background:#E5E7EB; position:relative; overflow:hidden; }
+.step-line.done::after { content:''; position:absolute; inset:0; background:#4F46E5; }
+
 /* Signup decorative bars get a default colour + subdued opacity */
 .waveform-bar {
   background: theme(--color-brand);   /* #4F46E5 */
@@ -878,6 +933,27 @@ body {
     radial-gradient(ellipse at 80% 80%, rgba(79, 70, 229, 0.18) 0%, transparent 55%);
 }
 
+/* ── Stripe-style card field ────────────────────────────────────────── */
+.stripe-field {
+  width: 100%;
+  padding: 0.65rem 0.875rem;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  color: #111827;
+  background: #FFFFFF;
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+.stripe-field::placeholder { color: #9CA3AF; }
+.stripe-field:focus {
+  border-color: #C7D2FE;
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.09);
+}
+/* simulated card number — mono feel */
+.stripe-field.card-num { letter-spacing: 0.08em; }
+
 /* ─── Signup page: password strength bar segment ────────────────────────── */
 .strength-segment {
   height: 3px;
@@ -885,6 +961,74 @@ body {
   background: theme(--color-border);   /* #E5E7EB */
   flex: 1;
 }
+
+/* ── Card brand icon slot ───────────────────────────────────────────── */
+.card-field-wrap { position: relative; }
+.card-field-wrap .card-icon {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  display: flex; gap: 4px; align-items: center;
+}
+
+/* ── Pay button ─────────────────────────────────────────────────────── */
+.btn-pay {
+  width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 0.9rem 1.5rem;
+  border-radius: 14px;
+  background: #4F46E5;
+  color: #fff;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 14px rgba(79,70,229,.22);
+  transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.15s ease;
+}
+.btn-pay:hover  { background:#4338CA; box-shadow:0 6px 20px rgba(79,70,229,.28); transform:translateY(-1px); }
+.btn-pay:active { background:#3730A3; transform:translateY(0); }
+
+/* ── Receipt card ───────────────────────────────────────────────────── */
+.receipt-card {
+  background:#FFFFFF; border:1px solid #E5E7EB;
+  border-radius:20px; overflow:hidden;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* ── Receipt hero ───────────────────────────────────────────────────── */
+.receipt-hero {
+  background-color:#1e1b4b;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(99,91,255,0.22) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 30%, rgba(79,70,229,0.14) 0%, transparent 55%);
+  position:relative; overflow:hidden;
+}
+
+/* ── QR code placeholder ────────────────────────────────────────────── */
+.qr-placeholder {
+  width:96px; height:96px;
+  border:2px solid #E5E7EB; border-radius:12px;
+  background:#F5F6F8;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+
+/* ── CSS-only view toggle (payment form ↔ receipt) ──────────────────── */
+/* Hidden radio controls which "view" is shown */
+#view-payment, #view-receipt { display:none; }
+
+/* Default — show payment, hide receipt */
+#view-payment:not(:checked) ~ .page-payment { display:block; }
+#view-payment:not(:checked) ~ .page-receipt  { display:none; }
+
+/* When receipt radio is checked — swap */
+#view-receipt:checked ~ .page-payment { display:none; }
+#view-receipt:checked ~ .page-receipt  { display:block; }
+
+/* ── Confetti dots ──────────────────────────────────────────────────── */
+.confetti-dot {
+  position:absolute; border-radius:50%; pointer-events:none;
+}
+
 
 /* ─── Signup page: vinyl groove (SVG stroke helper) ─────────────────────── */
 .vinyl-groove {
