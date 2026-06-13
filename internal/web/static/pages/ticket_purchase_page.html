@@ -328,7 +328,7 @@
 
       <!-- ── Proceed to Payment CTA ──────────────────────────────────── -->
       <div class="ph1-d5">
-        <a href="#"
+        <a hx-get="{{.PaymentUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" hx-vals='{"{{.ArtistIdKey}}":"{{.ArtistId}}","{{.LocationKey}}":"{{.Location}}"}'
            class="w-full flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-2xl
                   bg-brand text-white text-sm font-semibold
                   shadow-brand-sm

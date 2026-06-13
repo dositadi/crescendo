@@ -61,7 +61,7 @@ func (t *TicketPage) RenderTicketPage() error {
 		VatValue                                                                           int
 		ArtistInfo                                                                         artistapi.ArtistInfo
 		Location, Date                                                                     string
-		PreviousPageUrl, TicketTypeUrl, TicketQtyUrl                                       string
+		PreviousPageUrl, TicketTypeUrl, TicketQtyUrl, PaymentUrl                           string
 		ArtistId                                                                           int
 		ArtistIdKey, DateKey, LocationKey, TicketTypeKey, IncrementQtyKey, DecrementQtyKey string
 		GeneralTicket, VipTicket, ReserveTicket                                            string
@@ -87,6 +87,7 @@ func (t *TicketPage) RenderTicketPage() error {
 		ArtistId:           artistId,
 		TicketTypeUrl:      utils.TicketType.String(),
 		TicketQtyUrl:       utils.TicketQuantity.String(),
+		PaymentUrl:         utils.Payment.String(),
 		ArtistInfo:         artistInfo,
 		Location:           location,
 		Date:               date,
