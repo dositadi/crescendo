@@ -43,6 +43,7 @@ func (t *TicketPage) RenderTicketPage() error {
 		http.Error(t.responseWriter, err.Error(), http.StatusBadRequest)
 	}
 
+	//Get User's order from cache
 	booking, exist := ordercache.Get(user.Id, location, artistId)
 	if !exist {
 		t.logger.PrintError(NOT_FOUND.Error(), map[string]string{
@@ -50,23 +51,24 @@ func (t *TicketPage) RenderTicketPage() error {
 		})
 		return NOT_FOUND
 	}
-
-	fmt.Println("passed: ", booking)
+	fmt.Println(booking)
 
 	data := struct {
-		TicketType                                             string
-		Quantity                                               int
-		TicketPrice                                            float64
-		BookingFee                                             float64
-		VatValue                                               int
-		ArtistInfo                                             artistapi.ArtistInfo
-		Location, Date                                         string
-		PreviousPageUrl, TicketTypeUrl                         string
-		ArtistId                                               int
-		ArtistIdKey, DateKey, LocationKey, TicketTypeKey       string
-		GeneralTicket, VipTicket, ReserveTicket                string
-		GeneralTicketPrice, VipTicketPrice, ReserveTicketPrice float64
+		TicketType                                                                         string
+		Quantity                                                                           int
+		TicketPrice                                                                        float64
+		BookingFee                                                                         float64
+		VatValue                                                                           int
+		ArtistInfo                                                                         artistapi.ArtistInfo
+		Location, Date                                                                     string
+		PreviousPageUrl, TicketTypeUrl, TicketQtyUrl                                       string
+		ArtistId                                                                           int
+		ArtistIdKey, DateKey, LocationKey, TicketTypeKey, IncrementQtyKey, DecrementQtyKey string
+		GeneralTicket, VipTicket, ReserveTicket                                            string
+		GeneralTicketPrice, VipTicketPrice, ReserveTicketPrice                             float64
 	}{
+		DecrementQtyKey:    utils.DECREMENT_QTY_KEY,
+		IncrementQtyKey:    utils.INCREMENT_QTY_KEY,
 		TicketType:         booking.TicketType,
 		Quantity:           booking.Quantity,
 		TicketPrice:        t.getTicketPrice(booking.TicketType),
@@ -84,6 +86,7 @@ func (t *TicketPage) RenderTicketPage() error {
 		LocationKey:        utils.LOCATION_KEY,
 		ArtistId:           artistId,
 		TicketTypeUrl:      utils.TicketType.String(),
+		TicketQtyUrl:       utils.TicketQuantity.String(),
 		ArtistInfo:         artistInfo,
 		Location:           location,
 		Date:               date,

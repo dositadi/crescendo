@@ -40,5 +40,7 @@ func (a *App) initHandlers() {
 
 		// App post request
 		r.With(a.midleware.VerifyAccessToken).Post(utils.FAVORITE.String(), a.handler.Post.HomePage.UpdateFavoriteHandler)
+		r.With(a.midleware.VerifyAccessToken).Post(utils.TicketType.String(), a.handler.Post.TicketPage.TicketTypeHandler)
+		r.With(a.midleware.VerifyAccessToken).Post(string(utils.TicketQuantity), a.handler.Post.TicketPage.QuantitySelectorHandler)
 	})
 }

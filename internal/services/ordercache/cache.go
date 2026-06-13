@@ -15,8 +15,8 @@ type Vat int
 
 const (
 	GENERAL  Ticket = Ticket("General Admission")
-	VIP      Ticket = Ticket("VIP")
-	RESERVED Ticket = Ticket("Reserved")
+	VIP      Ticket = Ticket("VIP Standing")
+	RESERVED Ticket = Ticket("Reserved Seated")
 )
 
 const (
@@ -105,7 +105,7 @@ func Increment(userId, location string, artistId int) bool {
 	global.mu.Lock()
 	defer global.mu.Unlock()
 	booking, ok := global.store[key]
-	if !ok || booking.Quantity <= 1 {
+	if !ok || booking.Quantity > 8 {
 		return false
 	}
 	booking.Quantity++
@@ -120,7 +120,7 @@ func Decrement(userId, location string, artistId int) bool {
 	global.mu.Lock()
 	defer global.mu.Unlock()
 	booking, ok := global.store[key]
-	if !ok || booking.Quantity > 8 {
+	if !ok || booking.Quantity <= 1 {
 		return false
 	}
 	booking.Quantity--

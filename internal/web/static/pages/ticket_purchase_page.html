@@ -208,14 +208,14 @@
         <!-- Ticket type options (CSS-only radio) -->
         <div class="flex flex-col sm:flex-row gap-3 mb-7">
 
-          <input hx-post="{{.TicketTypeUrl}}" hx-swap="outerHTML" hx-target="#order-summary" hx-vals='{"{{.ArtistIdKey}}":"{{.ArtistId}}","{{.LocationKey}}":"{{.Location}}","{{.TicketTypeKey}}":"{{.GeneralTicket}}"}' hx-trigger="click delay:1s" type="radio" name="ticket-type" id="tt-general" class="ticket-type-radio" checked>
+          <input hx-post="{{.TicketTypeUrl}}" hx-swap="outerHTML" hx-target="#ticket-type" hx-vals='{"{{.ArtistIdKey}}":"{{.ArtistId}}","{{.LocationKey}}":"{{.Location}}","{{.TicketTypeKey}}":"{{.GeneralTicket}}"}' hx-trigger="click delay:200ms" type="radio" name="ticket-type" id="tt-general" class="ticket-type-radio" checked>
           <label for="tt-general" class="ticket-type-label">
             <span class="text-sm font-semibold text-ink pr-6">General Admission</span>
             <span class="text-xs text-ink-muted">Standing floor · Unreserved</span>
             <span class="text-base font-bold text-brand mt-1">€{{.GeneralTicketPrice}}</span>
           </label>
 
-          <input hx-post="{{.TicketTypeUrl}}" hx-swap="outerHTML" hx-target="#order-summary" hx-vals='{"{{.ArtistIdKey}}":"{{.ArtistId}}","{{.LocationKey}}":"{{.Location}}","{{.TicketTypeKey}}":"{{.VipTicket}}"}' hx-trigger="click delay:1s" type="radio" name="ticket-type" id="tt-vip" class="ticket-type-radio">
+          <input hx-post="{{.TicketTypeUrl}}" hx-swap="outerHTML" hx-target="#ticket-type" hx-vals='{"{{.ArtistIdKey}}":"{{.ArtistId}}","{{.LocationKey}}":"{{.Location}}","{{.TicketTypeKey}}":"{{.VipTicket}}"}' hx-trigger="click delay:200ms" type="radio" name="ticket-type" id="tt-vip" class="ticket-type-radio">
           <label for="tt-vip" class="ticket-type-label">
             <div class="flex items-center gap-1.5 pr-6">
               <span class="text-sm font-semibold text-ink">VIP Standing</span>
@@ -226,7 +226,7 @@
             <span class="text-base font-bold text-brand mt-1">€{{.VipTicketPrice}}</span>
           </label>
 
-          <input hx-post="{{.TicketTypeUrl}}" hx-swap="outerHTML" hx-target="#order-summary" hx-vals='{"{{.ArtistIdKey}}":"{{.ArtistId}}","{{.LocationKey}}":"{{.Location}}","{{.TicketTypeKey}}":"{{.ReserveTicket}}"}' hx-trigger="click delay:1s" type="radio" name="ticket-type" id="tt-seated" class="ticket-type-radio">
+          <input hx-post="{{.TicketTypeUrl}}" hx-swap="outerHTML" hx-target="#ticket-type" hx-vals='{"{{.ArtistIdKey}}":"{{.ArtistId}}","{{.LocationKey}}":"{{.Location}}","{{.TicketTypeKey}}":"{{.ReserveTicket}}"}' hx-trigger="click delay:200ms" type="radio" name="ticket-type" id="tt-seated" class="ticket-type-radio">
           <label for="tt-seated" class="ticket-type-label">
             <span class="text-sm font-semibold text-ink pr-6">Reserved Seated</span>
             <span class="text-xs text-ink-muted">Numbered seat · Block B</span>
@@ -243,11 +243,11 @@
         <!-- Quantity selector -->
         <div class="flex items-center gap-4 mb-2">
 
-          <div class="flex items-center gap-3 bg-surface-alt border border-border rounded-xl px-1 py-1">
-            <button class="qty-btn" aria-label="Decrease quantity">−</button>
-            <span id="quantity" class="text-base font-bold text-ink w-6 text-center select-none">{{.Quantity}}</span>
-            <button class="qty-btn" aria-label="Increase quantity">+</button>
-          </div>
+          <div id="quantity-selector" hx-swap-oob="true" class="flex items-center gap-3 bg-surface-alt border border-border rounded-xl px-1 py-1">
+            <button hx-post="{{.TicketQtyUrl}}" hx-swap="outerHTML" hx-target="#ticket-type" hx-vals='{"{{.ArtistIdKey}}":"{{.ArtistId}}","{{.LocationKey}}":"{{.Location}}","{{.DecrementQtyKey}}":"{{.DecrementQtyKey}}"}' hx-trigger="click delay:200ms" {{if eq .Quantity 1}}  class="qty-btn hover:bg-brand-light/15" {{end}} class="qty-btn" {{if eq .Quantity 1}} disabled {{end}} aria-label="Decrease quantity">−</button>
+            <span class="text-base font-bold text-ink w-6 text-center select-none">{{.Quantity}}</span>
+            <button hx-post="{{.TicketQtyUrl}}" hx-swap="outerHTML" hx-target="#ticket-type" hx-vals='{"{{.ArtistIdKey}}":"{{.ArtistId}}","{{.LocationKey}}":"{{.Location}}","{{.IncrementQtyKey}}":"{{.IncrementQtyKey}}"}' hx-trigger="click delay:200ms" {{if eq .Quantity 8}}  class="qty-btn hover:bg-brand-light/15" {{end}} class="qty-btn" {{if eq .Quantity 8}} disabled {{end}} aria-label="Increase quantity">+</button>
+        </div>
 
           <p class="text-xs text-ink-muted leading-snug">
             Max <span class="font-semibold text-ink">8</span> per order ·
@@ -286,27 +286,27 @@
         <!-- Rows -->
         <div class="divide-y divide-border-soft">
 
-            <div class="summary-row py-2">
-            <span class="text-ink-secondary">{{.TicketType}} × {{.Quantity}}</span>
-            <span class="font-medium text-ink">€{{TotalTicketAmount .TicketPrice .Quantity}}</span>
+            <div id="ticket-type" class="summary-row py-2">
+              <span class="text-ink-secondary">{{.TicketType}} × {{.Quantity}}</span>
+              <span class="font-medium text-ink">€{{TotalTicketAmount .TicketPrice .Quantity}}</span>
             </div>
 
-            <div class="summary-row py-2">
-            <span class="text-ink-secondary">Booking fee × {{.Quantity}}</span>
-            <span class="font-medium text-ink">€{{TotalBookingFee .BookingFee .Quantity}}</span>
+            <div id="booking-fee" hx-swap-oob="true" class="summary-row py-2">
+              <span class="text-ink-secondary">Booking fee × {{.Quantity}}</span>
+              <span class="font-medium text-ink">€{{TotalBookingFee .BookingFee .Quantity}}</span>
             </div>
 
-            <div class="summary-row py-2">
-            <span class="text-ink-secondary">VAT ({{.VatValue}}%)</span>
-            <span class="font-medium text-ink">€{{VatAmount .VatValue (TotalTicketAmount .TicketPrice .Quantity) (TotalBookingFee .BookingFee .Quantity)}}</span>
+            <div id="vat" hx-swap-oob="true" class="summary-row py-2">
+              <span class="text-ink-secondary">VAT ({{.VatValue}})</span>
+              <span class="font-medium text-ink">€{{VatAmount .VatValue (TotalTicketAmount .TicketPrice .Quantity) (TotalBookingFee .BookingFee .Quantity)}}</span>
             </div>
 
         </div>
 
         <!-- Total -->
-        <div class="summary-row total">
-            <span>Total</span>
-            <span class="text-brand">€{{GrandTotal (TotalTicketAmount .TicketPrice .Quantity) (TotalBookingFee .BookingFee .Quantity) (VatAmount .VatValue (TotalTicketAmount .TicketPrice .Quantity) (TotalBookingFee .BookingFee .Quantity))}}</span>
+        <div id="total" hx-swap-oob="true" class="summary-row total">
+          <span>Total</span>
+          <span class="text-brand">€{{GrandTotal (TotalTicketAmount .TicketPrice .Quantity) (TotalBookingFee .BookingFee .Quantity) (VatAmount .VatValue (TotalTicketAmount .TicketPrice .Quantity) (TotalBookingFee .BookingFee .Quantity))}}</span>
         </div>
         </div>
 
