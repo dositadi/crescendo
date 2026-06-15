@@ -75,7 +75,7 @@
 
 
   <!-- ── STEP INDICATOR ──────────────────────────────────────────────── -->
-  <div class="flex items-center gap-2 max-w-sm mx-auto mb-10 ph1-d1">
+  <div id="step" class="flex items-center gap-2 max-w-sm mx-auto mb-10 ph1-d1">
 
     <!-- Step 1 — active -->
     <div class="flex flex-col items-center gap-1">
@@ -103,7 +103,7 @@
 
 
   <!-- ── TWO-COLUMN LAYOUT (stacks on mobile) ──────────────────────── -->
-  <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 lg:gap-8 items-start">
+  <div id="payment" class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 lg:gap-8 items-start">
 
 
     <!-- ════════════════════════════════════════════════════════════════
@@ -297,7 +297,7 @@
             </div>
 
             <div id="vat" class="summary-row py-2">
-              <span class="text-ink-secondary">VAT ({{.VatValue}})</span>
+              <span class="text-ink-secondary">VAT ({{.VatValue}}%)</span>
               <span class="font-medium text-ink">€{{VatAmount .VatValue (TotalTicketAmount .TicketPrice .Quantity) (TotalBookingFee .BookingFee .Quantity)}}</span>
             </div>
 
@@ -328,7 +328,7 @@
 
       <!-- ── Proceed to Payment CTA ──────────────────────────────────── -->
       <div class="ph1-d5">
-        <a hx-get="{{.PaymentUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" hx-vals='{"{{.ArtistIdKey}}":"{{.ArtistId}}","{{.LocationKey}}":"{{.Location}}"}'
+        <a hx-get="{{.PaymentUrl}}" hx-swap="outerHTML" hx-target="#payment" hx-push-url="true" hx-vals='{"{{.ArtistIdKey}}":"{{.ArtistId}}","{{.LocationKey}}":"{{.Location}}"}'
            class="w-full flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-2xl
                   bg-brand text-white text-sm font-semibold
                   shadow-brand-sm

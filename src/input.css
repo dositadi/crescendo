@@ -969,6 +969,42 @@ body {
   display: flex; gap: 4px; align-items: center;
 }
 
+
+
+/* ── Card brand icon slot ───────────────────────────────────────────── */
+.card-field-wrap { position: relative; }
+.card-field-wrap .card-icon {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  display: flex; gap: 4px; align-items: center;
+}
+
+/* ── Receipt card ───────────────────────────────────────────────────── */
+.receipt-card {
+  background:#FFFFFF; border:1px solid #E5E7EB;
+  border-radius:20px; overflow:hidden;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* ── Receipt hero ───────────────────────────────────────────────────── */
+.receipt-hero {
+  background-color:#1e1b4b;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(99,91,255,0.22) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 30%, rgba(79,70,229,0.14) 0%, transparent 55%);
+  position:relative; overflow:hidden;
+}
+
+/* ── QR code placeholder ────────────────────────────────────────────── */
+.qr-placeholder {
+  width:96px; height:96px;
+  border:2px solid #E5E7EB; border-radius:12px;
+  background:#F5F6F8;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+
+
+
 /* ── Pay button ─────────────────────────────────────────────────────── */
 .btn-pay {
   width: 100%;
@@ -993,6 +1029,14 @@ body {
   border-radius:20px; overflow:hidden;
   box-shadow:0 10px 30px rgba(0,0,0,0.08);
 }
+
+/* ── Receipt row ────────────────────────────────────────────────────── */
+.receipt-row {
+  display:flex; justify-content:space-between; align-items:baseline;
+  padding:0.55rem 0; font-size:0.8125rem;
+  border-bottom:1px solid #EEF1F4;
+}
+.receipt-row:last-child { border-bottom:none; }
 
 /* ── Receipt hero ───────────────────────────────────────────────────── */
 .receipt-hero {

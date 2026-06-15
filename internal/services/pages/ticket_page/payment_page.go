@@ -1,9 +1,9 @@
 package ticketpage
 
 import (
-	"fmt"
 	"html/template"
 
+	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
 	"github.com/dositadi/groupie-tracker/internal/helper"
 	"github.com/dositadi/groupie-tracker/internal/services/ordercache"
 	"github.com/dositadi/groupie-tracker/internal/utils"
@@ -15,7 +15,7 @@ const (
 
 func (t *TicketPage) RenderPaymentPage() error {
 	fs := []string{
-		"internal/web/static/pages/payment_page.html",
+		"internal/web/static/partials/pages/payment_page.html",
 	}
 
 	artistId := t.atoi(t.request.FormValue(utils.ARTIST_ID_KEY))
@@ -30,18 +30,24 @@ func (t *TicketPage) RenderPaymentPage() error {
 		return NOT_FOUND
 	}
 
-	fmt.Println(booking)
+	artistInfo := t.client.GetByIdKey()[artistId]
 
 	data := struct {
-		ArtistId   int
-		Location   string
-		Quantity   int
-		TicketType string
+		ArtistInfo              artistapi.ArtistInfo
+		ArtistId, VatValue      int
+		Location                string
+		Quantity                int
+		TicketType              string
+		BookingFee, TicketPrice float64
 	}{
-		ArtistId:   artistId,
-		Location:   location,
-		Quantity:   booking.Quantity,
-		TicketType: booking.TicketType,
+		BookingFee:  float64(ordercache.BOOKING_FEE),
+		TicketPrice: t.getTicketPrice(booking.TicketType),
+		VatValue:    int(ordercache.VAT),
+		ArtistInfo:  artistInfo,
+		ArtistId:    artistId,
+		Location:    location,
+		Quantity:    booking.Quantity,
+		TicketType:  booking.TicketType,
 	}
 
 	temp, err := template.New("payment_page.html").Funcs(t.detailPageFuncMap()).ParseFS(t.embedded.Get(), fs...)
@@ -53,7 +59,7 @@ func (t *TicketPage) RenderPaymentPage() error {
 		return e
 	}
 
-	if err := temp.Execute(t.responseWriter, data); err != nil {
+	if err := temp.ExecuteTemplate(t.responseWriter, "payment", data); err != nil {
 		e := helper.WrapError("Template execution error", err)
 		t.logger.PrintError(e.Error(), map[string]string{
 			"Source": sourcePa,
