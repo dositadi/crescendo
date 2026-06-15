@@ -3,7 +3,7 @@
        PAGE — PAYMENT FORM
   ════════════════════════════════════════════════════════════════════════════ -->
   <div id="payment" class="page-payment">
-    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-2">
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-1 sm:py-1">
 
       <!-- Page title -->
       <div class="mb-8 animate-fade-up">
@@ -123,7 +123,7 @@
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
               </svg>
-              Pay €121.62 securely
+              Pay €{{GrandTotal (TotalTicketAmount .TicketPrice .Quantity) (TotalBookingFee .BookingFee .Quantity) (VatAmount .VatValue (TotalTicketAmount .TicketPrice .Quantity) (TotalBookingFee .BookingFee .Quantity))}} securely
             </label>
 
             <!-- Fine print -->
@@ -157,7 +157,8 @@
               <div class="w-10 h-10 rounded-xl shrink-0 flex items-center justify-center"
                    style="background:#1e1b4b;">
                 <svg class="w-5 h-5 text-white/70" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"/>
+                    <img class="w-full h-full object-cover rounded-xl" src="{{.ArtistInfo.Image}}" alt="{{.ArtistInfo.Name}}">
+                  <!-- <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"/> -->
                 </svg>
               </div>
               <div class="min-w-0">

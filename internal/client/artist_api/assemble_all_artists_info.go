@@ -7,10 +7,7 @@ import (
 )
 
 var (
-	byId           = make(map[int]ArtistInfo)
-	byCreationDate = make(map[int]ArtistInfo)
-	byName         = make(map[string]ArtistInfo)
-	byFirstAlbum   = make(map[string]ArtistInfo)
+	byId = make(map[int]ArtistInfo)
 )
 
 func (a *ArtistInfo) mapArtistsInfo() {
@@ -37,9 +34,6 @@ func (a *ArtistInfo) mapArtistsInfo() {
 	default:
 		for artistInfo := range chArtistInfo {
 			byId[artistInfo.Id] = *artistInfo
-			byCreationDate[artistInfo.CreationDate] = *artistInfo
-			byName[artistInfo.Name] = *artistInfo
-			byFirstAlbum[artistInfo.FirstAlbum] = *artistInfo
 		}
 	}
 }

@@ -11,15 +11,3 @@ func (a *ArtistInfo) Init() {
 func (a *ArtistInfo) GetByIdKey() map[int]ArtistInfo {
 	return byId
 }
-
-func (a *ArtistInfo) GetByCreationDate() map[int]ArtistInfo {
-	return byCreationDate
-}
-
-func (a *ArtistInfo) GetByName() map[string]ArtistInfo {
-	return byName
-}
-
-func (a *ArtistInfo) GetByFirstAlbum() map[string]ArtistInfo {
-	return byFirstAlbum
-}
