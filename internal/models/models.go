@@ -10,17 +10,17 @@ import (
 )
 
 type Models struct {
-	UserModel       usermodel.UserModel
-	FavoriteModel   favoritemodel.FavoriteModel
-	SearchModel     searchmodel.SearchModel
-	PreferenceModel preferencemodel.PreferenceModel
+	UserModel        usermodel.UserModel
+	FavoriteModel    favoritemodel.FavoriteModel
+	SoldTicketsModel searchmodel.SoldTicketsModel
+	PreferenceModel  preferencemodel.PreferenceModel
 }
 
 func New(db *pgx.Conn, logger jsonlog.Logger) *Models {
 	return &Models{
-		UserModel:       *usermodel.New(db, logger),
-		FavoriteModel:   *favoritemodel.New(db, logger),
-		SearchModel:     *searchmodel.New(db, logger),
-		PreferenceModel: *preferencemodel.New(db, logger),
+		UserModel:        *usermodel.New(db, logger),
+		FavoriteModel:    *favoritemodel.New(db, logger),
+		SoldTicketsModel: *searchmodel.New(db, logger),
+		PreferenceModel:  *preferencemodel.New(db, logger),
 	}
 }

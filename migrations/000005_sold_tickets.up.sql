@@ -13,8 +13,12 @@ CREATE TABLE IF NOT EXISTS sold_tickets (
     amt double precision NOT NULL, 
     location text NOT NULL, 
     bookingFee double precision NOT NULL,
+    version integer NOT NULL DEFAULT 1,
 
     CONSTRAINT fk_user FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE INDEX date_idx ON sold_tickets (concertDate);
+CREATE INDEX location_idx ON sold_tickets (location);
 
 COMMIT;
