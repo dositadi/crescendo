@@ -1,14 +1,17 @@
 package data
 
 type SoldTickets struct {
-	Id          string
-	UserId      string
-	ArtistId    int
-	ConcertDate string
-	TicketType  string
-	Qty         int
-	Vat         *float64
-	Amt         *float64
-	Location    string
-	BookingFee  *float64
+	Id               string
+	UserId           string
+	UserContactFName string
+	UserContactLName string
+	UserContactEmail string
+	ArtistId         int
+	ConcertDate      string
+	TicketType       string
+	Qty              int
+	Vat              *float64
+	Amt              *float64
+	Location         string
+	BookingFee       *float64
 }

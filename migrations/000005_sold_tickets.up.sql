@@ -4,7 +4,10 @@ CREATE TYPE ticket AS ENUM ('General Admission','VIP Standing','Reserved Seated'
 
 CREATE TABLE IF NOT EXISTS sold_tickets (
     id uuid NOT NULL,
-    userId uuid NOT NULL, 
+    userId uuid NOT NULL,
+    userContactFName text NOT NULL,
+    userContactLName text NOT NULL,
+    userContactEmail text NOT NULL, 
     artistId integer NOT NULL,
     concertDate text NOT NULL,
     ticketType ticket NOT NULL DEFAULT 'General Admission',

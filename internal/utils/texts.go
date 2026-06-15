@@ -19,4 +19,5 @@ const (
 	TICKET_TYPE_KEY   = "ticket-type"
 	INCREMENT_QTY_KEY = "increment"
 	DECREMENT_QTY_KEY = "decrement"
+	TOTAL_AMT_KEY     = "total"
 )
