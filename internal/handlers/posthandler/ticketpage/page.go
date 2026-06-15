@@ -39,17 +39,27 @@ type PreferenceModel interface {
 		Update(fav data.FavoriteUpdate) error
 	}
 */
-type TicketPage struct {
-	logger   jsonlog.Logger
-	embedded groupietracker.Embedded
-	client   artistapi.ArtistInfo
+
+type SoldTicketsModel interface {
+	Exists(userId, date, location string, artistId int) (bool, error)
+	Get(artistId int, userId, location, date string) (data.SoldTickets, error)
+	GetAll(userId string) ([]data.SoldTickets, error)
+	Insert(soldTicket data.SoldTickets) error
 }
 
-func New(logger jsonlog.Logger, embedded groupietracker.Embedded, client artistapi.ArtistInfo) *TicketPage {
+type TicketPage struct {
+	logger           jsonlog.Logger
+	embedded         groupietracker.Embedded
+	client           artistapi.ArtistInfo
+	soldTicketsModel SoldTicketsModel
+}
+
+func New(logger jsonlog.Logger, embedded groupietracker.Embedded, client artistapi.ArtistInfo, soldTicketsModel SoldTicketsModel) *TicketPage {
 	return &TicketPage{
-		logger:   logger,
-		embedded: embedded,
-		client:   client,
+		logger:           logger,
+		embedded:         embedded,
+		client:           client,
+		soldTicketsModel: soldTicketsModel,
 	}
 }
 

@@ -30,7 +30,7 @@ type Post struct {
 	TicketPage ticketpage.TicketPage
 }
 
-func New(userModel UserModel, favoriteModel homepagepost.FavoriteModel, preferenceModel homepagepost.PreferenceModel, client artistapi.ArtistInfo, logger jsonlog.Logger, embedded groupietracker.Embedded) *Post {
+func New(userModel UserModel, favoriteModel homepagepost.FavoriteModel, preferenceModel homepagepost.PreferenceModel, soldTicketsModel ticketpage.SoldTicketsModel, client artistapi.ArtistInfo, logger jsonlog.Logger, embedded groupietracker.Embedded) *Post {
 	return &Post{
 		userModel:  userModel,
 		logger:     logger,
@@ -38,6 +38,6 @@ func New(userModel UserModel, favoriteModel homepagepost.FavoriteModel, preferen
 		embedded:   embedded,
 		Auth:       *authpost.New(logger, userModel, preferenceModel, embedded),
 		HomePage:   *homepagepost.New(logger, userModel, favoriteModel, preferenceModel, embedded, client),
-		TicketPage: *ticketpage.New(logger, embedded, client),
+		TicketPage: *ticketpage.New(logger, embedded, client, soldTicketsModel),
 	}
 }

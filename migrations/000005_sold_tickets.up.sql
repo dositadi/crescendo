@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS sold_tickets (
     location text NOT NULL, 
     bookingFee double precision NOT NULL,
     version integer NOT NULL DEFAULT 1,
+    createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+    updateAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
     CONSTRAINT fk_user FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
