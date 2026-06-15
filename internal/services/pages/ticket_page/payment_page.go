@@ -20,6 +20,7 @@ func (t *TicketPage) RenderPaymentPage() error {
 
 	artistId := t.atoi(t.request.FormValue(utils.ARTIST_ID_KEY))
 	location := t.request.FormValue(utils.LOCATION_KEY)
+	date := t.request.FormValue(utils.DATE_KEY)
 	user := t.getUser()
 
 	booking, exists := ordercache.Get(user.Id, location, artistId)
@@ -35,11 +36,12 @@ func (t *TicketPage) RenderPaymentPage() error {
 	data := struct {
 		ArtistInfo              artistapi.ArtistInfo
 		ArtistId, VatValue      int
-		Location                string
+		Location, Date          string
 		Quantity                int
 		TicketType              string
 		BookingFee, TicketPrice float64
 	}{
+		Date:        date,
 		BookingFee:  float64(ordercache.BOOKING_FEE),
 		TicketPrice: t.getTicketPrice(booking.TicketType),
 		VatValue:    int(ordercache.VAT),
