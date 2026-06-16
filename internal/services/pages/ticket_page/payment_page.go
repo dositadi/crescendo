@@ -41,11 +41,13 @@ func (t *TicketPage) RenderPaymentPage() error {
 	artistInfo := t.client.GetByIdKey()[artistId]
 
 	data := struct {
-		ArtistInfo              artistapi.ArtistInfo
-		ArtistId, VatValue      int
-		Location, Date          string
-		Booking                 ordercache.Booking
-		BookingFee, TicketPrice float64
+		ArtistInfo                                                                                                     artistapi.ArtistInfo
+		ArtistId, VatValue                                                                                             int
+		Location, Date                                                                                                 string
+		Booking                                                                                                        ordercache.Booking
+		BookingFee, TicketPrice                                                                                        float64
+		FnKey, LnKey, EmailKey, CardNoKey, ExpiryDateKey, CvcKey, CardHolderNameKey, ArtistIdKey, LocationKey, DateKey string
+		PaymentUrl                                                                                                     string
 	}{
 		// Booking details
 		Date:        date,
@@ -58,6 +60,21 @@ func (t *TicketPage) RenderPaymentPage() error {
 		// Artist details
 		ArtistInfo: artistInfo,
 		ArtistId:   artistId,
+
+		// All keys
+		FnKey:             utils.USER_FN_KEY,
+		LnKey:             utils.USER_LN_KEY,
+		EmailKey:          utils.EMAIL_KEY,
+		CardNoKey:         utils.CARD_NO_KEY,
+		ExpiryDateKey:     utils.CARD_EXP_DATE_KEY,
+		CvcKey:            utils.CVC_KEY,
+		CardHolderNameKey: utils.CARD_HOLDER_NAME_KEY,
+		ArtistIdKey:       utils.ARTIST_ID_KEY,
+		LocationKey:       utils.LOCATION_KEY,
+		DateKey:           utils.DATE_KEY,
+
+		//Url
+		PaymentUrl: utils.Payment.String(),
 	}
 
 	temp, err := template.New("payment_page.html").Funcs(t.detailPageFuncMap()).ParseFS(t.embedded.Get(), fs...)

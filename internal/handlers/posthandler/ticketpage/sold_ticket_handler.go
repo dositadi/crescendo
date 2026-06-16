@@ -2,8 +2,8 @@ package ticketpage
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
@@ -31,13 +31,23 @@ func (t *TicketPage) SoldTicketHandler(w http.ResponseWriter, r *http.Request) {
 
 	var soldTicket data.SoldTickets
 
+	// Cache access data
 	location := r.FormValue(utils.LOCATION_KEY)
 	date := r.FormValue(utils.DATE_KEY)
 	artistId := t.atoi(r.FormValue(utils.ARTIST_ID_KEY), sourceSold)
-	total := r.FormValue(utils.TOTAL_AMT_KEY)
-	userFirstName := r.FormValue("")
-	userLastName := r.FormValue("")
-	userEmail := r.FormValue("")
+
+	// User contact info
+	userFirstName := r.FormValue(utils.USER_FN_KEY)
+	userLastName := r.FormValue(utils.USER_LN_KEY)
+	userEmail := r.FormValue(utils.EMAIL_KEY)
+
+	// Card details
+	cardNumber := r.FormValue(utils.CARD_NO_KEY)
+	cardExpDate := r.FormValue(utils.CARD_EXP_DATE_KEY)
+	cvc := r.FormValue(utils.CVC_KEY)
+	cardHolderName := r.FormValue(utils.CARD_HOLDER_NAME_KEY)
+
+	fmt.Printf("Card number: %s\nCard expiry date: %s\nCVC: %s\nCard holder name: %s\n", cardNumber, cardExpDate, cvc, cardHolderName)
 
 	order, exists := ordercache.Get(user.Id, location, artistId)
 	if !exists {
@@ -45,18 +55,15 @@ func (t *TicketPage) SoldTicketHandler(w http.ResponseWriter, r *http.Request) {
 		t.logger.PrintError(e.Error(), map[string]string{
 			"Source": sourceSold,
 		})
-		http.Error(w, e.Error(), http.StatusBadRequest)
+
+		detailPagePath := fmt.Sprintf("%s/%v", utils.ARTIST_DETAILS.String(), artistId)
+
+		url := fmt.Sprintf("%s?%s=%s&%s=%v&%s=%s&%s=%s", utils.TICKET.String(), utils.DATE_KEY, date, utils.ARTIST_ID_KEY, artistId, utils.LOCATION_KEY, location, utils.PATH_KEY, detailPagePath)
+
+		http.Redirect(w, r, url, http.StatusSeeOther)
 	}
 
 	vat := float64(int(ordercache.VAT))
-	amt, err := strconv.ParseFloat(total, 64)
-	if err != nil {
-		e := errors.New("Bad total value format (expected float)")
-		t.logger.PrintError(e.Error(), map[string]string{
-			"Source": sourceSold,
-		})
-		http.Error(w, e.Error(), http.StatusBadRequest)
-	}
 	bookingFee := float64(ordercache.BOOKING_FEE)
 
 	soldTicket = data.SoldTickets{
@@ -70,17 +77,18 @@ func (t *TicketPage) SoldTicketHandler(w http.ResponseWriter, r *http.Request) {
 		TicketType:       order.TicketType,
 		Qty:              order.Quantity,
 		Vat:              &vat,
-		Amt:              &amt,
+		Amt:              &order.GrandTotalAmount,
 		Location:         location,
 		BookingFee:       &bookingFee,
 	}
 
-	if err = t.soldTicketsModel.Insert(soldTicket); err != nil {
+	fmt.Println(soldTicket)
+
+	if err := t.soldTicketsModel.Insert(soldTicket); err != nil {
 		e := helper.WrapError("Sold ticket insertion error", err)
 		t.logger.PrintError(e.Error(), map[string]string{
 			"Source": sourceSold,
 		})
 		http.Error(w, e.Error(), http.StatusBadRequest)
 	}
-
 }

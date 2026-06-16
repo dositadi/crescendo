@@ -23,17 +23,17 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label class="block text-xs font-medium text-ink-secondary mb-1.5">First name</label>
-                <input type="text"
+                <input type="text" name="{{.FnKey}}"
                 name="first_name" placeholder="Alex" class="stripe-field"/>
               </div>
               <div>
                 <label class="block text-xs font-medium text-ink-secondary mb-1.5">Last name</label>
-                <input type="text"
+                <input type="text" name="{{.LnKey}}"
                 name="last_name" placeholder="Johnson" class="stripe-field"/>
               </div>
               <div class="sm:col-span-2">
                 <label class="block text-xs font-medium text-ink-secondary mb-1.5">Email address</label>
-                <input type="email"
+                <input type="email" name="{{.EmailKey}}"
                 name="email" placeholder="alex@example.com" class="stripe-field" />
                 <p class="text-[11px] text-ink-muted mt-1.5">Your tickets will be sent to this address.</p>
               </div>
@@ -67,7 +67,7 @@
               <div>
                 <label class="block text-xs font-medium text-ink-secondary mb-1.5">Card number</label>
                 <div class="card-field-wrap">
-                  <input type="text" placeholder="1234  5678  9012  3456"
+                  <input type="text" name="{{.CardNoKey}}" placeholder="1234  5678  9012  3456"
                          class="stripe-field card-num pr-20" maxlength="19" />
                   <!-- Card brand icons -->
                   <div class="card-icon">
@@ -94,12 +94,12 @@
               <div class="grid grid-cols-2 gap-3">
                 <div>
                   <label class="block text-xs font-medium text-ink-secondary mb-1.5">Expiry date</label>
-                  <input type="text" placeholder="MM / YY" class="stripe-field" maxlength="7" />
+                  <input type="text" name="{{.ExpiryDateKey}}" placeholder="MM / YY" class="stripe-field" maxlength="7" />
                 </div>
                 <div>
                   <label class="block text-xs font-medium text-ink-secondary mb-1.5">CVC</label>
                   <div class="card-field-wrap">
-                    <input type="text" placeholder="•••" class="stripe-field pr-10" maxlength="4" />
+                    <input type="text" name="{{.CvcKey}}" placeholder="•••" class="stripe-field pr-10" maxlength="4" />
                     <div class="card-icon">
                       <svg class="w-5 h-5 text-ink-disabled" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                         <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor"/>
@@ -113,7 +113,7 @@
               <!-- Cardholder name -->
               <div>
                 <label class="block text-xs font-medium text-ink-secondary mb-1.5">Cardholder name</label>
-                <input type="text" placeholder="Name on card" class="stripe-field" />
+                <input type="text" name="{{.CardHolderNameKey}}" placeholder="Name on card" class="stripe-field" />
               </div>
 
             </div>
@@ -122,7 +122,7 @@
             <div class="border-t border-border-soft my-5"></div>
 
             <!-- Pay now button -->
-            <a hx-post="" hx-target="#payment" hx-swap="outerHTML" hx-push-url="true" hx-vals='' hx-include="" class="btn-pay cursor-pointer">
+            <a hx-post="{{.PaymentUrl}}" hx-push-url="true" hx-vals='{"{{.ArtistIdKey}}":"{{.ArtistId}}", "{{.LocationKey}}":"{{.Location}}", "{{.DateKey}}":"{{.Date}}"}' hx-include="[name='{{.FnKey}}'], [name='{{.LnKey}}'], [name='{{.EmailKey}}'], [name='{{.CardNoKey}}'], [name='{{.ExpiryDateKey}}'], [name='{{.CvcKey}}'], [name='{{.CardHolderNameKey}}']" class="btn-pay cursor-pointer">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
               </svg>

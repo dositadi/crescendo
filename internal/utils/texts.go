@@ -20,4 +20,12 @@ const (
 	INCREMENT_QTY_KEY = "increment"
 	DECREMENT_QTY_KEY = "decrement"
 	TOTAL_AMT_KEY     = "total"
+
+	// User payment detail keys
+	USER_FN_KEY          = "first-name"
+	USER_LN_KEY          = "last-name"
+	CARD_NO_KEY          = "card-number"
+	CARD_EXP_DATE_KEY    = "expiry-date"
+	CVC_KEY              = "cvc"
+	CARD_HOLDER_NAME_KEY = "card-holder-name"
 )

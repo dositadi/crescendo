@@ -52,9 +52,9 @@ func (s *SoldTicketsModel) Insert(soldTicket data.SoldTickets) error {
 		return CONFLICT_ERR
 	}
 
-	query := "INSERT INTO favorites (id, userId, artistId, concertDate, ticketType, qty, vat, amt, location, bookingFee) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
+	query := "INSERT INTO favorites (id, userId, artistId, userContactFName, userContactLName, userContactEmail, concertDate, ticketType, qty, vat, amt, location, bookingFee) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)"
 
-	_, err = tx.Exec(ctx, query, soldTicket.Id, soldTicket.UserId, soldTicket.ArtistId, soldTicket.ConcertDate, soldTicket.TicketType, soldTicket.Qty, soldTicket.Vat, soldTicket.Amt, soldTicket.Location, soldTicket.BookingFee)
+	_, err = tx.Exec(ctx, query, soldTicket.Id, soldTicket.UserId, soldTicket.ArtistId, soldTicket.UserContactFName, soldTicket.UserContactLName, soldTicket.UserContactEmail, soldTicket.ConcertDate, soldTicket.TicketType, soldTicket.Qty, soldTicket.Vat, soldTicket.Amt, soldTicket.Location, soldTicket.BookingFee)
 	if err != nil {
 		var e error
 		switch {
