@@ -1,7 +1,9 @@
 package ticketpage
 
 import (
+	"fmt"
 	"html/template"
+	"net/http"
 
 	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
 	"github.com/dositadi/groupie-tracker/internal/helper"
@@ -28,7 +30,12 @@ func (t *TicketPage) RenderPaymentPage() error {
 		t.logger.PrintError(NOT_FOUND.Error(), map[string]string{
 			"Source": sourcePP,
 		})
-		return NOT_FOUND
+
+		detailPagePath := fmt.Sprintf("%s/%v", utils.ARTIST_DETAILS.String(), artistId)
+
+		url := fmt.Sprintf("%s?%s=%s&%s=%v&%s=%s&%s=%s", utils.TICKET.String(), utils.DATE_KEY, date, utils.ARTIST_ID_KEY, artistId, utils.LOCATION_KEY, location, utils.PATH_KEY, detailPagePath)
+
+		http.Redirect(t.responseWriter, t.request, url, http.StatusSeeOther)
 	}
 
 	artistInfo := t.client.GetByIdKey()[artistId]
@@ -37,19 +44,20 @@ func (t *TicketPage) RenderPaymentPage() error {
 		ArtistInfo              artistapi.ArtistInfo
 		ArtistId, VatValue      int
 		Location, Date          string
-		Quantity                int
-		TicketType              string
+		Booking                 ordercache.Booking
 		BookingFee, TicketPrice float64
 	}{
+		// Booking details
 		Date:        date,
+		Booking:     booking,
 		BookingFee:  float64(ordercache.BOOKING_FEE),
 		TicketPrice: ordercache.GetTicketPrice(booking.TicketType),
 		VatValue:    int(ordercache.VAT),
-		ArtistInfo:  artistInfo,
-		ArtistId:    artistId,
 		Location:    location,
-		Quantity:    booking.Quantity,
-		TicketType:  booking.TicketType,
+
+		// Artist details
+		ArtistInfo: artistInfo,
+		ArtistId:   artistId,
 	}
 
 	temp, err := template.New("payment_page.html").Funcs(t.detailPageFuncMap()).ParseFS(t.embedded.Get(), fs...)

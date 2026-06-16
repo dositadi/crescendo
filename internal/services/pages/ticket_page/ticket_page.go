@@ -21,11 +21,11 @@ func (t *TicketPage) RenderTicketPage() error {
 		"internal/web/static/pages/ticket_purchase_page.html",
 	}
 
-	path := t.request.FormValue(utils.PATH_KEY)
 	artistId := t.atoi(t.request.FormValue(utils.ARTIST_ID_KEY))
 	date := t.request.FormValue(utils.DATE_KEY)
 	location := t.request.FormValue(utils.LOCATION_KEY)
 	user := t.getUser()
+	path := fmt.Sprintf("%s/%v", utils.ARTIST_DETAILS.String(), artistId)
 
 	// Add the user's order to the cache
 	ordercache.Set(user.Id, location, artistId, string(ordercache.GENERAL))
@@ -48,9 +48,13 @@ func (t *TicketPage) RenderTicketPage() error {
 		t.logger.PrintError(NOT_FOUND.Error(), map[string]string{
 			"Source": sourcePa,
 		})
-		return NOT_FOUND
+
+		detailPagePath := fmt.Sprintf("%s/%v", utils.ARTIST_DETAILS.String(), artistId)
+
+		url := fmt.Sprintf("%s?%s=%s&%s=%v&%s=%s&%s=%s", utils.TICKET.String(), utils.DATE_KEY, date, utils.ARTIST_ID_KEY, artistId, utils.LOCATION_KEY, location, utils.PATH_KEY, detailPagePath)
+
+		http.Redirect(t.responseWriter, t.request, url, http.StatusSeeOther)
 	}
-	fmt.Println(booking)
 
 	data := struct {
 		TicketType                                                                         string

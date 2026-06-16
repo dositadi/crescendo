@@ -20,7 +20,6 @@ func (a *ArtistDetail) RenderAllEventsPage() error {
 	}
 
 	id := a.atoi(chi.URLParam(a.request, "id"))
-	fmt.Println(id)
 
 	artistInfo := a.client.GetByIdKey()[id]
 
@@ -31,15 +30,28 @@ func (a *ArtistDetail) RenderAllEventsPage() error {
 			"Status": sourceE,
 		})
 	}
+	prevPage := fmt.Sprintf("%s/%v", utils.ARTIST_DETAILS.String(), id)
 
 	data := struct {
-		ArtistDetailUrl string
-		ArtistInfo      artistapi.ArtistInfo
-		AllArtists      map[int]artistapi.ArtistInfo
+		ArtistDetailUrl, PreviousPageUrl, TicketUrl, PathUrl string
+		ArtistInfo                                           artistapi.ArtistInfo
+		AllArtists                                           map[int]artistapi.ArtistInfo
+		PathKey, DateKey, ArtistIdKey, LocationKey           string
 	}{
-		ArtistInfo:      artistInfo,
-		AllArtists:      a.client.GetByIdKey(),
+		// All urls
+		PreviousPageUrl: prevPage,
 		ArtistDetailUrl: utils.ARTIST_DETAILS.String(),
+		TicketUrl:       utils.TICKET.String(),
+
+		// Artists details
+		ArtistInfo: artistInfo,
+		AllArtists: a.client.GetByIdKey(),
+
+		// All keys
+		PathKey:     utils.PATH_KEY,
+		DateKey:     utils.DATE_KEY,
+		ArtistIdKey: utils.ARTIST_ID_KEY,
+		LocationKey: utils.LOCATION_KEY,
 	}
 
 	if err = temp.Execute(a.responseWriter, data); err != nil {
