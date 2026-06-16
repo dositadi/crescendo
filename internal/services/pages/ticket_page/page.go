@@ -46,23 +46,34 @@ type PreferenceModel interface {
 	Update(preference data.PreferenceUpdate) error
 }
 
+type SoldTicketsModel interface {
+	Exists(userId, date, location string, artistId int) (bool, error)
+	Get(artistId int, userId, location, date string) (data.SoldTickets, error)
+	GetAll(userId string) ([]data.SoldTickets, error)
+	Insert(soldTicket data.SoldTickets) error
+}
+
 type TicketPage struct {
-	logger         jsonlog.Logger
-	responseWriter http.ResponseWriter
-	embedded       groupietracker.Embedded
-	client         artistapi.ArtistInfo
-	request        *http.Request /*
+	logger           jsonlog.Logger
+	responseWriter   http.ResponseWriter
+	embedded         groupietracker.Embedded
+	client           artistapi.ArtistInfo
+	request          *http.Request
+	soldTicketsModel SoldTicketsModel
+	/*
 		favoriteModel   FavoriteModel
 		preferenceModel PreferenceModel */
 }
 
-func New(logger jsonlog.Logger, responseWriter http.ResponseWriter, embedded groupietracker.Embedded, client artistapi.ArtistInfo, request *http.Request /* favoriteModel FavoriteModel, preferenceModel PreferenceModel */) *TicketPage {
+func New(logger jsonlog.Logger, responseWriter http.ResponseWriter, embedded groupietracker.Embedded, client artistapi.ArtistInfo, request *http.Request, soldTicketsModel SoldTicketsModel /*preferenceModel PreferenceModel */) *TicketPage {
 	return &TicketPage{
-		logger:         logger,
-		responseWriter: responseWriter,
-		embedded:       embedded,
-		client:         client,
-		request:        request, /*
+		logger:           logger,
+		responseWriter:   responseWriter,
+		embedded:         embedded,
+		client:           client,
+		request:          request,
+		soldTicketsModel: soldTicketsModel,
+		/*
 			favoriteModel:   favoriteModel,
 			preferenceModel: preferenceModel, */
 	}

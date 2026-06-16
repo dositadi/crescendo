@@ -11,7 +11,7 @@ const (
 )
 
 func (d *DetailPage) TicketPageHandler(w http.ResponseWriter, r *http.Request) {
-	pages := ticketpage.New(d.logger, w, d.embedded, d.client, r)
+	pages := ticketpage.New(d.logger, w, d.embedded, d.client, r, nil)
 
 	if err := pages.RenderTicketPage(); err != nil {
 		d.logger.PrintError(err.Error(), map[string]string{

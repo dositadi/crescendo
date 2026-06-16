@@ -13,7 +13,7 @@ const (
 	sourcePa = "Render Ticket page partial f(n) under ticketpage pkg"
 )
 
-var NOT_FOUND = errors.New("Order does not exist in cache")
+var NOT_FOUND = errors.New("Order does not exist!")
 
 func (t *TicketPage) RenderTicketPagePartials(userId, location string, artistId int) error {
 	fs := []string{

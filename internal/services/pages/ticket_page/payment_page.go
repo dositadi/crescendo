@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
 	"github.com/dositadi/groupie-tracker/internal/services/ordercache"
 	"github.com/dositadi/groupie-tracker/internal/utils"
@@ -38,6 +39,18 @@ func (t *TicketPage) RenderPaymentPage(paymentPage bool) error {
 		http.Redirect(t.responseWriter, t.request, url, http.StatusSeeOther)
 	}
 
+	var boughtTicket data.SoldTickets
+
+	if !paymentPage && t.soldTicketsModel != nil {
+		ticket, err := t.soldTicketsModel.Get(artistId, user.Id, location, date)
+		if err != nil {
+			t.logger.PrintError(NOT_FOUND.Error(), map[string]string{
+				"Source": sourcePP,
+			})
+		}
+		boughtTicket = ticket
+	}
+
 	artistInfo := t.client.GetByIdKey()[artistId]
 
 	data := struct {
@@ -48,6 +61,7 @@ func (t *TicketPage) RenderPaymentPage(paymentPage bool) error {
 		BookingFee, TicketPrice                                                                                        float64
 		FnKey, LnKey, EmailKey, CardNoKey, ExpiryDateKey, CvcKey, CardHolderNameKey, ArtistIdKey, LocationKey, DateKey string
 		PaymentUrl                                                                                                     string
+		BoughtTicket                                                                                                   data.SoldTickets
 	}{
 		// Booking details
 		Date:        date,
@@ -75,6 +89,9 @@ func (t *TicketPage) RenderPaymentPage(paymentPage bool) error {
 
 		//Url
 		PaymentUrl: utils.Payment.String(),
+
+		//Bought ticket info
+		BoughtTicket: boughtTicket,
 	}
 
 	temp, err := template.New("payment_page.html").Funcs(t.detailPageFuncMap()).ParseFS(t.embedded.Get(), fs...)

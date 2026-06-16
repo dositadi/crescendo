@@ -20,7 +20,7 @@ func (t *TicketPage) TicketTypeHandler(w http.ResponseWriter, r *http.Request) {
 
 	ordercache.Set(user.Id, location, artistId, ticketType)
 
-	partial := ticketpage.New(t.logger, w, t.embedded, t.client, r)
+	partial := ticketpage.New(t.logger, w, t.embedded, t.client, r, t.soldTicketsModel)
 
 	if err := partial.RenderTicketPagePartials(user.Id, location, artistId); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

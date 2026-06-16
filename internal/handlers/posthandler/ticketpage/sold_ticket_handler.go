@@ -91,7 +91,7 @@ func (t *TicketPage) SoldTicketHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, e.Error(), http.StatusBadRequest)
 	}
 
-	page := ticketpage.New(t.logger, w, t.embedded, t.client, r)
+	page := ticketpage.New(t.logger, w, t.embedded, t.client, r, t.soldTicketsModel)
 
 	if err := page.RenderPaymentPage(false); err != nil {
 		t.logger.PrintError(err.Error(), map[string]string{

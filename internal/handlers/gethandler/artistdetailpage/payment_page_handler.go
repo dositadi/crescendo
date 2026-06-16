@@ -11,7 +11,7 @@ const (
 )
 
 func (d *DetailPage) RenderPaymentPage(w http.ResponseWriter, r *http.Request) {
-	page := ticketpage.New(d.logger, w, d.embedded, d.client, r)
+	page := ticketpage.New(d.logger, w, d.embedded, d.client, r,nil)
 
 	if err := page.RenderPaymentPage(true); err != nil {
 		d.logger.PrintError(err.Error(), map[string]string{
