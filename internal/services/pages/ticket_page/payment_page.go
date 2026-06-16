@@ -16,6 +16,13 @@ const (
 	sourcePP = "Render payment page under ticketpage pkg"
 )
 
+type recieptData struct {
+	BoughtTicket                                                   data.SoldTickets
+	TotalTicketAmount, TotalBookingFee, TotalVatAmount, GrandTotal float64
+	ArtistDetailUrl                                                string
+	ArtistName                                                     string
+}
+
 func (t *TicketPage) RenderPaymentPage(paymentPage bool) error {
 	fs := []string{
 		"internal/web/static/partials/pages/payment_page.html",
@@ -40,6 +47,7 @@ func (t *TicketPage) RenderPaymentPage(paymentPage bool) error {
 	}
 
 	var boughtTicket data.SoldTickets
+	var recieptData recieptData
 
 	if !paymentPage && t.soldTicketsModel != nil {
 		ticket, err := t.soldTicketsModel.Get(artistId, user.Id, location, date)
@@ -49,11 +57,22 @@ func (t *TicketPage) RenderPaymentPage(paymentPage bool) error {
 			})
 		}
 		boughtTicket = ticket
+
+		recieptData.ArtistDetailUrl = fmt.Sprintf("%s/%v", utils.ARTIST_DETAILS.String(), artistId)
+		recieptData.ArtistName = t.client.GetByIdKey()[boughtTicket.ArtistId].Name
+
+		//Bought ticket info
+		recieptData.BoughtTicket = boughtTicket
+		recieptData.TotalTicketAmount = ordercache.TotalTicketAmount(ordercache.GetTicketPrice(boughtTicket.TicketType), booking.Quantity)
+
+		recieptData.TotalBookingFee = ordercache.TotalBookingFee(float64(ordercache.BOOKING_FEE), boughtTicket.Qty)
+		
+		recieptData.TotalVatAmount = ordercache.VatAmount(*boughtTicket.Vat, ordercache.TotalTicketAmount(ordercache.GetTicketPrice(boughtTicket.TicketType), booking.Quantity), ordercache.TotalBookingFee(float64(ordercache.BOOKING_FEE), boughtTicket.Qty))
 	}
 
 	artistInfo := t.client.GetByIdKey()[artistId]
 
-	data := struct {
+	paymentData := struct {
 		ArtistInfo                                                                                                     artistapi.ArtistInfo
 		ArtistId, VatValue                                                                                             int
 		Location, Date                                                                                                 string
@@ -61,7 +80,6 @@ func (t *TicketPage) RenderPaymentPage(paymentPage bool) error {
 		BookingFee, TicketPrice                                                                                        float64
 		FnKey, LnKey, EmailKey, CardNoKey, ExpiryDateKey, CvcKey, CardHolderNameKey, ArtistIdKey, LocationKey, DateKey string
 		PaymentUrl                                                                                                     string
-		BoughtTicket                                                                                                   data.SoldTickets
 	}{
 		// Booking details
 		Date:        date,
@@ -89,9 +107,6 @@ func (t *TicketPage) RenderPaymentPage(paymentPage bool) error {
 
 		//Url
 		PaymentUrl: utils.Payment.String(),
-
-		//Bought ticket info
-		BoughtTicket: boughtTicket,
 	}
 
 	temp, err := template.New("payment_page.html").Funcs(t.detailPageFuncMap()).ParseFS(t.embedded.Get(), fs...)
@@ -104,7 +119,7 @@ func (t *TicketPage) RenderPaymentPage(paymentPage bool) error {
 	}
 
 	if paymentPage {
-		if err := temp.ExecuteTemplate(t.responseWriter, "payment", data); err != nil {
+		if err := temp.ExecuteTemplate(t.responseWriter, "payment", paymentData); err != nil {
 			e := helper.WrapError("Template execution error", err)
 			t.logger.PrintError(e.Error(), map[string]string{
 				"Source": sourcePa,
@@ -112,7 +127,7 @@ func (t *TicketPage) RenderPaymentPage(paymentPage bool) error {
 			return e
 		}
 	} else {
-		if err := temp.ExecuteTemplate(t.responseWriter, "reciept", data); err != nil {
+		if err := temp.ExecuteTemplate(t.responseWriter, "reciept", recieptData); err != nil {
 			e := helper.WrapError("Template execution error", err)
 			t.logger.PrintError(e.Error(), map[string]string{
 				"Source": sourcePa,

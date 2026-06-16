@@ -288,7 +288,7 @@
         <h1 class="font-display text-3xl lg:text-4xl text-ink tracking-tight mb-2">You're going!</h1>
         <p class="text-sm text-ink-muted leading-relaxed max-w-sm mx-auto">
           Payment confirmed. Your tickets have been sent to
-          <span class="font-semibold text-ink">alex@example.com</span>
+          <span class="font-semibold text-ink">{{.BoughtTicket.UserContactEmail}}</span>
         </p>
 
         <!-- Order ref pill -->
@@ -337,14 +337,14 @@
               <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5"/>
               </svg>
-              <span class="text-white/70 text-xs">Saturday, 14 June 2025</span>
+              <span class="text-white/70 text-xs"> {{GetDay .BoughtTicket.ConcertDate}} {{GetMonth .BoughtTicket.ConcertDate}} {{GetYear .BoughtTicket.ConcertDate}}</span>
             </div>
             <div class="flex items-center gap-1.5">
               <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
               </svg>
-              <span class="text-white/70 text-xs">Wembley Stadium, London, UK</span>
+              <span class="text-white/70 text-xs">{{.BoughtTicket.Location}}</span>
             </div>
             <div class="flex items-center gap-1.5">
               <svg class="w-3.5 h-3.5 text-white/50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -375,21 +375,8 @@
                   </svg>
                 </div>
                 <div>
-                  <p class="text-sm font-semibold text-ink">General Admission</p>
+                  <p class="text-sm font-semibold text-ink">{{.BoughtTicket.TicketType}}  × {{.BoughtTicket.Qty}}</p>
                   <p class="text-xs text-ink-muted">Standing floor · Ticket #01 of 02</p>
-                </div>
-              </div>
-
-              <!-- Ticket chip 2 -->
-              <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-surface-alt border border-border flex items-center justify-center shrink-0">
-                  <svg class="w-4 h-4 text-ink-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a3 3 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z"/>
-                  </svg>
-                </div>
-                <div>
-                  <p class="text-sm font-semibold text-ink">General Admission</p>
-                  <p class="text-xs text-ink-muted">Standing floor · Ticket #02 of 02</p>
                 </div>
               </div>
             </div>
@@ -441,20 +428,20 @@
           <p class="text-[10px] uppercase tracking-widest font-semibold text-ink-muted mb-3">Payment Summary</p>
           <div>
             <div class="receipt-row">
-              <span class="text-ink-secondary">General Admission × 2</span>
-              <span class="font-medium text-ink">€98.00</span>
+              <span class="text-ink-secondary">{{.BoughtTicket.TicketType}} × {{.BoughtTicket.Qty}}</span>
+              <span class="font-medium text-ink">€{{.TotalTicketAmount}}</span>
             </div>
             <div class="receipt-row">
-              <span class="text-ink-secondary">Booking fee × 2</span>
-              <span class="font-medium text-ink">€5.00</span>
+              <span class="text-ink-secondary">Booking fee × {{.BoughtTicket.Qty}}</span>
+              <span class="font-medium text-ink">€{{.TotalBookingFee}}</span>
             </div>
             <div class="receipt-row">
-              <span class="text-ink-secondary">VAT (19%)</span>
-              <span class="font-medium text-ink">€18.62</span>
+              <span class="text-ink-secondary">VAT ({{.BoughtTicket.Vat}}%)</span>
+              <span class="font-medium text-ink">€{{.TotalVatAmount}}</span>
             </div>
             <div class="receipt-row" style="border-bottom:none;padding-top:0.75rem;margin-top:0.25rem;border-top:1.5px solid #EEF1F4;">
               <span class="font-bold text-ink">Total paid</span>
-              <span class="font-bold text-brand text-base">€121.62</span>
+              <span class="font-bold text-brand text-base">€{{.BoughtTicket.Amt}}</span>
             </div>
           </div>
 
@@ -473,7 +460,7 @@
         <!-- Receipt footer -->
         <div class="px-6 py-4 bg-surface-alt/50 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div class="text-center sm:text-left">
-            <p class="text-xs text-ink-muted">A copy has been sent to <span class="font-semibold text-ink">alex@example.com</span></p>
+            <p class="text-xs text-ink-muted">A copy has been sent to <span class="font-semibold text-ink">{{.BoughtTicket.UserContactEmail}}</span></p>
           </div>
           <!-- Get Receipt button -->
           <label for="view-receipt"
@@ -493,7 +480,7 @@
 
       <!-- ── Below receipt actions ───────────────────────────────────── -->
       <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 animate-fade-up-d4">
-        <a href="#"
+        <a hx-get="{{.ArtistDetailUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true"
            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface-white border border-border
                   text-sm font-medium text-ink-secondary hover:border-brand/30 hover:bg-brand-light hover:text-brand
                   transition-all duration-200">
