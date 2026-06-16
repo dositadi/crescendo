@@ -19,7 +19,7 @@ func (s *SoldTicketsModel) Exists(userId, date, location string, artistId int) (
 	ctx, cancel := context.WithTimeout(context.Background(), timeout*time.Second)
 	defer cancel()
 
-	query := `SELECT EXISTS (SELECT 1 FROM preferences WHERE userId = $1 AND concertDate = $2 AND location = $3 AND artistId = $4)`
+	query := `SELECT EXISTS (SELECT 1 FROM sold_tickets WHERE userId = $1 AND concertDate = $2 AND location = $3 AND artistId = $4)`
 
 	row := s.db.QueryRow(ctx, query, userId, date, location, artistId)
 

@@ -15,7 +15,7 @@ const (
 	sourcePP = "Render payment page under ticketpage pkg"
 )
 
-func (t *TicketPage) RenderPaymentPage() error {
+func (t *TicketPage) RenderPaymentPage(paymentPage bool) error {
 	fs := []string{
 		"internal/web/static/partials/pages/payment_page.html",
 	}
@@ -86,12 +86,22 @@ func (t *TicketPage) RenderPaymentPage() error {
 		return e
 	}
 
-	if err := temp.ExecuteTemplate(t.responseWriter, "payment", data); err != nil {
-		e := helper.WrapError("Template execution error", err)
-		t.logger.PrintError(e.Error(), map[string]string{
-			"Source": sourcePa,
-		})
-		return e
+	if paymentPage {
+		if err := temp.ExecuteTemplate(t.responseWriter, "payment", data); err != nil {
+			e := helper.WrapError("Template execution error", err)
+			t.logger.PrintError(e.Error(), map[string]string{
+				"Source": sourcePa,
+			})
+			return e
+		}
+	} else {
+		if err := temp.ExecuteTemplate(t.responseWriter, "reciept", data); err != nil {
+			e := helper.WrapError("Template execution error", err)
+			t.logger.PrintError(e.Error(), map[string]string{
+				"Source": sourcePa,
+			})
+			return e
+		}
 	}
 	return nil
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
 	"github.com/dositadi/groupie-tracker/internal/services/ordercache"
+	ticketpage "github.com/dositadi/groupie-tracker/internal/services/pages/ticket_page"
 	"github.com/dositadi/groupie-tracker/internal/utils"
 	"github.com/google/uuid"
 )
@@ -82,13 +83,21 @@ func (t *TicketPage) SoldTicketHandler(w http.ResponseWriter, r *http.Request) {
 		BookingFee:       &bookingFee,
 	}
 
-	fmt.Println(soldTicket)
-
 	if err := t.soldTicketsModel.Insert(soldTicket); err != nil {
 		e := helper.WrapError("Sold ticket insertion error", err)
 		t.logger.PrintError(e.Error(), map[string]string{
 			"Source": sourceSold,
 		})
 		http.Error(w, e.Error(), http.StatusBadRequest)
+	}
+
+	page := ticketpage.New(t.logger, w, t.embedded, t.client, r)
+
+	if err := page.RenderPaymentPage(false); err != nil {
+		t.logger.PrintError(err.Error(), map[string]string{
+			"Source": sourceSold,
+		})
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 }

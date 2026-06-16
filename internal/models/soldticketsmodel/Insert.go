@@ -41,6 +41,18 @@ func (s *SoldTicketsModel) Insert(soldTicket data.SoldTickets) error {
 		return e
 	}
 
+	var amt, vat, bookingFee float64
+
+	if soldTicket.Amt != nil {
+		amt = *soldTicket.Amt
+	}
+	if soldTicket.Vat != nil {
+		vat = *soldTicket.Vat
+	}
+	if soldTicket.BookingFee != nil {
+		bookingFee = *soldTicket.BookingFee
+	}
+
 	exists, err := s.Exists(soldTicket.UserId, soldTicket.ConcertDate, soldTicket.Location, soldTicket.ArtistId)
 	if err != nil {
 		return err
@@ -52,9 +64,9 @@ func (s *SoldTicketsModel) Insert(soldTicket data.SoldTickets) error {
 		return CONFLICT_ERR
 	}
 
-	query := "INSERT INTO favorites (id, userId, artistId, userContactFName, userContactLName, userContactEmail, concertDate, ticketType, qty, vat, amt, location, bookingFee) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)"
+	query := "INSERT INTO sold_tickets (id, userId, artistId, userContactFName, userContactLName, userContactEmail, concertDate, ticketType, qty, vat, amt, location, bookingFee) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)"
 
-	_, err = tx.Exec(ctx, query, soldTicket.Id, soldTicket.UserId, soldTicket.ArtistId, soldTicket.UserContactFName, soldTicket.UserContactLName, soldTicket.UserContactEmail, soldTicket.ConcertDate, soldTicket.TicketType, soldTicket.Qty, soldTicket.Vat, soldTicket.Amt, soldTicket.Location, soldTicket.BookingFee)
+	_, err = tx.Exec(ctx, query, soldTicket.Id, soldTicket.UserId, soldTicket.ArtistId, soldTicket.UserContactFName, soldTicket.UserContactLName, soldTicket.UserContactEmail, soldTicket.ConcertDate, soldTicket.TicketType, soldTicket.Qty, vat, amt, soldTicket.Location, bookingFee)
 	if err != nil {
 		var e error
 		switch {
