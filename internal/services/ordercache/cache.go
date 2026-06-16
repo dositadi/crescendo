@@ -3,9 +3,13 @@ package ordercache
 import (
 	"context"
 	"fmt"
+	"os"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
+
+	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
 
 type Ticket string
@@ -18,6 +22,8 @@ const (
 	VIP      Ticket = Ticket("VIP Standing")
 	RESERVED Ticket = Ticket("Reserved Seated")
 )
+
+var logger = jsonlog.New(os.Stdout, jsonlog.LevelInfo)
 
 const (
 	GENERAL_AMT  TicketAmount = TicketAmount(49)
@@ -74,6 +80,10 @@ func (c *Cache) evictLoop(ctx context.Context) {
 			for key := range c.store {
 				if now.After(c.store[key].expiryTime) {
 					delete(c.store, key)
+					info := fmt.Sprintf("User order with id: %s, has been deleted from cache", key)
+					logger.PrintInfo(info, map[string]string{
+						"Source": "Order cache evict loop",
+					})
 				}
 			}
 			c.mu.Unlock()
@@ -93,6 +103,11 @@ func Set(userId, location string, artistId int, tickettype string) {
 	}
 	setAmountFields(key)
 	global.mu.Unlock()
+	info := fmt.Sprintf("User order with id: %s, has been set in cache", key)
+	logger.PrintInfo(info, map[string]string{
+		"Source":     "Order cache set f(n)",
+		"TicketType": tickettype,
+	})
 }
 
 func setAmountFields(key string) {
@@ -111,6 +126,11 @@ func Get(userId, location string, artistId int) (Booking, bool) {
 	global.mu.RLock()
 	booking, ok := global.store[key]
 	defer global.mu.RUnlock()
+
+	info := fmt.Sprintf("Get user order with id: %s, successful", key)
+	logger.PrintInfo(info, map[string]string{
+		"Source": "Order cache get f(n)",
+	})
 	return booking, ok
 }
 
@@ -121,6 +141,11 @@ func Increment(userId, location string, artistId int) bool {
 	defer global.mu.Unlock()
 	booking, ok := global.store[key]
 	if !ok || booking.Quantity > 8 {
+		info := "Order not found in cache"
+		logger.PrintInfo(info, map[string]string{
+			"Source":   "Order cache set f(n)",
+			"Order Id": key,
+		})
 		return false
 	}
 	booking.Quantity++
@@ -128,6 +153,13 @@ func Increment(userId, location string, artistId int) bool {
 	global.store[key] = booking
 
 	setAmountFields(key)
+
+	info := "User increased number of ticket"
+	logger.PrintInfo(info, map[string]string{
+		"Source":   "Order cache set f(n)",
+		"Order Id": key,
+		"Qty":      strconv.FormatInt(int64(booking.Quantity), 10),
+	})
 	return ok
 }
 
@@ -138,6 +170,11 @@ func Decrement(userId, location string, artistId int) bool {
 	defer global.mu.Unlock()
 	booking, ok := global.store[key]
 	if !ok || booking.Quantity <= 1 {
+		info := "Order not found in cache"
+		logger.PrintInfo(info, map[string]string{
+			"Source":   "Order cache set f(n)",
+			"Order Id": key,
+		})
 		return false
 	}
 	booking.Quantity--
@@ -145,6 +182,13 @@ func Decrement(userId, location string, artistId int) bool {
 	global.store[key] = booking
 
 	setAmountFields(key)
+
+	info := "User decreased number of ticket"
+	logger.PrintInfo(info, map[string]string{
+		"Source":   "Order cache set f(n)",
+		"Order Id": key,
+		"Qty":      strconv.FormatInt(int64(booking.Quantity), 10),
+	})
 	return ok
 }
 
@@ -154,4 +198,9 @@ func Delete(userId, location string, artistId int) {
 	global.mu.Lock()
 	delete(global.store, key)
 	global.mu.Unlock()
+	info := "User order deleted successfully"
+	logger.PrintInfo(info, map[string]string{
+		"Source":   "Order cache set f(n)",
+		"Order Id": key,
+	})
 }
