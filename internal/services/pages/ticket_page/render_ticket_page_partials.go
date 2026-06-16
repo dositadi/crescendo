@@ -39,18 +39,22 @@ func (t *TicketPage) RenderTicketPagePartials(userId, location string, artistId 
 		ArtistId                                                                   int
 		Location                                                                   string
 	}{
-		IncrementQtyKey: utils.INCREMENT_QTY_KEY,
-		DecrementQtyKey: utils.DECREMENT_QTY_KEY,
-		LocationKey:     utils.LOCATION_KEY,
-		ArtistIdKey:     utils.ARTIST_ID_KEY,
-		ArtistId:        artistId,
-		Location:        location,
-		TicketQtyUrl:    utils.TicketQuantity.String(),
-		TicketType:      booking.TicketType,
-		Quantity:        booking.Quantity,
-		TicketPrice:     ordercache.GetTicketPrice(booking.TicketType),
-		BookingFee:      float64(ordercache.BOOKING_FEE),
-		VatValue:        int(ordercache.VAT),
+		IncrementQtyKey:   utils.INCREMENT_QTY_KEY,
+		DecrementQtyKey:   utils.DECREMENT_QTY_KEY,
+		LocationKey:       utils.LOCATION_KEY,
+		ArtistIdKey:       utils.ARTIST_ID_KEY,
+		ArtistId:          artistId,
+		Location:          location,
+		TicketQtyUrl:      utils.TicketQuantity.String(),
+		TicketType:        booking.TicketType,
+		Quantity:          booking.Quantity,
+		TotalBookingFee:   booking.TotalBookingFee,
+		TotalTicketAmount: booking.TotalTicketAmount,
+		TotalVatAmount:    booking.TotalVatAmount,
+		GrandTotal:        booking.GrandTotalAmount,
+		TicketPrice:       ordercache.GetTicketPrice(booking.TicketType),
+		BookingFee:        float64(ordercache.BOOKING_FEE),
+		VatValue:          int(ordercache.VAT),
 	}
 
 	temp := template.Must(template.New("ticket_page_partials.htmls").Funcs(t.detailPageFuncMap()).ParseFS(t.embedded.Get(), fs...))
