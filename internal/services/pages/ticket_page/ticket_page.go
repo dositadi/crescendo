@@ -23,7 +23,6 @@ func (t *TicketPage) RenderTicketPage() error {
 
 	path := t.request.FormValue(utils.PATH_KEY)
 	artistId := t.atoi(t.request.FormValue(utils.ARTIST_ID_KEY))
-	fmt.Println(artistId)
 	date := t.request.FormValue(utils.DATE_KEY)
 	location := t.request.FormValue(utils.LOCATION_KEY)
 	user := t.getUser()
@@ -51,6 +50,7 @@ func (t *TicketPage) RenderTicketPage() error {
 		})
 		return NOT_FOUND
 	}
+	fmt.Println(booking)
 
 	data := struct {
 		TicketType                                                                         string
@@ -66,35 +66,46 @@ func (t *TicketPage) RenderTicketPage() error {
 		GeneralTicket, VipTicket, ReserveTicket                                            string
 		GeneralTicketPrice, VipTicketPrice, ReserveTicketPrice                             float64
 	}{
-		DecrementQtyKey:    utils.DECREMENT_QTY_KEY,
-		IncrementQtyKey:    utils.INCREMENT_QTY_KEY,
-		TicketType:         booking.TicketType,
-		Quantity:           booking.Quantity,
-		TotalBookingFee:    booking.TotalBookingFee,
-		TotalTicketAmount:  booking.TotalTicketAmount,
-		TotalVatAmount:     booking.TotalVatAmount,
-		GrandTotal:         booking.GrandTotalAmount,
-		TicketPrice:        ordercache.GetTicketPrice(booking.TicketType),
-		BookingFee:         float64(ordercache.BOOKING_FEE),
-		VatValue:           ordercache.Round(float64(ordercache.VAT)),
-		GeneralTicket:      string(ordercache.GENERAL),
-		VipTicket:          string(ordercache.VIP),
-		ReserveTicket:      string(ordercache.RESERVED),
+		// User order details from cache
+		TicketType:        booking.TicketType,
+		Quantity:          booking.Quantity,
+		TotalBookingFee:   booking.TotalBookingFee,
+		TotalTicketAmount: booking.TotalTicketAmount,
+		TotalVatAmount:    booking.TotalVatAmount,
+		GrandTotal:        booking.GrandTotalAmount,
+
+		// Tickets
+		GeneralTicket: string(ordercache.GENERAL),
+		VipTicket:     string(ordercache.VIP),
+		ReserveTicket: string(ordercache.RESERVED),
+
+		//Ticket prices
 		GeneralTicketPrice: float64(ordercache.GENERAL_AMT),
 		VipTicketPrice:     float64(ordercache.VIP_AMT),
 		ReserveTicketPrice: float64(ordercache.RESERVED_AMT),
-		TicketTypeKey:      utils.TICKET_TYPE_KEY,
-		ArtistIdKey:        utils.ARTIST_ID_KEY,
-		DateKey:            utils.DATE_KEY,
-		LocationKey:        utils.LOCATION_KEY,
-		ArtistId:           artistId,
-		TicketTypeUrl:      utils.TicketType.String(),
-		TicketQtyUrl:       utils.TicketQuantity.String(),
-		PaymentUrl:         utils.Payment.String(),
-		ArtistInfo:         artistInfo,
-		Location:           location,
-		Date:               date,
-		PreviousPageUrl:    path,
+		TicketPrice:        ordercache.GetTicketPrice(booking.TicketType),
+		BookingFee:         float64(ordercache.BOOKING_FEE),
+		VatValue:           ordercache.Round(float64(ordercache.VAT)),
+
+		// All keys
+		TicketTypeKey:   utils.TICKET_TYPE_KEY,
+		ArtistIdKey:     utils.ARTIST_ID_KEY,
+		DateKey:         utils.DATE_KEY,
+		LocationKey:     utils.LOCATION_KEY,
+		DecrementQtyKey: utils.DECREMENT_QTY_KEY,
+		IncrementQtyKey: utils.INCREMENT_QTY_KEY,
+
+		// Page Urls
+		TicketTypeUrl:   utils.TicketType.String(),
+		TicketQtyUrl:    utils.TicketQuantity.String(),
+		PaymentUrl:      utils.Payment.String(),
+		PreviousPageUrl: path,
+
+		// Artist info
+		ArtistId:   artistId,
+		ArtistInfo: artistInfo,
+		Location:   location,
+		Date:       date,
 	}
 
 	temp, err := template.New("ticket_purchase_page.html").Funcs(t.detailPageFuncMap()).ParseFS(t.embedded.Get(), fs...)

@@ -96,16 +96,13 @@ func Set(userId, location string, artistId int, tickettype string) {
 }
 
 func setAmountFields(key string) {
-	global.mu.Lock()
 	booking := global.store[key]
-	booking.TotalTicketAmount = TotalTicketAmount(GetTicketPrice(booking.TicketType), booking.Quantity)
-	booking.TotalBookingFee = TotalBookingFee(float64(BOOKING_FEE), booking.Quantity)
-	booking.TotalVatAmount = VatAmount(float64(VAT), booking.TotalTicketAmount, booking.TotalBookingFee)
-	booking.GrandTotalAmount = GrandTotal(booking.TotalTicketAmount, booking.TotalBookingFee, booking.TotalVatAmount)
+	booking.TotalTicketAmount = totalTicketAmount(GetTicketPrice(booking.TicketType), booking.Quantity)
+	booking.TotalBookingFee = totalBookingFee(float64(BOOKING_FEE), booking.Quantity)
+	booking.TotalVatAmount = vatAmount(float64(VAT), booking.TotalTicketAmount, booking.TotalBookingFee)
+	booking.GrandTotalAmount = grandTotal(booking.TotalTicketAmount, booking.TotalBookingFee, booking.TotalVatAmount)
 
 	global.store[key] = booking
-
-	global.mu.Unlock()
 }
 
 func Get(userId, location string, artistId int) (Booking, bool) {

@@ -2,7 +2,6 @@ package ticketpage
 
 import (
 	"html/template"
-	"math"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -25,9 +24,6 @@ func (t *TicketPage) atoi(s string) int {
 
 func (t *TicketPage) detailPageFuncMap() template.FuncMap {
 	return template.FuncMap{
-		/* "RangeEvents": func(relations map[string][]string) {
-
-		}, */
 		"GetDay": func(date string) string {
 			out := strings.Split(date, "-")
 			return out[0]
@@ -83,23 +79,6 @@ func (t *TicketPage) detailPageFuncMap() template.FuncMap {
 		},
 		"RandomValues": func() int {
 			return rand.Intn(500)
-		},
-		"TotalTicketAmount": func(ticketPrice float64, qty int) float64 {
-			amt := ticketPrice * float64(qty)
-			return math.Round(amt*100) / 100
-		},
-		"TotalBookingFee": func(fee float64, qty int) float64 {
-			amt := fee * float64(qty)
-			return math.Round(amt*100) / 100
-		},
-		"VatAmount": func(vatRate int, totalTicketAmount, totalBookingFee float64) float64 {
-			totalPrice := totalBookingFee + totalTicketAmount
-			vatAmount := totalPrice * (float64(vatRate) / (100 + float64(vatRate)))
-			return math.Round(vatAmount*100) / 100
-		},
-		"GrandTotal": func(totalTicketAmount, totalBookingFee, vatAmount float64) float64 {
-			total := totalBookingFee + totalTicketAmount + vatAmount
-			return math.Round(total*100) / 100
 		},
 	}
 }

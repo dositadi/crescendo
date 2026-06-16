@@ -48,9 +48,15 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 		AllEventsPageUrl: utils.ALL_EVENTS_ROUTES.String(),
 	}
 
-	temp := template.Must(template.New("artist_profile.html").Funcs(a.detailPageFuncMap()).ParseFS(a.embedded.Get(), fs...))
+	temp, err := template.New("artist_profile.html").Funcs(a.detailPageFuncMap()).ParseFS(a.embedded.Get(), fs...)
+	if err != nil {
+		e := helper.WrapError("Template new error", err)
+		a.logger.PrintError(e.Error(), map[string]string{
+			"Source": sourceR,
+		})
+	}
 
-	if err := temp.Execute(a.responseWriter, data); err != nil {
+	if err = temp.Execute(a.responseWriter, data); err != nil {
 		e := helper.WrapError("Template execute error", err)
 		a.logger.PrintError(e.Error(), map[string]string{
 			"Source": sourceR,
