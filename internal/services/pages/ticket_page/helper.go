@@ -9,22 +9,8 @@ import (
 	"unicode"
 
 	"github.com/dositadi/groupie-tracker/internal/data"
-	"github.com/dositadi/groupie-tracker/internal/services/ordercache"
 	"github.com/dositadi/groupie-tracker/internal/utils"
 )
-
-func (t *TicketPage) getTicketPrice(ticketType string) float64 {
-	switch ticketType {
-	case string(ordercache.GENERAL):
-		return math.Round(float64(ordercache.GENERAL_AMT)*100) / 100
-	case string(ordercache.RESERVED):
-		return math.Round(float64(ordercache.RESERVED_AMT)*100) / 100
-	case string(ordercache.VIP):
-		return math.Round(float64(ordercache.VIP_AMT)*100) / 100
-	default:
-		return 0
-	}
-}
 
 func (t *TicketPage) atoi(s string) int {
 	out, err := strconv.Atoi(s)

@@ -288,17 +288,17 @@
 
             <div id="ticket-type" class="summary-row py-2">
               <span class="text-ink-secondary">{{.TicketType}} × {{.Quantity}}</span>
-              <span class="font-medium text-ink">€{{TotalTicketAmount .TicketPrice .Quantity}}</span>
+              <span class="font-medium text-ink">€{{.TotalTicketAmount}}</span>
             </div>
 
             <div id="booking-fee" class="summary-row py-2">
               <span class="text-ink-secondary">Booking fee × {{.Quantity}}</span>
-              <span class="font-medium text-ink">€{{TotalBookingFee .BookingFee .Quantity}}</span>
+              <span class="font-medium text-ink">€{{.TotalBookingFee}}</span>
             </div>
 
             <div id="vat" class="summary-row py-2">
               <span class="text-ink-secondary">VAT ({{.VatValue}}%)</span>
-              <span class="font-medium text-ink">€{{VatAmount .VatValue (TotalTicketAmount .TicketPrice .Quantity) (TotalBookingFee .BookingFee .Quantity)}}</span>
+              <span class="font-medium text-ink">€{{.TotalVatAmount}}</span>
             </div>
 
         </div>
@@ -306,7 +306,7 @@
         <!-- Total -->
         <div id="total" class="summary-row total">
           <span>Total</span>
-          <span class="text-brand">€{{GrandTotal (TotalTicketAmount .TicketPrice .Quantity) (TotalBookingFee .BookingFee .Quantity) (VatAmount .VatValue (TotalTicketAmount .TicketPrice .Quantity) (TotalBookingFee .BookingFee .Quantity))}}</span>
+          <span class="text-brand">€{{.GrandTotal}}</span>
         </div>
         </div>
 

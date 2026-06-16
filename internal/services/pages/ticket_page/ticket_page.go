@@ -51,14 +51,13 @@ func (t *TicketPage) RenderTicketPage() error {
 		})
 		return NOT_FOUND
 	}
-	fmt.Println(booking)
 
 	data := struct {
 		TicketType                                                                         string
 		Quantity                                                                           int
 		TicketPrice                                                                        float64
-		BookingFee                                                                         float64
-		VatValue                                                                           int
+		BookingFee, TotalBookingFee, TotalTicketAmount, TotalVatAmount, GrandTotal         float64
+		VatValue                                                                           float64
 		ArtistInfo                                                                         artistapi.ArtistInfo
 		Location, Date                                                                     string
 		PreviousPageUrl, TicketTypeUrl, TicketQtyUrl, PaymentUrl                           string
@@ -71,9 +70,9 @@ func (t *TicketPage) RenderTicketPage() error {
 		IncrementQtyKey:    utils.INCREMENT_QTY_KEY,
 		TicketType:         booking.TicketType,
 		Quantity:           booking.Quantity,
-		TicketPrice:        t.getTicketPrice(booking.TicketType),
+		TicketPrice:        ordercache.GetTicketPrice(booking.TicketType),
 		BookingFee:         float64(ordercache.BOOKING_FEE),
-		VatValue:           int(ordercache.VAT),
+		VatValue:           ordercache.Round(float64(ordercache.VAT)),
 		GeneralTicket:      string(ordercache.GENERAL),
 		VipTicket:          string(ordercache.VIP),
 		ReserveTicket:      string(ordercache.RESERVED),

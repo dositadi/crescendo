@@ -1,28 +1,28 @@
 {{define "order-summary"}}
  <div id="ticket-type" class="summary-row py-2">
     <span class="text-ink-secondary">{{.TicketType}} × {{.Quantity}}</span>
-    <span class="font-medium text-ink">€{{TotalTicketAmount .TicketPrice .Quantity}}</span>
+    <span class="font-medium text-ink">€{{.TotalTicketAmount}}</span>
 </div>
 
 <div id="booking-fee" hx-swap-oob="true" class="summary-row py-2">
     <span class="text-ink-secondary">Booking fee × {{.Quantity}}</span>
-    <span class="font-medium text-ink">€{{TotalBookingFee .BookingFee .Quantity}}</span>
+    <span class="font-medium text-ink">€{{.TotalBookingFee}}</span>
 </div>
 
 <div id="vat" hx-swap-oob="true" class="summary-row py-2">
     <span class="text-ink-secondary">VAT ({{.VatValue}})</span>
-    <span class="font-medium text-ink">€{{VatAmount .VatValue (TotalTicketAmount .TicketPrice .Quantity) (TotalBookingFee .BookingFee .Quantity)}}</span>
+    <span class="font-medium text-ink">€{{.TotalVatAmount}}</span>
 </div>
 
 <!-- Total -->
 <div id="total" hx-swap-oob="true" class="summary-row total">
     <span>Total</span>
-    <span class="text-brand">€{{GrandTotal (TotalTicketAmount .TicketPrice .Quantity) (TotalBookingFee .BookingFee .Quantity) (VatAmount .VatValue (TotalTicketAmount .TicketPrice .Quantity) (TotalBookingFee .BookingFee .Quantity))}}</span>
+    <span class="text-brand">€{{.GrandTotal}}</span>
 </div>
 
 <div id="quantity-selector" hx-swap-oob="true" class="flex items-center gap-3 bg-surface-alt border border-border rounded-xl px-1 py-1">
-    <button hx-post="{{.TicketQtyUrl}}" hx-swap="outerHTML" hx-target="#ticket-type" hx-vals='{"{{.ArtistIdKey}}":"{{.ArtistId}}","{{.LocationKey}}":"{{.Location}}","{{.DecrementQtyKey}}":"{{.DecrementQtyKey}}"}' hx-trigger="click delay:200ms" {{if eq .Quantity 1}}  class="qty-btn hover:bg-brand-light/15" {{end}} class="qty-btn" {{if eq .Quantity 1}} disabled {{end}} aria-label="Decrease quantity">−</button>
+    <button hx-post="{{.TicketQtyUrl}}" hx-swap="outerHTML" hx-target="#ticket-type" hx-vals='{"{{.ArtistIdKey}}":"{{.ArtistId}}","{{.LocationKey}}":"{{.Location}}","{{.DecrementQtyKey}}":"{{.DecrementQtyKey}}"}' hx-trigger="click delay:200ms" class="qty-btn" {{if eq .Quantity 1}} disabled {{end}} aria-label="Decrease quantity">−</button>
     <span class="text-base font-bold text-ink w-6 text-center select-none">{{.Quantity}}</span>
-    <button hx-post="{{.TicketQtyUrl}}" hx-swap="outerHTML" hx-target="#ticket-type" hx-vals='{"{{.ArtistIdKey}}":"{{.ArtistId}}","{{.LocationKey}}":"{{.Location}}","{{.IncrementQtyKey}}":"{{.IncrementQtyKey}}"}' hx-trigger="click delay:200ms" {{if eq .Quantity 8}}  class="qty-btn hover:bg-brand-light/15" {{end}} class="qty-btn" {{if eq .Quantity 8}} disabled {{end}} aria-label="Increase quantity">+</button>
+    <button hx-post="{{.TicketQtyUrl}}" hx-swap="outerHTML" hx-target="#ticket-type" hx-vals='{"{{.ArtistIdKey}}":"{{.ArtistId}}","{{.LocationKey}}":"{{.Location}}","{{.IncrementQtyKey}}":"{{.IncrementQtyKey}}"}' hx-trigger="click delay:200ms" class="qty-btn" {{if eq .Quantity 8}} disabled {{end}} aria-label="Increase quantity">+</button>
 </div>
 {{end}}

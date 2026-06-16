@@ -11,7 +11,7 @@ import (
 type Ticket string
 type TicketAmount float64
 type Fee float64
-type Vat int
+type Vat float64
 
 const (
 	GENERAL  Ticket = Ticket("General Admission")
@@ -32,10 +32,14 @@ const (
 var ttl = 15 * time.Minute
 
 type Booking struct {
-	TicketType string
-	Quantity   int
-	createdAt  time.Time
-	expiryTime time.Time
+	TicketType        string
+	Quantity          int
+	TotalTicketAmount float64
+	TotalBookingFee   float64
+	TotalVatAmount    float64
+	GrandTotalAmount  float64
+	createdAt         time.Time
+	expiryTime        time.Time
 }
 
 type Cache struct {
@@ -87,6 +91,20 @@ func Set(userId, location string, artistId int, tickettype string) {
 		createdAt:  time.Now(),
 		expiryTime: time.Now().Add(ttl),
 	}
+	setAmountFields(key)
+	global.mu.Unlock()
+}
+
+func setAmountFields(key string) {
+	global.mu.Lock()
+	booking := global.store[key]
+	booking.TotalTicketAmount = TotalTicketAmount(GetTicketPrice(booking.TicketType), booking.Quantity)
+	booking.TotalBookingFee = TotalBookingFee(float64(BOOKING_FEE), booking.Quantity)
+	booking.TotalVatAmount = VatAmount(float64(VAT), booking.TotalTicketAmount, booking.TotalBookingFee)
+	booking.GrandTotalAmount = GrandTotal(booking.TotalTicketAmount, booking.TotalBookingFee, booking.TotalVatAmount)
+
+	global.store[key] = booking
+
 	global.mu.Unlock()
 }
 
@@ -111,6 +129,8 @@ func Increment(userId, location string, artistId int) bool {
 	booking.Quantity++
 	booking.expiryTime.Add(ttl)
 	global.store[key] = booking
+
+	setAmountFields(key)
 	return ok
 }
 
@@ -126,6 +146,8 @@ func Decrement(userId, location string, artistId int) bool {
 	booking.Quantity--
 	booking.expiryTime.Add(ttl)
 	global.store[key] = booking
+
+	setAmountFields(key)
 	return ok
 }
 

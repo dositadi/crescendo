@@ -43,7 +43,7 @@ func (t *TicketPage) RenderPaymentPage() error {
 	}{
 		Date:        date,
 		BookingFee:  float64(ordercache.BOOKING_FEE),
-		TicketPrice: t.getTicketPrice(booking.TicketType),
+		TicketPrice: ordercache.GetTicketPrice(booking.TicketType),
 		VatValue:    int(ordercache.VAT),
 		ArtistInfo:  artistInfo,
 		ArtistId:    artistId,

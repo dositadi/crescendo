@@ -29,15 +29,15 @@ func (t *TicketPage) RenderTicketPagePartials(userId, location string, artistId 
 	}
 
 	data := struct {
-		TicketType                                                 string
-		Quantity                                                   int
-		TicketPrice                                                float64
-		BookingFee                                                 float64
-		VatValue                                                   int
-		TicketQtyUrl                                               string
-		IncrementQtyKey, DecrementQtyKey, LocationKey, ArtistIdKey string
-		ArtistId                                                   int
-		Location                                                   string
+		TicketType                                                                 string
+		Quantity                                                                   int
+		TicketPrice                                                                float64
+		BookingFee, TotalBookingFee, TotalTicketAmount, TotalVatAmount, GrandTotal float64
+		VatValue                                                                   int
+		TicketQtyUrl                                                               string
+		IncrementQtyKey, DecrementQtyKey, LocationKey, ArtistIdKey                 string
+		ArtistId                                                                   int
+		Location                                                                   string
 	}{
 		IncrementQtyKey: utils.INCREMENT_QTY_KEY,
 		DecrementQtyKey: utils.DECREMENT_QTY_KEY,
@@ -48,7 +48,7 @@ func (t *TicketPage) RenderTicketPagePartials(userId, location string, artistId 
 		TicketQtyUrl:    utils.TicketQuantity.String(),
 		TicketType:      booking.TicketType,
 		Quantity:        booking.Quantity,
-		TicketPrice:     t.getTicketPrice(booking.TicketType),
+		TicketPrice:     ordercache.GetTicketPrice(booking.TicketType),
 		BookingFee:      float64(ordercache.BOOKING_FEE),
 		VatValue:        int(ordercache.VAT),
 	}
