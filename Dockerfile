@@ -1,6 +1,6 @@
 FROM golang:alpine3.22 AS builder
 
-WORKDIR /groupie-tracker
+WORKDIR /crescendo
 
 #RUN go install github.com/air-verse/air@latest
 
@@ -8,9 +8,11 @@ COPY go.mod go.sum ./
 
 RUN go mod download
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /app ./cmd/
+COPY . .
 
-FROM alpine3.22
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app ./cmd/api
+
+FROM alpine:3.22
 
 WORKDIR /root
 
