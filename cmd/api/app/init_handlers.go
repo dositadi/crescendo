@@ -20,6 +20,7 @@ func (a *App) initHandlers() {
 	// Get request routes
 	a.router.Group(func(r chi.Router) {
 		// Auth routes
+		r.Get("/", a.handler.Get.Auth.LandingPageHandler)
 		r.Get(utils.LOGIN.String(), a.handler.Get.Auth.LoginPageHandler)
 		r.Get(utils.REGISTER.String(), a.handler.Get.Auth.SignupHandler)
 
