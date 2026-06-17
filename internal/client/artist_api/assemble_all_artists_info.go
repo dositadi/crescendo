@@ -32,8 +32,8 @@ func (a *ArtistInfo) mapArtistsInfo() {
 		time.Sleep(5 * time.Millisecond)
 		os.Exit(1)
 	default:
-		for artistInfo := range chArtistInfo {
-			byId[artistInfo.Id] = *artistInfo
-		}
+	}
+	for artistInfo := range chArtistInfo {
+		byId[artistInfo.Id] = *artistInfo
 	}
 }

@@ -20,7 +20,7 @@ func fillGeolocationsFromOpenCage(ctx context.Context, chArtists chan *ArtistInf
 		go func(art ArtistInfo) {
 			defer outerWg.Done()
 			innerWg := new(sync.WaitGroup)
-			var locationsGeo []opencage.GeoLocation
+			locationsGeo := make([]opencage.GeoLocation, 0, len(art.Locations))
 			mu := new(sync.RWMutex)
 
 			for _, location := range art.Locations {
@@ -34,7 +34,11 @@ func fillGeolocationsFromOpenCage(ctx context.Context, chArtists chan *ArtistInf
 
 					geoLocation, err := opencage.FetchGeoLocations(cleanedCity)
 					if err != nil {
-						chError <- err
+						select {
+						case chError <- err:
+						case <-ctx.Done():
+						default:
+						}
 						return
 					}
 
@@ -62,7 +66,10 @@ func fillGeolocationsFromOpenCage(ctx context.Context, chArtists chan *ArtistInf
 
 			art.GeoLocations = template.JS(jsObject)
 
-			out <- &art
+			select {
+			case out <- &art:
+			case <-ctx.Done():
+			}
 		}(*current)
 	}
 
