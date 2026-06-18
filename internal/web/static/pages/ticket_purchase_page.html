@@ -392,8 +392,8 @@
       </a>
 
       <nav class="flex items-center gap-4 text-xs text-ink-muted">
-        <a href="#" class="hover:text-ink transition-colors">Privacy</a>
-        <a href="#" class="hover:text-ink transition-colors">Terms</a>
+        <a hx-get="{{.PrivacyPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="hover:text-ink transition-colors">Privacy</a>
+        <a hx-get="{{.TermsPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="hover:text-ink transition-colors">Terms</a>
         <a href="#" class="hover:text-ink transition-colors">Refund Policy</a>
         <a href="#" class="hover:text-ink transition-colors">Support</a>
       </nav>

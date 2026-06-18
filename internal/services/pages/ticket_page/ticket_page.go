@@ -57,18 +57,18 @@ func (t *TicketPage) RenderTicketPage() error {
 	}
 
 	data := struct {
-		TicketType                                                                         string
-		Quantity                                                                           int
-		TicketPrice                                                                        float64
-		BookingFee, TotalBookingFee, TotalTicketAmount, TotalVatAmount, GrandTotal         float64
-		VatValue                                                                           float64
-		ArtistInfo                                                                         herokuapp.ArtistInfo
-		Location, Date                                                                     string
-		PreviousPageUrl, TicketTypeUrl, TicketQtyUrl, PaymentUrl                           string
-		ArtistId                                                                           int
-		ArtistIdKey, DateKey, LocationKey, TicketTypeKey, IncrementQtyKey, DecrementQtyKey string
-		GeneralTicket, VipTicket, ReserveTicket                                            string
-		GeneralTicketPrice, VipTicketPrice, ReserveTicketPrice                             float64
+		TicketType                                                                             string
+		Quantity                                                                               int
+		TicketPrice                                                                            float64
+		BookingFee, TotalBookingFee, TotalTicketAmount, TotalVatAmount, GrandTotal             float64
+		VatValue                                                                               float64
+		ArtistInfo                                                                             herokuapp.ArtistInfo
+		Location, Date                                                                         string
+		PreviousPageUrl, TicketTypeUrl, TicketQtyUrl, PaymentUrl, PrivacyPageUrl, TermsPageUrl string
+		ArtistId                                                                               int
+		ArtistIdKey, DateKey, LocationKey, TicketTypeKey, IncrementQtyKey, DecrementQtyKey     string
+		GeneralTicket, VipTicket, ReserveTicket                                                string
+		GeneralTicketPrice, VipTicketPrice, ReserveTicketPrice                                 float64
 	}{
 		// User order details from cache
 		TicketType:        booking.TicketType,
@@ -104,6 +104,8 @@ func (t *TicketPage) RenderTicketPage() error {
 		TicketQtyUrl:    utils.TicketQuantity.String(),
 		PaymentUrl:      utils.Payment.String(),
 		PreviousPageUrl: path,
+		PrivacyPageUrl:  fmt.Sprintf("%s?%s=%s/%v", utils.PRIVACY.String(), utils.PAGE_KEY, utils.ARTIST_DETAILS.String(), artistId),
+		TermsPageUrl:    fmt.Sprintf("%s?%s=%s/%v", utils.TERMS.String(), utils.PAGE_KEY, utils.ARTIST_DETAILS.String(), artistId),
 
 		// Artist info
 		ArtistId:   artistId,
