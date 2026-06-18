@@ -24,4 +24,5 @@ const (
 	TicketType        Route = Route("/artists/events/ticket/type")
 	TicketQuantity    Route = Route("/artists/events/ticket/quantity")
 	Payment           Route = Route("/artists/events/ticket/payment")
+	
 )

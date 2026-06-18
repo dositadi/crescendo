@@ -55,6 +55,7 @@ func (t *TicketPage) RenderPaymentPage(paymentPage bool) error {
 			t.logger.PrintError(NOT_FOUND.Error(), map[string]string{
 				"Source": sourcePP,
 			})
+			return err
 		}
 		boughtTicket = ticket
 

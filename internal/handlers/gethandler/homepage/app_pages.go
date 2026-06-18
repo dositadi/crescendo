@@ -4,6 +4,7 @@ import (
 	groupietracker "github.com/dositadi/groupie-tracker"
 	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
+	"github.com/dositadi/groupie-tracker/internal/handlers/posthandler/ticketpage"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
 
@@ -41,9 +42,10 @@ type HomePage struct {
 	embedded        groupietracker.Embedded
 	favoriteModel   FavoriteModel
 	preferencemodel PreferenceModel
+	soldTickets     ticketpage.SoldTicketsModel
 }
 
-func New(usermodel UserModel, client herokuapp.HerokuApp, logger jsonlog.Logger, embedded groupietracker.Embedded, favoriteModel FavoriteModel, preferencemodel PreferenceModel) *HomePage {
+func New(usermodel UserModel, client herokuapp.HerokuApp, logger jsonlog.Logger, embedded groupietracker.Embedded, favoriteModel FavoriteModel, preferencemodel PreferenceModel, soldTickets ticketpage.SoldTicketsModel) *HomePage {
 	return &HomePage{
 		usermodel:       usermodel,
 		client:          client,
@@ -51,5 +53,6 @@ func New(usermodel UserModel, client herokuapp.HerokuApp, logger jsonlog.Logger,
 		embedded:        embedded,
 		favoriteModel:   favoriteModel,
 		preferencemodel: preferencemodel,
+		soldTickets:     soldTickets,
 	}
 }

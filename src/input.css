@@ -75,6 +75,10 @@
   --animate-spin-slow:   spin-slow 18s linear infinite;
   --animate-pulse-ring:  pulse-ring 2.4s ease-out infinite;
 
+  --animate-pe-d1: fade-up 0.55s ease-out 0.05s both;
+  --animate-pe-d2: fade-up 0.55s ease-out 0.13s both;
+  --animate-pe-d3: fade-up 0.55s ease-out 0.21s both;
+
   /* Login-specific animations */
   --animate-fu-d1:       fade-up 0.65s ease-out 0.08s both;
   --animate-fu-d2:       fade-up 0.65s ease-out 0.16s both;
@@ -513,6 +517,45 @@ body {
   border-color: #4F46E5;
   background: #EEF2FF;
 }
+
+/* ── Paid status badge ────────────────────────────────────────────── */
+.badge-paid {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1px solid #BBF7D0;
+}
+
+
+/* ── Detail row ───────────────────────────────────────────────────── */
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.6rem 0;
+}
+.detail-row + .detail-row {
+  border-top: 1px solid #EEF1F4;
+}
+.detail-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: #EEF2FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 /* Checkmark badge on selected */
 .ticket-type-radio:checked + .ticket-type-label::after {
   content: '✓';
@@ -744,6 +787,32 @@ body {
   padding: 80px 24px;
   color: var(--color-ink-muted);
   gap: 12px;
+}
+
+/* ── View receipt button ──────────────────────────────────────────── */
+.btn-receipt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0.7rem 1.4rem;
+  border-radius: 12px;
+  background: #4F46E5;
+  color: #FFFFFF;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(79,70,229,0.18);
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+}
+.btn-receipt:hover {
+  background: #4338CA;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(79,70,229,0.28);
+}
+.btn-receipt:active {
+  background: #3730A3;
+  transform: translateY(0);
 }
 
 /* ── CTA button ─────────────────────────────────────────────────────── */
@@ -1182,6 +1251,31 @@ body {
 /* ─── Login page: turntable needle pivot ─────────────────────────────────── */
 .needle-wrap {
   transform-origin: 228px 62px;
+}
+
+
+/* ── Paid event card ──────────────────────────────────────────────── */
+.paid-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+  overflow: hidden;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.paid-card:hover {
+  box-shadow: 0 14px 36px rgba(0,0,0,0.09);
+  transform: translateY(-2px);
+}
+
+/* Hero banner — same dark panel language as ticket purchase page */
+.paid-hero {
+  background-color: #1e1b4b;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(99,91,255,0.22) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 30%, rgba(79,70,229,0.14) 0%, transparent 55%);
+  position: relative;
+  overflow: hidden;
 }
 
 /* ─── Login page: CSS-only password visibility toggle ────────────────────── */
