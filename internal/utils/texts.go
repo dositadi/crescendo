@@ -6,6 +6,7 @@ const (
 	EMAIL_KEY         = "email"
 	ACCESS_TOKEN_KEY  = "access"
 	TERMS_KEY         = "terms"
+	PRIVACY_KEY       = "privacy"
 	FILTER_KEY        = "filter"
 	SORT_KEY          = "sort"
 	FAV_KEY           = "favorited"

@@ -21,7 +21,7 @@
     <div class="flex items-center gap-3 h-15">
 
       <!-- Back button -->
-      <a hx-get="{{.PreviousPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true"
+      <a hx-get="{{.PrevPage}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true"
          class="inline-flex items-center gap-1.5 text-sm font-medium text-ink-secondary
                 hover:text-brand transition-colors duration-200 group shrink-0">
         <svg class="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-0.5"
@@ -165,7 +165,7 @@
   <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
 
-      <a href="/" class="inline-flex items-center gap-2 shrink-0">
+      <a hx-get="{{.PrevPage}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="inline-flex items-center gap-2 shrink-0">
         <div class="flex items-end gap-0.75" style="height:14px">
           <div class="wbar bg-ink-disabled animate-bar1" style="height:35%;"></div>
           <div class="wbar bg-ink-disabled animate-bar2" style="height:65%;"></div>

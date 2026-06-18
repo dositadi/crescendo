@@ -1,6 +1,7 @@
 package authservice
 
 import (
+	"fmt"
 	"html/template"
 
 	"github.com/dositadi/groupie-tracker/internal/helper"
@@ -11,7 +12,7 @@ const (
 	sourceRS = "Render signup page f(n) under authservice"
 )
 
-func (a *AuthService) RenderSignupPage() error {
+func (a *AuthService) RenderSignupPage(pagePath string) error {
 	fs := []string{
 		"internal/web/static/auth/signup.html",
 	}
@@ -36,6 +37,8 @@ func (a *AuthService) RenderSignupPage() error {
 		EmailKey:    utils.EMAIL_KEY,
 		PasswordKey: utils.PASSWORD_KEY,
 		TermsKey:    utils.TERMS_KEY,
+		PrivacyUrl:  fmt.Sprintf("%s?%s=%s", utils.PRIVACY.String(), utils.PAGE_KEY, pagePath),
+		TermUrl:     fmt.Sprintf("%s?%s=%s", utils.TERMS.String(), utils.PAGE_KEY, pagePath),
 	}
 
 	if err = temp.Execute(a.responseWriter, data); err != nil {

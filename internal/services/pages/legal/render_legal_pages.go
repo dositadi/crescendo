@@ -4,6 +4,7 @@ import (
 	"html/template"
 
 	"github.com/dositadi/groupie-tracker/internal/helper"
+	"github.com/dositadi/groupie-tracker/internal/utils"
 )
 
 type LegalPage string
@@ -27,9 +28,29 @@ func (l *LegalPages) RenderLegalPages(page LegalPage) error {
 		"internal/web/static/pages/terms.html",
 	}
 
-	data := struct{}{}
+	name := "about.html"
+	switch page {
+	case Terms:
+		name = "terms.html"
+	case Privacy:
+		name = "privacy.html"
+	case About:
+		name = "about.html"
+	}
 
-	temp, err := template.New("about.html").ParseFS(l.embedded.Get(), fs...)
+	prevPage := l.request.FormValue(utils.PAGE_KEY)
+	if prevPage == "" {
+		prevPage = utils.LOGIN.String()
+	}
+
+	data := struct {
+		PrevPage, TermsPageUrl, PrivacyPageUrl, RefundPolicyUrl, SupportUrl string
+	}{
+		PrevPage:     prevPage,
+		TermsPageUrl: utils.TERMS.String(),
+	}
+
+	temp, err := template.New(name).ParseFS(l.embedded.Get(), fs...)
 	if err != nil {
 		e := helper.WrapError("Template creation error", err)
 		l.logger.PrintError(e.Error(), map[string]string{

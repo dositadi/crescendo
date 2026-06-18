@@ -244,9 +244,9 @@
               </div>
               <label for="terms" class="text-xs text-ink-muted leading-relaxed cursor-pointer">
                 I agree to the
-                <a href="{{.TermUrl}}" class="text-brand hover:text-brand-hover underline underline-offset-2 transition-colors">Terms of Service</a>
+                <a hx-get="{{.TermUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="text-brand hover:text-brand-hover underline underline-offset-2 transition-colors">Terms of Service</a>
                 and
-                <a href="{{.PrivacyUrl}}" class="text-brand hover:text-brand-hover underline underline-offset-2 transition-colors">Privacy Policy</a>
+                <a hx-get="{{.PrivacyUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="text-brand hover:text-brand-hover underline underline-offset-2 transition-colors">Privacy Policy</a>
               </label>
 
                <p class="hidden mt-1.5 text-xs text-red-500" id="term-error"></p>

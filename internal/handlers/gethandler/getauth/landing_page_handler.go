@@ -7,5 +7,5 @@ import (
 )
 
 func (a *Auth) LandingPageHandler(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, utils.REGISTER.String(), http.StatusSeeOther)
+	http.Redirect(w, r, utils.LOGIN.String(), http.StatusSeeOther)
 }
