@@ -24,6 +24,11 @@ func (a *App) initHandlers() {
 		r.Get(utils.LOGIN.String(), a.handler.Get.Auth.LoginPageHandler)
 		r.Get(utils.REGISTER.String(), a.handler.Get.Auth.SignupHandler)
 
+		// Legal pages
+		r.Get(utils.ABOUT.String(), a.handler.Get.LegalPage.AboutPageHandler)
+		r.Get(utils.TERMS.String(), a.handler.Get.LegalPage.TermsPageHandler)
+		r.Get(utils.PRIVACY.String(), a.handler.Get.LegalPage.PrivacyPageHandler)
+
 		// App pages
 		r.With(a.midleware.VerifyAccessToken).Get(utils.HOME.String(), a.handler.Get.HomePage.HomeHandler)
 		r.With(a.midleware.VerifyAccessToken).Get(utils.ARTIST_SEARCH.String(), a.handler.Get.HomePage.SearchHandler)

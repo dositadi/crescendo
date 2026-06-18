@@ -7,6 +7,7 @@ import (
 	"github.com/dositadi/groupie-tracker/internal/handlers/gethandler/artistdetailpage"
 	"github.com/dositadi/groupie-tracker/internal/handlers/gethandler/getauth"
 	"github.com/dositadi/groupie-tracker/internal/handlers/gethandler/homepage"
+	"github.com/dositadi/groupie-tracker/internal/handlers/gethandler/legalpages"
 	"github.com/dositadi/groupie-tracker/internal/handlers/posthandler/homepagepost"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
@@ -25,6 +26,7 @@ type Get struct {
 	Auth       getauth.Auth
 	HomePage   homepage.HomePage
 	DetailPage artistdetailpage.DetailPage
+	LegalPage  legalpages.LegalPage
 }
 
 func New(usermodel UserModel, favoriteModel homepage.FavoriteModel, preferenceModel homepagepost.PreferenceModel, client herokuapp.HerokuApp, logger jsonlog.Logger, embedded groupietracker.Embedded) *Get {
@@ -32,5 +34,6 @@ func New(usermodel UserModel, favoriteModel homepage.FavoriteModel, preferenceMo
 		Auth:       *getauth.New(usermodel, client, logger, embedded),
 		HomePage:   *homepage.New(usermodel, client, logger, embedded, favoriteModel, preferenceModel),
 		DetailPage: *artistdetailpage.New(usermodel, client, logger, embedded, favoriteModel, preferenceModel),
+		LegalPage:  *legalpages.New(logger, embedded),
 	}
 }
