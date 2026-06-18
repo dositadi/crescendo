@@ -1,6 +1,7 @@
 package legal
 
 import (
+	"fmt"
 	"html/template"
 
 	"github.com/dositadi/groupie-tracker/internal/helper"
@@ -46,8 +47,9 @@ func (l *LegalPages) RenderLegalPages(page LegalPage) error {
 	data := struct {
 		PrevPage, TermsPageUrl, PrivacyPageUrl, RefundPolicyUrl, SupportUrl string
 	}{
-		PrevPage:     prevPage,
-		TermsPageUrl: utils.TERMS.String(),
+		PrevPage:       prevPage,
+		TermsPageUrl:   fmt.Sprintf("%s?%s=%s", utils.TERMS.String(), utils.PAGE_KEY, l.request.URL.EscapedPath()),
+		PrivacyPageUrl: fmt.Sprintf("%s?%s=%s", utils.PRIVACY.String(), utils.PAGE_KEY, l.request.URL.EscapedPath()),
 	}
 
 	temp, err := template.New(name).ParseFS(l.embedded.Get(), fs...)

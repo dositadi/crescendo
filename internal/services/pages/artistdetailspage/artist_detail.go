@@ -1,6 +1,7 @@
 package artistdetail
 
 import (
+	"fmt"
 	"html/template"
 
 	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
@@ -29,11 +30,11 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 	artistInfo := a.client.Get()[id]
 
 	data := struct {
-		HomeUrl, ArtistDetailUrl, AllEventsPageUrl, TicketUrl, PathUrl string
-		ArtistInfo                                                     herokuapp.ArtistInfo
-		AllArtists                                                     map[int]herokuapp.ArtistInfo
-		JsObject                                                       template.JS
-		ArtistIdKey, DateKey, PathKey, LocationKey                     string
+		HomeUrl, ArtistDetailUrl, AllEventsPageUrl, TicketUrl, PathUrl, PrivacyPageUrl, TermsPageUrl string
+		ArtistInfo                                                                                   herokuapp.ArtistInfo
+		AllArtists                                                                                   map[int]herokuapp.ArtistInfo
+		JsObject                                                                                     template.JS
+		ArtistIdKey, DateKey, PathKey, LocationKey                                                   string
 	}{
 		LocationKey:      utils.LOCATION_KEY,
 		PathKey:          utils.PATH_KEY,
@@ -46,6 +47,8 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 		AllArtists:       a.client.Get(),
 		ArtistDetailUrl:  utils.ARTIST_DETAILS.String(),
 		AllEventsPageUrl: utils.ALL_EVENTS_ROUTES.String(),
+		PrivacyPageUrl:   fmt.Sprintf("%s?%s=%s", utils.PRIVACY.String(), utils.PAGE_KEY, a.request.URL.EscapedPath()),
+		TermsPageUrl:     fmt.Sprintf("%s?%s=%s", utils.TERMS.String(), utils.PAGE_KEY, a.request.URL.EscapedPath()),
 	}
 
 	temp, err := template.New("artist_profile.html").Funcs(a.detailPageFuncMap()).ParseFS(a.embedded.Get(), fs...)

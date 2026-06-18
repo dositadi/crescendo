@@ -44,14 +44,6 @@
           </a>
         </div>
 
-        <!-- Center nav links (desktop) -->
-        <nav class="hidden md:flex items-center gap-6">
-          <a href="#" class="nav-link active">Artists</a>
-          <a href="#" class="nav-link">Events</a>
-          <a href="#" class="nav-link">Venues</a>
-          <a href="#" class="nav-link">Charts</a>
-        </nav>
-
         <!-- Right side -->
         <div class="flex items-center gap-3">
           
@@ -79,6 +71,14 @@
               <line x1="3" y1="10" x2="21" y2="10"/>
             </svg>
             Events
+          </a>
+
+          <!-- Favorites -->
+          <a href="#" class="hidden sm:inline-flex items-center gap-1.5 bg-brand hover:bg-brand-hover text-white text-sm font-medium px-4 py-2 rounded-full transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            Favorites
           </a>
 
           <!-- Avatar -->
@@ -297,12 +297,11 @@
 
         <!-- Links -->
         <nav class="flex flex-wrap items-center gap-x-6 gap-y-2">
-          <a href="#" class="text-ink-muted hover:text-ink text-sm transition-colors">About</a>
+          <a hx-get="{{.AboutPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="text-ink-muted hover:text-ink text-sm transition-colors">About</a>
           <a href="#" class="text-ink-muted hover:text-ink text-sm transition-colors">Artists</a>
           <a href="#" class="text-ink-muted hover:text-ink text-sm transition-colors">Events</a>
-          <a href="#" class="text-ink-muted hover:text-ink text-sm transition-colors">Venues</a>
-          <a href="#" class="text-ink-muted hover:text-ink text-sm transition-colors">Privacy</a>
-          <a href="#" class="text-ink-muted hover:text-ink text-sm transition-colors">Terms</a>
+          <a hx-get="{{.PrivacyPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="text-ink-muted hover:text-ink text-sm transition-colors">Privacy</a>
+          <a hx-get="{{.TermsPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="text-ink-muted hover:text-ink text-sm transition-colors">Terms</a>
         </nav>
 
         <!-- Copy -->
