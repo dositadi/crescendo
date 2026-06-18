@@ -2,7 +2,7 @@ package getauth
 
 import (
 	groupietracker "github.com/dositadi/groupie-tracker"
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
@@ -20,11 +20,11 @@ type UserModel interface {
 type Auth struct {
 	logger    jsonlog.Logger
 	usermodel UserModel
-	client    artistapi.ArtistInfo
+	client    herokuapp.HerokuApp
 	embedded  groupietracker.Embedded
 }
 
-func New(usermodel UserModel, client artistapi.ArtistInfo, logger jsonlog.Logger, embedded groupietracker.Embedded) *Auth {
+func New(usermodel UserModel, client herokuapp.HerokuApp, logger jsonlog.Logger, embedded groupietracker.Embedded) *Auth {
 	return &Auth{
 		usermodel: usermodel,
 		client:    client,

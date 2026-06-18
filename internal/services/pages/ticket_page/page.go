@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	groupietracker "github.com/dositadi/groupie-tracker"
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
@@ -57,7 +57,7 @@ type TicketPage struct {
 	logger           jsonlog.Logger
 	responseWriter   http.ResponseWriter
 	embedded         groupietracker.Embedded
-	client           artistapi.ArtistInfo
+	client           herokuapp.HerokuApp
 	request          *http.Request
 	soldTicketsModel SoldTicketsModel
 	/*
@@ -65,7 +65,7 @@ type TicketPage struct {
 		preferenceModel PreferenceModel */
 }
 
-func New(logger jsonlog.Logger, responseWriter http.ResponseWriter, embedded groupietracker.Embedded, client artistapi.ArtistInfo, request *http.Request, soldTicketsModel SoldTicketsModel /*preferenceModel PreferenceModel */) *TicketPage {
+func New(logger jsonlog.Logger, responseWriter http.ResponseWriter, embedded groupietracker.Embedded, client herokuapp.HerokuApp, request *http.Request, soldTicketsModel SoldTicketsModel /*preferenceModel PreferenceModel */) *TicketPage {
 	return &TicketPage{
 		logger:           logger,
 		responseWriter:   responseWriter,

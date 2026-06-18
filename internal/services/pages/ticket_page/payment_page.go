@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"net/http"
 
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
 	"github.com/dositadi/groupie-tracker/internal/services/ordercache"
@@ -59,21 +59,21 @@ func (t *TicketPage) RenderPaymentPage(paymentPage bool) error {
 		boughtTicket = ticket
 
 		recieptData.ArtistDetailUrl = fmt.Sprintf("%s/%v", utils.ARTIST_DETAILS.String(), artistId)
-		recieptData.ArtistName = t.client.GetByIdKey()[boughtTicket.ArtistId].Name
+		recieptData.ArtistName = t.client.Get()[boughtTicket.ArtistId].Name
 
 		//Bought ticket info
 		recieptData.BoughtTicket = boughtTicket
 		recieptData.TotalTicketAmount = ordercache.TotalTicketAmount(ordercache.GetTicketPrice(boughtTicket.TicketType), booking.Quantity)
 
 		recieptData.TotalBookingFee = ordercache.TotalBookingFee(float64(ordercache.BOOKING_FEE), boughtTicket.Qty)
-		
+
 		recieptData.TotalVatAmount = ordercache.VatAmount(*boughtTicket.Vat, ordercache.TotalTicketAmount(ordercache.GetTicketPrice(boughtTicket.TicketType), booking.Quantity), ordercache.TotalBookingFee(float64(ordercache.BOOKING_FEE), boughtTicket.Qty))
 	}
 
-	artistInfo := t.client.GetByIdKey()[artistId]
+	artistInfo := t.client.Get()[artistId]
 
 	paymentData := struct {
-		ArtistInfo                                                                                                     artistapi.ArtistInfo
+		ArtistInfo                                                                                                     herokuapp.ArtistInfo
 		ArtistId, VatValue                                                                                             int
 		Location, Date                                                                                                 string
 		Booking                                                                                                        ordercache.Booking

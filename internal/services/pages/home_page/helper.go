@@ -9,20 +9,20 @@ import (
 	"strings"
 	"unicode"
 
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
 )
 
 // This function converts a map to a slice
-func mapToSlice[T comparable, K artistapi.ArtistInfo](artists map[T]K) []K {
+func mapToSlice[T comparable, K herokuapp.ArtistInfo](artists map[T]K) []K {
 	return slices.Collect(maps.Values(artists))
 }
 
-func sortArtist(artists []artistapi.ArtistInfo, sort Sort, filter Filter) []artistapi.ArtistInfo {
+func sortArtist(artists []herokuapp.ArtistInfo, sort Sort, filter Filter) []herokuapp.ArtistInfo {
 	switch filter {
 	case FILTER_BY_ID:
-		slices.SortStableFunc(artists, func(a, b artistapi.ArtistInfo) int {
+		slices.SortStableFunc(artists, func(a, b herokuapp.ArtistInfo) int {
 			if a.Id < b.Id {
 				return -1
 			} else if a.Id > b.Id {
@@ -41,7 +41,7 @@ func sortArtist(artists []artistapi.ArtistInfo, sort Sort, filter Filter) []arti
 		}
 
 	case FILTER_BY_NAME:
-		slices.SortStableFunc(artists, func(a, b artistapi.ArtistInfo) int {
+		slices.SortStableFunc(artists, func(a, b herokuapp.ArtistInfo) int {
 			if a.Name < b.Name {
 				return -1
 			} else if a.Name > b.Name {
@@ -60,7 +60,7 @@ func sortArtist(artists []artistapi.ArtistInfo, sort Sort, filter Filter) []arti
 		}
 
 	case FILTER_BY_CREATION_DATE:
-		slices.SortStableFunc(artists, func(a, b artistapi.ArtistInfo) int {
+		slices.SortStableFunc(artists, func(a, b herokuapp.ArtistInfo) int {
 			if a.CreationDate < b.CreationDate {
 				return -1
 			} else if a.CreationDate > b.CreationDate {
@@ -79,7 +79,7 @@ func sortArtist(artists []artistapi.ArtistInfo, sort Sort, filter Filter) []arti
 		}
 
 	case FILTER_BY_FIRST_ALBUM:
-		slices.SortStableFunc(artists, func(a, b artistapi.ArtistInfo) int {
+		slices.SortStableFunc(artists, func(a, b herokuapp.ArtistInfo) int {
 			if a.FirstAlbum < b.FirstAlbum {
 				return -1
 			} else if a.FirstAlbum > b.FirstAlbum {
@@ -145,7 +145,7 @@ func (p *Pages) homePageFunc() template.FuncMap {
 
 			return strings.Join(sl, " ")
 		},
-		"CheckFav": func(artist artistapi.ArtistInfo, favorites map[int]data.Favorite) bool {
+		"CheckFav": func(artist herokuapp.ArtistInfo, favorites map[int]data.Favorite) bool {
 			if favorites == nil {
 				return false
 			}

@@ -6,7 +6,7 @@ import (
 	"html/template"
 	"net/http"
 
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/helper"
 	"github.com/dositadi/groupie-tracker/internal/services/ordercache"
 	"github.com/dositadi/groupie-tracker/internal/utils"
@@ -30,9 +30,9 @@ func (t *TicketPage) RenderTicketPage() error {
 	// Add the user's order to the cache
 	ordercache.Set(user.Id, location, artistId, string(ordercache.GENERAL))
 
-	var artistInfo artistapi.ArtistInfo
+	var artistInfo herokuapp.ArtistInfo
 
-	if val, ok := t.client.GetByIdKey()[artistId]; ok {
+	if val, ok := t.client.Get()[artistId]; ok {
 		artistInfo = val
 	} else {
 		err := errors.New("Artist ID does not exist")
@@ -62,7 +62,7 @@ func (t *TicketPage) RenderTicketPage() error {
 		TicketPrice                                                                        float64
 		BookingFee, TotalBookingFee, TotalTicketAmount, TotalVatAmount, GrandTotal         float64
 		VatValue                                                                           float64
-		ArtistInfo                                                                         artistapi.ArtistInfo
+		ArtistInfo                                                                         herokuapp.ArtistInfo
 		Location, Date                                                                     string
 		PreviousPageUrl, TicketTypeUrl, TicketQtyUrl, PaymentUrl                           string
 		ArtistId                                                                           int

@@ -1,7 +1,7 @@
 package deletehandler
 
 import (
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
@@ -19,10 +19,10 @@ type UserModel interface {
 type Delete struct {
 	logger    jsonlog.Logger
 	userModel UserModel
-	client    artistapi.ArtistInfo
+	client    herokuapp.HerokuApp
 }
 
-func New(userModel UserModel, client artistapi.ArtistInfo, logger jsonlog.Logger) *Delete {
+func New(userModel UserModel, client herokuapp.HerokuApp, logger jsonlog.Logger) *Delete {
 	return &Delete{
 		userModel: userModel,
 		client:    client,

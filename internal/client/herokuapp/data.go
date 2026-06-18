@@ -1,4 +1,4 @@
-package artistapi
+package herokuapp
 
 import (
 	"html/template"

@@ -1,4 +1,4 @@
-package artistapi
+package herokuapp
 
 import (
 	"encoding/json"
@@ -16,11 +16,11 @@ const (
 var logger = jsonlog.New(os.Stdout, jsonlog.LevelInfo)
 
 // A generic function that fetches all the artist resource.
-func fetchArtists() (map[int]artist, error) {
+func (h *HerokuApp) fetchArtists() (map[int]artist, error) {
 	response, err := http.Get(artistUrl)
 	if err != nil {
 		e := helper.WrapError("Get error", err)
-		logger.PrintFatal(e.Error(), map[string]string{
+		h.logger.PrintFatal(e.Error(), map[string]string{
 			"Source": "Fetch artists f(n) under artistapi package.",
 		})
 	}
@@ -32,7 +32,7 @@ func fetchArtists() (map[int]artist, error) {
 	err = json.NewDecoder(response.Body).Decode(&artists)
 	if err != nil {
 		e := helper.WrapError("JSON decode error", err)
-		logger.PrintFatal(e.Error(), map[string]string{
+		h.logger.PrintFatal(e.Error(), map[string]string{
 			"Source": "Fetch artists f(n) under artistapi package.",
 		})
 	}
@@ -43,7 +43,7 @@ func fetchArtists() (map[int]artist, error) {
 		artistsMap[artist.Id] = artist
 	}
 
-	logger.PrintInfo("Artists fetch successful", map[string]string{
+	h.logger.PrintInfo("Artists fetch successful", map[string]string{
 		"Source": "Fetch artists f(n) under artistapi package.",
 	})
 

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
 	"github.com/dositadi/groupie-tracker/internal/utils"
@@ -50,10 +50,10 @@ func (p *Pages) RenderHomePage(partial bool) error {
 		return e
 	}
 
-	var artists []artistapi.ArtistInfo
-	var paginatedArtists []artistapi.ArtistInfo
+	var artists []herokuapp.ArtistInfo
+	var paginatedArtists []herokuapp.ArtistInfo
 
-	artists = sortArtist(mapToSlice(p.client.GetByIdKey()), Sort(userPreference.Sort), Filter(userPreference.Filter))
+	artists = sortArtist(mapToSlice(p.client.Get()), Sort(userPreference.Sort), Filter(userPreference.Filter))
 
 	page := p.request.FormValue(utils.PAGE_KEY)
 
@@ -95,7 +95,7 @@ func (p *Pages) RenderHomePage(partial bool) error {
 		Username                                               string
 		NextPage, PreviousPage, Count, Total                   int
 		UserFavorites                                          map[int]data.Favorite
-		Artists                                                []artistapi.ArtistInfo
+		Artists                                                []herokuapp.ArtistInfo
 		CurrentFilter, CurrentSort                             string
 		FilterSortRoute                                        string
 		FilterByName, FilterByCreationDate, FilterByFirstAlbum string

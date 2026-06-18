@@ -1,15 +1,15 @@
-package artistapi
+package herokuapp
 
 import (
 	"os"
 	"sync"
 )
 
-func fillArtistsInfoFromArtists(artists map[int]artist) chan ArtistInfo {
+func (h *HerokuApp) fillArtistsInfoFromArtists(artists map[int]artist) chan ArtistInfo {
 	temp := make(chan ArtistInfo, len(artists))
 
 	if artists == nil {
-		logger.PrintFatal("Recieved a nil paramter [artists]", map[string]string{
+		h.logger.PrintFatal("Recieved a nil paramter [artists]", map[string]string{
 			"Source": "Fill artists info from artists f(n) in artistapi pkg",
 		})
 		os.Exit(1)
@@ -37,7 +37,7 @@ func fillArtistsInfoFromArtists(artists map[int]artist) chan ArtistInfo {
 		close(temp)
 	}()
 
-	logger.PrintInfo("Filled in artists into artist's info successfully", map[string]string{
+	h.logger.PrintInfo("Filled in artists into artist's info successfully", map[string]string{
 		"Source": "Fill artists info from artists f(n) in artistapi pkg",
 	})
 

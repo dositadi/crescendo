@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	groupietracker "github.com/dositadi/groupie-tracker"
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 	"github.com/dositadi/groupie-tracker/internal/utils"
@@ -51,13 +51,13 @@ type Pages struct {
 	logger          jsonlog.Logger
 	responseWriter  http.ResponseWriter
 	embedded        groupietracker.Embedded
-	client          artistapi.ArtistInfo
+	client          herokuapp.HerokuApp
 	request         *http.Request
 	favoriteModel   FavoriteModel
 	preferenceModel PreferenceModel
 }
 
-func New(logger jsonlog.Logger, responseWriter http.ResponseWriter, embedded groupietracker.Embedded, client artistapi.ArtistInfo, request *http.Request, favoriteModel FavoriteModel, preferenceModel PreferenceModel) *Pages {
+func New(logger jsonlog.Logger, responseWriter http.ResponseWriter, embedded groupietracker.Embedded, client herokuapp.HerokuApp, request *http.Request, favoriteModel FavoriteModel, preferenceModel PreferenceModel) *Pages {
 	return &Pages{
 		logger:          logger,
 		responseWriter:  responseWriter,

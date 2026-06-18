@@ -2,7 +2,7 @@ package gethandler
 
 import (
 	groupietracker "github.com/dositadi/groupie-tracker"
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/handlers/gethandler/artistdetailpage"
 	"github.com/dositadi/groupie-tracker/internal/handlers/gethandler/getauth"
@@ -27,7 +27,7 @@ type Get struct {
 	DetailPage artistdetailpage.DetailPage
 }
 
-func New(usermodel UserModel, favoriteModel homepage.FavoriteModel, preferenceModel homepagepost.PreferenceModel, client artistapi.ArtistInfo, logger jsonlog.Logger, embedded groupietracker.Embedded) *Get {
+func New(usermodel UserModel, favoriteModel homepage.FavoriteModel, preferenceModel homepagepost.PreferenceModel, client herokuapp.HerokuApp, logger jsonlog.Logger, embedded groupietracker.Embedded) *Get {
 	return &Get{
 		Auth:       *getauth.New(usermodel, client, logger, embedded),
 		HomePage:   *homepage.New(usermodel, client, logger, embedded, favoriteModel, preferenceModel),

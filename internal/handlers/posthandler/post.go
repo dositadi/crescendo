@@ -2,7 +2,7 @@ package posthandler
 
 import (
 	groupietracker "github.com/dositadi/groupie-tracker"
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/handlers/posthandler/authpost"
 	"github.com/dositadi/groupie-tracker/internal/handlers/posthandler/homepagepost"
@@ -23,14 +23,14 @@ type UserModel interface {
 type Post struct {
 	logger     jsonlog.Logger
 	userModel  UserModel
-	client     artistapi.ArtistInfo
+	client     herokuapp.HerokuApp
 	embedded   groupietracker.Embedded
 	Auth       authpost.Auth
 	HomePage   homepagepost.HomePage
 	TicketPage ticketpage.TicketPage
 }
 
-func New(userModel UserModel, favoriteModel homepagepost.FavoriteModel, preferenceModel homepagepost.PreferenceModel, soldTicketsModel ticketpage.SoldTicketsModel, client artistapi.ArtistInfo, logger jsonlog.Logger, embedded groupietracker.Embedded) *Post {
+func New(userModel UserModel, favoriteModel homepagepost.FavoriteModel, preferenceModel homepagepost.PreferenceModel, soldTicketsModel ticketpage.SoldTicketsModel, client herokuapp.HerokuApp, logger jsonlog.Logger, embedded groupietracker.Embedded) *Post {
 	return &Post{
 		userModel:  userModel,
 		logger:     logger,

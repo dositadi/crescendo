@@ -1,4 +1,4 @@
-package artistapi
+package herokuapp
 
 import (
 	"context"
@@ -9,12 +9,12 @@ import (
 	"github.com/dositadi/groupie-tracker/internal/helper"
 )
 
-func fillArtistInfoFromLocation(ctx context.Context, chArtistInfo chan ArtistInfo, chError chan error, artists map[int]artist) chan *ArtistInfo {
+func (h *HerokuApp) fillArtistInfoFromLocation(ctx context.Context, chArtistInfo chan ArtistInfo, chError chan error, artists map[int]artist) chan *ArtistInfo {
 	temp := make(chan *ArtistInfo, len(artists))
 	wg := new(sync.WaitGroup)
 
 	if chArtistInfo == nil || artists == nil {
-		logger.PrintFatal("Recieved a nil paramter [chArtist | artists]", map[string]string{
+		h.logger.PrintFatal("Recieved a nil paramter [chArtist | artists]", map[string]string{
 			"Source": "Fill artist info from sub infos f(n) under artistapi pkg",
 		})
 		os.Exit(1)
@@ -33,17 +33,21 @@ func fillArtistInfoFromLocation(ctx context.Context, chArtistInfo chan ArtistInf
 			if err != nil {
 				e := helper.WrapError("Fetch info error", err)
 
-				logger.PrintError(e.Error(), map[string]string{
+				h.logger.PrintError(e.Error(), map[string]string{
 					"Source": "Fill artist info from sub infos f(n) under artistapi pkg",
 				})
 
-				chError <- e
+				select {
+				case chError <- e:
+				case <-ctx.Done():
+				default:
+				}
 			}
 
 			if err = ctx.Err(); err != nil {
 				e := helper.WrapError("Stopping location fetch worker routine", err)
 
-				logger.PrintFatal(e.Error(), map[string]string{
+				h.logger.PrintFatal(e.Error(), map[string]string{
 					"Source": "Fill artist info from sub infos f(n) under artistapi pkg",
 					"Worker": fmt.Sprintf("Location filler for %v with %v", aInfo, a),
 				})
@@ -52,7 +56,10 @@ func fillArtistInfoFromLocation(ctx context.Context, chArtistInfo chan ArtistInf
 
 			artInfo := populateArtistInfo(locations, &aInfo)
 
-			temp <- artInfo
+			select {
+			case temp <- artInfo:
+			case <-ctx.Done():
+			}
 
 		}(artInfo, art)
 	}
@@ -62,7 +69,7 @@ func fillArtistInfoFromLocation(ctx context.Context, chArtistInfo chan ArtistInf
 		close(temp)
 	}()
 
-	logger.PrintInfo("Filled in locations into artist's info successfully", map[string]string{
+	h.logger.PrintInfo("Filled in locations into artist's info successfully", map[string]string{
 		"Source": "Fill artist info from sub infos f(n) under artistapi pkg",
 	})
 

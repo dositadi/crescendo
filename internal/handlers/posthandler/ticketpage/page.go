@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	groupietracker "github.com/dositadi/groupie-tracker"
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 	"github.com/dositadi/groupie-tracker/internal/utils"
@@ -50,11 +50,11 @@ type SoldTicketsModel interface {
 type TicketPage struct {
 	logger           jsonlog.Logger
 	embedded         groupietracker.Embedded
-	client           artistapi.ArtistInfo
+	client           herokuapp.HerokuApp
 	soldTicketsModel SoldTicketsModel
 }
 
-func New(logger jsonlog.Logger, embedded groupietracker.Embedded, client artistapi.ArtistInfo, soldTicketsModel SoldTicketsModel) *TicketPage {
+func New(logger jsonlog.Logger, embedded groupietracker.Embedded, client herokuapp.HerokuApp, soldTicketsModel SoldTicketsModel) *TicketPage {
 	return &TicketPage{
 		logger:           logger,
 		embedded:         embedded,

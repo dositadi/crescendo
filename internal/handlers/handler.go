@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	groupietracker "github.com/dositadi/groupie-tracker"
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/handlers/deletehandler"
 	"github.com/dositadi/groupie-tracker/internal/handlers/gethandler"
@@ -27,14 +27,14 @@ type UserModel interface {
 type Handler struct {
 	logger    jsonlog.Logger
 	userModel UserModel
-	client    artistapi.ArtistInfo
+	client    herokuapp.HerokuApp
 	Get       gethandler.Get
 	Post      posthandler.Post
 	Delete    deletehandler.Delete
 	embedded  groupietracker.Embedded
 }
 
-func New(logger jsonlog.Logger, userModel UserModel, favoriteModel homepagepost.FavoriteModel, preferenceModel homepagepost.PreferenceModel, soldTicketsModel ticketpage.SoldTicketsModel, client artistapi.ArtistInfo, embedded groupietracker.Embedded) *Handler {
+func New(logger jsonlog.Logger, userModel UserModel, favoriteModel homepagepost.FavoriteModel, preferenceModel homepagepost.PreferenceModel, soldTicketsModel ticketpage.SoldTicketsModel, client herokuapp.HerokuApp, embedded groupietracker.Embedded) *Handler {
 	return &Handler{
 		logger:    logger,
 		userModel: userModel,

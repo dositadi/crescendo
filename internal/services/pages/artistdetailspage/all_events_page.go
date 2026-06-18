@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"html/template"
 
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/helper"
 	"github.com/dositadi/groupie-tracker/internal/utils"
 	"github.com/go-chi/chi/v5"
@@ -21,7 +21,7 @@ func (a *ArtistDetail) RenderAllEventsPage() error {
 
 	id := a.atoi(chi.URLParam(a.request, "id"))
 
-	artistInfo := a.client.GetByIdKey()[id]
+	artistInfo := a.client.Get()[id]
 
 	temp, err := template.New("all_concerts.html").Funcs(a.detailPageFuncMap()).ParseFS(a.embedded.Get(), fs...)
 	if err != nil {
@@ -34,8 +34,8 @@ func (a *ArtistDetail) RenderAllEventsPage() error {
 
 	data := struct {
 		ArtistDetailUrl, PreviousPageUrl, TicketUrl, PathUrl string
-		ArtistInfo                                           artistapi.ArtistInfo
-		AllArtists                                           map[int]artistapi.ArtistInfo
+		ArtistInfo                                           herokuapp.ArtistInfo
+		AllArtists                                           map[int]herokuapp.ArtistInfo
 		PathKey, DateKey, ArtistIdKey, LocationKey           string
 	}{
 		// All urls
@@ -45,7 +45,7 @@ func (a *ArtistDetail) RenderAllEventsPage() error {
 
 		// Artists details
 		ArtistInfo: artistInfo,
-		AllArtists: a.client.GetByIdKey(),
+		AllArtists: a.client.Get(),
 
 		// All keys
 		PathKey:     utils.PATH_KEY,

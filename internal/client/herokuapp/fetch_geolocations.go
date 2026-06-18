@@ -1,4 +1,4 @@
-package artistapi
+package herokuapp
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"github.com/dositadi/groupie-tracker/internal/helper"
 )
 
-func fillGeolocationsFromOpenCage(ctx context.Context, chArtists chan *ArtistInfo, chError chan error) chan *ArtistInfo {
+func (h *HerokuApp) fillGeolocationsFromOpenCage(ctx context.Context, chArtists chan *ArtistInfo, chError chan error) chan *ArtistInfo {
 	out := make(chan *ArtistInfo, 5)
 	outerWg := new(sync.WaitGroup)
 
@@ -32,7 +32,7 @@ func fillGeolocationsFromOpenCage(ctx context.Context, chArtists chan *ArtistInf
 
 					cleanedCity := cleanCity(city)
 
-					geoLocation, err := opencage.FetchGeoLocations(cleanedCity)
+					geoLocation, err := h.opencage.FetchGeoLocations(cleanedCity)
 					if err != nil {
 						select {
 						case chError <- err:
@@ -78,7 +78,7 @@ func fillGeolocationsFromOpenCage(ctx context.Context, chArtists chan *ArtistInf
 		close(out)
 	}()
 
-	logger.PrintInfo("Geolocations fetch successful", map[string]string{
+	h.logger.PrintInfo("Geolocations fetch successful", map[string]string{
 		"Source": "Fill geolocations f(n) under artistapi package.",
 	})
 

@@ -53,7 +53,7 @@ func (a *App) connectToDB() (*pgx.Conn, error) {
 	for i := 0; i <= 5; i++ {
 		var err error
 
-		db, err = pgx.Connect(context.Background(), a.config.dsn)
+		db, err = pgx.Connect(context.Background(), a.config.postgres_db_dsn)
 		if err != nil {
 			e := fmt.Errorf("Database connect err: %w", err)
 			a.logger.PrintError(e.Error(), map[string]string{
@@ -80,7 +80,7 @@ func (a *App) migrate() error {
 		return e
 	}
 
-	m, err := migrate.NewWithSourceInstance("iofs", migratefiles, a.config.dsn)
+	m, err := migrate.NewWithSourceInstance("iofs", migratefiles, a.config.postgres_db_dsn)
 	if err != nil {
 		e := helper.WrapError("Migrate new instance failed", err)
 		a.logger.PrintFatal(e.Error(), map[string]string{

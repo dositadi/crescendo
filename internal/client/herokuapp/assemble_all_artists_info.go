@@ -1,4 +1,4 @@
-package artistapi
+package herokuapp
 
 import (
 	"context"
@@ -10,9 +10,9 @@ var (
 	byId = make(map[int]ArtistInfo)
 )
 
-func (a *ArtistInfo) mapArtistsInfo() {
+func (h *HerokuApp) mapArtistsInfo() {
 	// Using the pipeline routine pattern to generate the artist's info
-	arts, err := fetchArtists()
+	arts, err := h.fetchArtists()
 	if err != nil {
 		os.Exit(1)
 	}
@@ -21,11 +21,11 @@ func (a *ArtistInfo) mapArtistsInfo() {
 	defer cancel()
 	chError := make(chan error)
 
-	filledArtists := fillArtistsInfoFromArtists(arts)
-	chArtistInfo := fillArtistInfoFromLocation(ctx, filledArtists, chError, arts)
-	chArtistInfo = fillArtistInfoFromDate(ctx, chArtistInfo, chError, arts)
-	chArtistInfo = fillArtistInfoFromRelations(ctx, chArtistInfo, chError, arts)
-	//chArtistInfo = fillGeolocationsFromOpenCage(ctx, chArtistInfo, chError)
+	filledArtists := h.fillArtistsInfoFromArtists(arts)
+	chArtistInfo := h.fillArtistInfoFromLocation(ctx, filledArtists, chError, arts)
+	chArtistInfo = h.fillArtistInfoFromDate(ctx, chArtistInfo, chError, arts)
+	chArtistInfo = h.fillArtistInfoFromRelations(ctx, chArtistInfo, chError, arts)
+	//chArtistInfo = h.fillGeolocationsFromOpenCage(ctx, chArtistInfo, chError)
 
 	select {
 	case <-chError:

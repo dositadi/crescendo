@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	groupietracker "github.com/dositadi/groupie-tracker"
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 	"github.com/dositadi/groupie-tracker/internal/utils"
@@ -43,10 +43,10 @@ type HomePage struct {
 	favoriteModel   FavoriteModel
 	preferenceModel PreferenceModel
 	embedded        groupietracker.Embedded
-	client          artistapi.ArtistInfo
+	client          herokuapp.HerokuApp
 }
 
-func New(logger jsonlog.Logger, userModel UserModel, favoriteModel FavoriteModel, preferenceModel PreferenceModel, embedded groupietracker.Embedded, client artistapi.ArtistInfo) *HomePage {
+func New(logger jsonlog.Logger, userModel UserModel, favoriteModel FavoriteModel, preferenceModel PreferenceModel, embedded groupietracker.Embedded, client herokuapp.HerokuApp) *HomePage {
 	return &HomePage{
 		logger:          logger,
 		usermodel:       userModel,

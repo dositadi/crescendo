@@ -4,7 +4,8 @@ import (
 	"os"
 
 	groupietracker "github.com/dositadi/groupie-tracker"
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
+	opencage "github.com/dositadi/groupie-tracker/internal/client/open_cage"
 	"github.com/dositadi/groupie-tracker/internal/handlers"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 	"github.com/dositadi/groupie-tracker/internal/middlewares"
@@ -19,18 +20,20 @@ type App struct {
 	logger    *jsonlog.Logger
 	handler   *handlers.Handler
 	midleware *middlewares.Middleware
-	client    *artistapi.ArtistInfo
+	opencage  *opencage.OpenCage
+	client    *herokuapp.HerokuApp
 	router    *chi.Mux
 	embedded  groupietracker.Embedded
 }
 
 func (a *App) init() {
 	a.embedded = *groupietracker.New()
-	a.router = chi.NewRouter()
-	a.client = artistapi.New()
-	a.client.Init()
-	a.config = newConfig()
 	a.logger = jsonlog.New(os.Stdout, jsonlog.LevelInfo)
+	a.router = chi.NewRouter()
+	a.config.Init(*a.logger)
+	a.opencage = opencage.New(a.config.opencage_key)
+	a.client = herokuapp.New(*a.logger, *a.opencage)
+	a.client.Init()
 	a.initDB()
 	models := models.New(a.db, *a.logger)
 	a.handler = handlers.New(*a.logger, &models.UserModel, &models.FavoriteModel, &models.PreferenceModel, &models.SoldTicketsModel, *a.client, a.embedded)

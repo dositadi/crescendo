@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
 	"github.com/dositadi/groupie-tracker/internal/utils"
@@ -43,11 +43,11 @@ func (p *Pages) RenderSearch() error {
 		return e
 	}
 
-	var artists []artistapi.ArtistInfo
-	var paginatedArtists []artistapi.ArtistInfo
+	var artists []herokuapp.ArtistInfo
+	var paginatedArtists []herokuapp.ArtistInfo
 	search = strings.ToLower(search)
 
-	for _, artist := range p.client.GetByIdKey() {
+	for _, artist := range p.client.Get() {
 		if strings.Contains(strings.ToLower(artist.FirstAlbum), search) || strings.Contains(strings.ToLower(artist.Name), search) {
 			artists = append(artists, artist)
 		}
@@ -118,7 +118,7 @@ func (p *Pages) RenderSearch() error {
 	data := struct {
 		NextPage, PreviousPage, Count, Total                   int
 		UserFavorites                                          map[int]data.Favorite
-		Artists                                                []artistapi.ArtistInfo
+		Artists                                                []herokuapp.ArtistInfo
 		CurrentFilter, CurrentSort                             string
 		FilterSortRoute                                        string
 		FilterByName, FilterByCreationDate, FilterByFirstAlbum string

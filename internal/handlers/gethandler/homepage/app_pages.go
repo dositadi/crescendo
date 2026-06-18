@@ -2,7 +2,7 @@ package homepage
 
 import (
 	groupietracker "github.com/dositadi/groupie-tracker"
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
@@ -37,13 +37,13 @@ type PreferenceModel interface {
 type HomePage struct {
 	logger          jsonlog.Logger
 	usermodel       UserModel
-	client          artistapi.ArtistInfo
+	client          herokuapp.HerokuApp
 	embedded        groupietracker.Embedded
 	favoriteModel   FavoriteModel
 	preferencemodel PreferenceModel
 }
 
-func New(usermodel UserModel, client artistapi.ArtistInfo, logger jsonlog.Logger, embedded groupietracker.Embedded, favoriteModel FavoriteModel, preferencemodel PreferenceModel) *HomePage {
+func New(usermodel UserModel, client herokuapp.HerokuApp, logger jsonlog.Logger, embedded groupietracker.Embedded, favoriteModel FavoriteModel, preferencemodel PreferenceModel) *HomePage {
 	return &HomePage{
 		usermodel:       usermodel,
 		client:          client,

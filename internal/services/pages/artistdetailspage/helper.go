@@ -9,7 +9,7 @@ import (
 	"strings"
 	"unicode"
 
-	artistapi "github.com/dositadi/groupie-tracker/internal/client/artist_api"
+	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 )
 
 func (a *ArtistDetail) atoi(s string) int {
@@ -115,11 +115,11 @@ func (a *ArtistDetail) detailPageFuncMap() template.FuncMap {
 		"RandomValues": func() int {
 			return rand.Intn(500)
 		},
-		"SimilarArtists": func(id int, artists map[int]artistapi.ArtistInfo) []artistapi.ArtistInfo {
+		"SimilarArtists": func(id int, artists map[int]herokuapp.ArtistInfo) []herokuapp.ArtistInfo {
 			keys := slices.Collect(maps.Keys(artists))
 			values := slices.Collect(maps.Values(artists))
 			slices.Sort(keys)
-			slices.SortStableFunc(values, func(a, b artistapi.ArtistInfo) int {
+			slices.SortStableFunc(values, func(a, b herokuapp.ArtistInfo) int {
 				if a.Id < b.Id {
 					return -1
 				} else if a.Id > b.Id {
@@ -131,7 +131,7 @@ func (a *ArtistDetail) detailPageFuncMap() template.FuncMap {
 
 			idx := slices.Index(keys, id)
 
-			var out []artistapi.ArtistInfo
+			var out []herokuapp.ArtistInfo
 
 			if (len(values[:idx+1]) + 3) > len(values)-1 {
 				out = values[idx-3 : idx]
