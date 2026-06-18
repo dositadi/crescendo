@@ -31,7 +31,7 @@ func (a *App) init() {
 	a.logger = jsonlog.New(os.Stdout, jsonlog.LevelInfo)
 	a.router = chi.NewRouter()
 	a.config.Init(*a.logger)
-	a.opencage = opencage.New(a.config.opencage_key)
+	a.opencage = opencage.New(a.config.opencageKey)
 	a.client = herokuapp.New(*a.logger, *a.opencage)
 	a.client.Init()
 	a.initDB()
