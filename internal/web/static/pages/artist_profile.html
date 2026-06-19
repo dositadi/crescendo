@@ -228,8 +228,8 @@
 
                   <!-- Action -->
                   <div class="shrink-0">
-                    <button hx-get="{{$.TicketUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" hx-vals='{"{{$.PathKey}}":"{{$.PathUrl}}","{{$.DateKey}}":"{{.}}","{{$.ArtistIdKey}}":"{{$.ArtistInfo.Id}}","{{$.LocationKey}}":"{{$key | CleanCityName}}"}' class="cursor-pointer inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand text-white text-sm font-medium hover:bg-brand-hover active:bg-brand-active transition-colors duration-200" style="box-shadow:0 4px 14px rgba(79,70,229,.18);">
-                      Get Tickets
+                    <button {{if Paid $.UserTickets $.ArtistInfo.Id .}} hx-get="{{$.TicketUrl}}"  hx-vals='{"{{$.PathKey}}":"{{$.PathUrl}}","{{$.DateKey}}":"{{.}}","{{$.ArtistIdKey}}":"{{$.ArtistInfo.Id}}","{{$.LocationKey}}":"{{$key | CleanCityName}}"}' {{else}}  {{end}} hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="cursor-pointer inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand text-white text-sm font-medium hover:bg-brand-hover active:bg-brand-active transition-colors duration-200" style="box-shadow:0 4px 14px rgba(79,70,229,.18);">
+                      {{if Paid $.UserTickets $.ArtistInfo.Id .}} See Receipt {{else}} Get Tickets {{end}}
                       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                       </svg>
