@@ -1,5 +1,7 @@
 package data
 
+import "time"
+
 type SoldTickets struct {
 	Id               string
 	UserId           string
@@ -14,4 +16,6 @@ type SoldTickets struct {
 	Amt              *float64
 	Location         string
 	BookingFee       *float64
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
 }

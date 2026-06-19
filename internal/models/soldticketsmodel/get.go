@@ -26,13 +26,13 @@ func (s *SoldTicketsModel) Get(artistId int, userId, location, date string) (dat
 	ctx, cancel := context.WithTimeout(context.Background(), timeout*time.Second)
 	defer cancel()
 
-	query := "SELECT userContactFName, userContactLName, userContactEmail, concertDate, ticketType, qty, vat, amt, bookingFee FROM sold_tickets WHERE userId = $1 AND artistId = $2 AND location = $3 AND concertDate = $4"
+	query := "SELECT userContactFName, userContactLName, userContactEmail, concertDate, ticketType, qty, vat, amt, bookingFee, createdAt FROM sold_tickets WHERE userId = $1 AND artistId = $2 AND location = $3 AND concertDate = $4"
 
 	row := s.db.QueryRow(ctx, query, userId, artistId, location, date)
 
 	var sold data.SoldTickets
 
-	if err := row.Scan(&sold.UserContactFName, &sold.UserContactLName, &sold.UserContactEmail, &sold.ConcertDate, &sold.TicketType, &sold.Qty, &sold.Vat, &sold.Amt, &sold.BookingFee); err != nil {
+	if err := row.Scan(&sold.UserContactFName, &sold.UserContactLName, &sold.UserContactEmail, &sold.ConcertDate, &sold.TicketType, &sold.Qty, &sold.Vat, &sold.Amt, &sold.BookingFee, &sold.CreatedAt); err != nil {
 		var e error
 		switch {
 		case errors.Is(err, context.Canceled):
@@ -56,7 +56,7 @@ func (s *SoldTicketsModel) GetAll(userId string) ([]data.SoldTickets, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout*time.Second)
 	defer cancel()
 
-	query := `SELECT artistId, userContactFName, userContactLName, userContactEmail, concertDate, ticketType, qty, vat, amt, location, bookingFee FROM sold_tickets WHERE userId = $1`
+	query := `SELECT artistId, userContactFName, userContactLName, userContactEmail, concertDate, ticketType, qty, vat, amt, location, bookingFee, createdAt FROM sold_tickets WHERE userId = $1`
 
 	rows, err := s.db.Query(ctx, query, userId)
 	if err != nil {
@@ -84,7 +84,7 @@ func (s *SoldTicketsModel) GetAll(userId string) ([]data.SoldTickets, error) {
 	for rows.Next() {
 		var soldTicket data.SoldTickets
 
-		if err := rows.Scan(&soldTicket.ArtistId, &soldTicket.UserContactFName, &soldTicket.UserContactLName, &soldTicket.UserContactEmail, &soldTicket.ConcertDate, &soldTicket.TicketType, &soldTicket.Qty, &soldTicket.Vat, &soldTicket.Amt, &soldTicket.Location, &soldTicket.BookingFee); err != nil {
+		if err := rows.Scan(&soldTicket.ArtistId, &soldTicket.UserContactFName, &soldTicket.UserContactLName, &soldTicket.UserContactEmail, &soldTicket.ConcertDate, &soldTicket.TicketType, &soldTicket.Qty, &soldTicket.Vat, &soldTicket.Amt, &soldTicket.Location, &soldTicket.BookingFee, &soldTicket.CreatedAt); err != nil {
 			var e error
 			switch {
 			case errors.Is(err, context.Canceled):

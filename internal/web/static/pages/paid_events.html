@@ -21,7 +21,7 @@
     <div class="flex items-center gap-3 h-15">
 
       <!-- Back button -->
-      <a hx-get="" hx-swap="outerHTML" hx-target="#body" hx-push-url="true"
+      <a hx-get="{{.PrevPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true"
          class="inline-flex items-center gap-1.5 text-sm font-medium text-ink-secondary
                 hover:text-brand transition-colors duration-200 group shrink-0">
         <svg class="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-0.5"
@@ -96,8 +96,11 @@
   <!-- ════════════════════════════════════════════════════════════════════
        PAID EVENT CARD — single card, populate via Go template range
   ════════════════════════════════════════════════════════════════════════ -->
-  <article class="paid-card max-w-2xl pe-d2">
 
+  <div id="paid-events" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+
+    {{range .PaidEvents}}
+    <article class="paid-card pe-d2">
     <!-- ── Hero banner ──────────────────────────────────────────────── -->
     <div class="paid-hero px-6 sm:px-7 py-6">
       <div class="noise"></div>
@@ -107,8 +110,8 @@
         <!-- Date block -->
         <div class="shrink-0 w-14 h-14 rounded-xl bg-white/10 border border-white/15
                     flex flex-col items-center justify-center">
-          <span class="text-white/60 text-xs font-semibold tracking-widest uppercase leading-none">APR</span>
-          <span class="text-white font-bold text-xl leading-tight tracking-tight">27</span>
+          <span class="text-white/60 text-xs font-semibold tracking-widest uppercase leading-none">{{GetMonth .ConcertDate}}</span>
+          <span class="text-white font-bold text-xl leading-tight tracking-tight"> {{GetDay .ConcertDate}} </span>
         </div>
 
         <!-- Event info -->
@@ -127,19 +130,18 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/>
             </svg>
-            Allianz Arena, Munich
+            {{.Location}}
           </p>
         </div>
 
         <!-- Artist thumbnail -->
         <div class="hidden sm:block w-12 h-12 rounded-xl overflow-hidden border border-white/20 shrink-0">
           <img
-            src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=200&q=80"
-            alt="Artist"
+            src="{{ GetArtistImage .ArtistId $.ArtistInfoImage}}"
+            alt="{{GetArtistImage .ArtistId $.ArtistInfoName}}"
             class="w-full h-full object-cover"
           />
         </div>
-
       </div>
     </div><!-- /paid-hero -->
 
@@ -161,7 +163,7 @@
           </div>
           <div class="flex-1">
             <p class="text-xs text-ink-muted">Ticket Type</p>
-            <p class="text-sm font-semibold text-ink">VIP Standing × 2</p>
+            <p class="text-sm font-semibold text-ink">{{.TicketType}} × {{.Qty}}</p>
           </div>
         </div>
 
@@ -173,7 +175,7 @@
           </div>
           <div class="flex-1">
             <p class="text-xs text-ink-muted">Event Date</p>
-            <p class="text-sm font-semibold text-ink">April 27, 2025 · 8:30 PM</p>
+            <p class="text-sm font-semibold text-ink">{{GetMonth .ConcertDate}} {{GetDay .ConcertDate}}, {{GetYear .ConcertDate}} · 8:30 PM</p>
           </div>
         </div>
 
@@ -197,7 +199,7 @@
           </div>
           <div class="flex-1">
             <p class="text-xs text-ink-muted">Amount Paid</p>
-            <p class="text-sm font-semibold text-ink">€245.00</p>
+            <p class="text-sm font-semibold text-ink">€{{DeReferenceValue .Amt}}</p>
           </div>
         </div>
 
@@ -206,7 +208,7 @@
       <!-- ── Footer actions ─────────────────────────────────────────── -->
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
         <p class="text-xs text-ink-disabled order-2 sm:order-1">
-          Paid on Mar 12, 2025 via Visa •••• 4242
+          Paid on {{FormatTime .CreatedAt}} via Visa •••• 4242
         </p>
         <a href="#" class="btn-receipt order-1 sm:order-2 w-full sm:w-auto">
           View Receipt
@@ -219,6 +221,8 @@
     </div><!-- /body -->
 
   </article>
+  {{end}}
+  </div>
 
 </main>
 
@@ -242,8 +246,8 @@
       </a>
 
       <nav class="flex items-center gap-4 text-xs text-ink-muted">
-        <a href="#" class="hover:text-ink transition-colors">Privacy</a>
-        <a href="#" class="hover:text-ink transition-colors">Terms</a>
+        <a hx-get="{{.PrivacyPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="hover:text-ink transition-colors">Privacy</a>
+        <a hx-get="{{.TermsPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="hover:text-ink transition-colors">Terms</a>
         <a href="#" class="hover:text-ink transition-colors">Refund Policy</a>
         <a href="#" class="hover:text-ink transition-colors">Support</a>
       </nav>

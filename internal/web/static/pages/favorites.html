@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Favorites — Crescendo</title>
+  <link rel="stylesheet" href="/src/output.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/htmx-ext-response-targets@2.0.4" integrity="sha384-T41oglUPvXLGBVyRdZsVRxNWnOOqCynaPubjUVjxhsjFTKrFJGEMm3/0KGmNQ+Pg" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- ══════════════════════════════════════════════════════════════════════
+     HEADER
+    ═══════════════════════════════════════════════════════════════════════════ -->
+    <header class="sticky top-0 z-50 bg-surface-white border-b border-border-soft shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center gap-3 h-15">
+
+        <!-- Back button -->
+        <a hx-get="{{.PrevPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true"
+            class="inline-flex items-center gap-1.5 text-sm font-medium text-ink-secondary
+                    hover:text-brand transition-colors duration-200 group shrink-0">
+            <svg class="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-0.5"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/>
+            </svg>
+            <span class="hidden sm:inline">Back to Schedule</span>
+        </a>
+
+        <!-- Divider -->
+        <div class="h-5 w-px bg-border shrink-0 hidden sm:block"></div>
+
+        <!-- Logo -->
+        <a href="/" class="inline-flex items-center gap-2 shrink-0">
+            <div class="flex items-end gap-0.75" style="height:20px">
+            <div class="wbar bg-brand animate-bar1" style="height:35%;"></div>
+            <div class="wbar bg-brand animate-bar2" style="height:65%;"></div>
+            <div class="wbar bg-brand animate-bar3" style="height:100%;"></div>
+            <div class="wbar bg-brand animate-bar4" style="height:60%;"></div>
+            <div class="wbar bg-brand animate-bar5" style="height:30%;"></div>
+            </div>
+            <span class="font-display text-ink text-[1.3rem] tracking-tight leading-none">Crescendo</span>
+        </a>
+
+        <div class="flex-1"></div>
+
+        <!-- Secure badge -->
+        <div class="hidden sm:inline-flex items-center gap-1.5 text-xs text-ink-muted
+                    bg-surface-alt border border-border-soft rounded-full px-3 py-1.5">
+            <svg class="w-3.5 h-3.5 text-green-600" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/>
+            </svg>
+            Secure checkout
+        </div>
+
+            <!-- Avatar -->
+            <button class="w-9 h-9 rounded-full overflow-hidden border-2 border-white/20 hover:border-white/40 transition-all duration-200 shrink-0" aria-label="Profile">
+                <img src="https://i.pravatar.cc/40?img=11" alt="User avatar" class="w-full h-full object-cover" />
+            </button>
+
+        </div>
+    </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+
+        <!-- ── Page heading ─────────────────────────────────────────────────── -->
+        <div class="mb-7 pe-d1">
+            <div class="flex items-end gap-0.5 mb-2" style="height:14px">
+            <div class="waveform-bar animate-bar1" style="height:40%; opacity:0.25;"></div>
+            <div class="waveform-bar animate-bar2" style="height:70%; opacity:0.3;"></div>
+            <div class="waveform-bar animate-bar3" style="height:100%; opacity:0.35;"></div>
+            <div class="waveform-bar animate-bar4" style="height:75%; opacity:0.3;"></div>
+            <div class="waveform-bar animate-bar5" style="height:45%; opacity:0.25;"></div>
+            <div class="waveform-bar animate-bar1" style="height:30%; opacity:0.2;"></div>
+            </div>
+            <h1 class="font-display text-2xl sm:text-3xl text-ink leading-tight tracking-tight">
+            My Favorites
+            </h1>
+            <p class="text-sm text-ink-muted mt-1">
+            All your favorite artists.
+            </p>
+        </div>
+
+        <!-- ─────────────────────────────────────────────────────────── -->
+    <!-- ARTIST CARDS GRID                                           -->
+    <!-- ─────────────────────────────────────────────────────────── -->
+    <div id="artists-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 sm:gap-5">
+
+    <!-- ── CARD ── -->
+     {{range .Artists}}
+        <article class="artist-card visible card-d1 group relative flex flex-col">
+
+        <!-- Image container -->
+        <div class="relative overflow-hidden" style="border-radius: 16px 16px 0 0;">
+            <img
+            src="{{.Image}}"
+            alt="{{.Name}}"
+            class="artist-card-img"
+            />
+            <!-- Favourite button (OUTLINE — not favourited) -->
+            <button id="fav-{{.Id}}" hx-post="{{$.FavoriteArtistUrl}}?{{$.FavKey}}={{$.NotFavorited}}&{{$.ArtistIDKey}}={{.Id}}" hx-swap="outerHTML" hx-target="#artists-grid"
+            class="fav-btn cursor-pointer absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center bg-rose-500 border border-rose-400 text-white hover:bg-rose-600 transition-all duration-200"
+            aria-label="Remove from favourites"
+            >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            </button>
+            <!-- Upcoming events badge -->
+            <div class="absolute bottom-3 left-3">
+            <span class="inline-flex items-center gap-1 bg-black/40 backdrop-blur-sm border border-white/15 text-white text-[10px] font-medium px-2 py-1 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
+                {{len .DatesLocations}} upcoming
+            </span>
+            </div>
+        </div>
+
+        <!-- Card body -->
+        <div class="flex flex-col flex-1 p-3.5">
+            <!-- Genre -->
+            <span class="genre-badge mb-2 self-start">HIP-HOP</span>
+            <!-- Name -->
+            <h3 class="font-semibold text-ink text-sm leading-snug mb-1">{{.Name}}</h3>
+            <!-- Location -->
+            <p class="text-ink-muted text-xs flex items-center gap-1 mb-3">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            {{.Locations | GetLocation | CleanText}}
+            </p>
+            <!-- Stats row -->
+            <div class="flex items-center gap-3 mb-3.5">
+            <div class="stat-pill">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                {{RandomValues}}
+            </div>
+            <div class="stat-pill">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                {{RandomValues}}
+            </div>
+            </div>
+            <!-- CTA -->
+            <a hx-get="{{$.ArtistDetailUrl}}/{{.Id}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="cursor-pointer mt-auto flex items-center justify-center gap-1.5 w-full bg-brand-light text-brand border border-indigo-100 hover:bg-brand hover:text-white hover:border-brand text-xs font-medium py-2 rounded-lg transition-all duration-200">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+            View Profile
+            </a>
+        </div>
+        </article>
+        {{end}}
+    </div> <!-- /grid -->
+    </main>
+</body>
+</html>

@@ -102,7 +102,7 @@ func (p *Pages) RenderHomePage(partial bool) error {
 		FilterByName, FilterByCreationDate, FilterByFirstAlbum                                     string
 		FilterKey, ArtistIDKey, SearchKey, PageKey                                                 string
 		SortKey, SortASC, SortDESC                                                                 string
-		FavoriteArtistUrl, FavKey, Favorited, NotFavorited                                         string
+		FavoriteArtistUrl, AllFavoritesUrl, FavKey, Favorited, NotFavorited                        string
 		SearchUrl, Url, ArtistDetailUrl, PrivacyPageUrl, TermsPageUrl, AboutPageUrl, PaidEventsUrl string
 		DisableNextbutton, DisablePrevButton, IsSearch                                             bool
 	}{
@@ -120,6 +120,7 @@ func (p *Pages) RenderHomePage(partial bool) error {
 		SortASC:              string(ASCENDING_ORDER),
 		SortDESC:             string(DESCENDING_ORDER),
 		FavoriteArtistUrl:    utils.FAVORITE.String(),
+		AllFavoritesUrl:      utils.FAVORITES.String(),
 		FavKey:               utils.FAV_KEY,
 		Favorited:            string(FAVORITED),
 		NotFavorited:         string(NOT_FAVORITED),

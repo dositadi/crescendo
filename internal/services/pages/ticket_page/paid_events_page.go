@@ -1,10 +1,12 @@
 package ticketpage
 
 import (
+	"fmt"
 	"html/template"
 
 	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
+	"github.com/dositadi/groupie-tracker/internal/utils"
 )
 
 type Events string
@@ -30,10 +32,18 @@ func (t *TicketPage) RenderPaidEventsPage(event Events) error {
 		return err
 	}
 
+
 	data := struct {
-		PaidEvents []data.SoldTickets
+		PaidEvents                                []data.SoldTickets
+		ArtistInfoName, ArtistInfoImage           string
+		PrivacyPageUrl, TermsPageUrl, PrevPageUrl string
 	}{
-		PaidEvents: boughtTickets,
+		PaidEvents:      boughtTickets,
+		ArtistInfoName:  "name",
+		ArtistInfoImage: "image",
+		PrivacyPageUrl:  fmt.Sprintf("%s?%s=%s", utils.PRIVACY.String(), utils.PAGE_KEY, t.request.URL.EscapedPath()),
+		TermsPageUrl:    fmt.Sprintf("%s?%s=%s", utils.TERMS.String(), utils.PAGE_KEY, t.request.URL.EscapedPath()),
+		PrevPageUrl:     utils.HOME.String(),
 	}
 
 	temp, err := template.New("paid_events.html").Funcs(t.detailPageFuncMap()).ParseFS(t.embedded.Get(), fs...)

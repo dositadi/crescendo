@@ -14,6 +14,7 @@ const (
 	PRIVACY           Route = Route("/crescendo/privacy")
 	HOME              Route = Route("/artists")
 	FAVORITES         Route = Route("/artists/favorites")
+	RECIEPTS          Route = Route("/artists/event/reciept")
 	ARTIST_DETAILS    Route = Route("/artists/detail")
 	ARTIST_SEARCH     Route = Route("/artists/search") //?query=
 	EVENTS            Route = Route("/artists/concert")
@@ -24,5 +25,4 @@ const (
 	TicketType        Route = Route("/artists/events/ticket/type")
 	TicketQuantity    Route = Route("/artists/events/ticket/quantity")
 	Payment           Route = Route("/artists/events/ticket/payment")
-	
 )

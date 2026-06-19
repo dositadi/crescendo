@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"strconv"
 	"strings"
+	"time"
 	"unicode"
 
 	"github.com/dositadi/groupie-tracker/internal/data"
@@ -79,6 +80,26 @@ func (t *TicketPage) detailPageFuncMap() template.FuncMap {
 		},
 		"RandomValues": func() int {
 			return rand.Intn(500)
+		},
+		"GetArtistImage": func(artistId int, info string) string {
+			artistInfo := t.client.Get()[artistId]
+
+			switch info {
+			case "image":
+				return artistInfo.Image
+			case "name":
+				return artistInfo.Name
+			}
+			return ""
+		},
+		"DeReferenceValue": func(val *float64) float64 {
+			if val != nil {
+				return *val
+			}
+			return 0.0
+		},
+		"FormatTime": func(time time.Time) string {
+			return time.Format("Jan 2, 2006")
 		},
 	}
 }

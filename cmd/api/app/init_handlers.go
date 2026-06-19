@@ -37,6 +37,8 @@ func (a *App) initHandlers() {
 		r.With(a.midleware.VerifyAccessToken).Get(utils.TICKET.String(), a.handler.Get.DetailPage.TicketPageHandler)
 		r.With(a.midleware.VerifyAccessToken).Get(utils.Payment.String(), a.handler.Get.DetailPage.RenderPaymentPage)
 		r.With(a.midleware.VerifyAccessToken).Get(utils.ALL_EVENTS_ROUTES.String(), a.handler.Get.HomePage.PaidEventsPageHandler)
+		r.With(a.midleware.VerifyAccessToken).Get(utils.FAVORITES.String(), a.handler.Get.HomePage.FavoritePageHandler)
+		r.With(a.midleware.VerifyAccessToken).Get(utils.RECIEPTS.String(), a.handler.Get.DetailPage.RecieptPageHandler)
 	})
 
 	// Post request routes
