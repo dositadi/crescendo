@@ -11,7 +11,7 @@ const (
 )
 
 func (d *DetailPage) AllEventsPageHandler(w http.ResponseWriter, r *http.Request) {
-	page := artistdetail.New(d.logger, w, d.embedded, d.client, r)
+	page := artistdetail.New(d.logger, w, d.embedded, d.client, r,d.soldTickets)
 
 	if err := page.RenderAllEventsPage(); err != nil {
 		d.logger.PrintError(err.Error(), map[string]string{

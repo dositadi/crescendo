@@ -10,6 +10,8 @@ import (
 	"unicode"
 
 	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
+	"github.com/dositadi/groupie-tracker/internal/data"
+	"github.com/dositadi/groupie-tracker/internal/utils"
 )
 
 func (a *ArtistDetail) atoi(s string) int {
@@ -140,5 +142,22 @@ func (a *ArtistDetail) detailPageFuncMap() template.FuncMap {
 			}
 			return out
 		},
+		"Paid": func(userTickets []data.SoldTickets, artistId int, date string) bool {
+			for _, ticket := range userTickets {
+				if ticket.ArtistId == artistId && ticket.ConcertDate == date {
+					return true
+				}
+			}
+			return false
+		},
 	}
+}
+
+func (a *ArtistDetail) getUser() data.User {
+	val := a.request.Context().Value(utils.USER_ID_KEY)
+
+	if user, ok := val.(data.User); ok {
+		return user
+	}
+	return data.User{}
 }

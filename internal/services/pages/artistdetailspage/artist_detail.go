@@ -5,6 +5,7 @@ import (
 	"html/template"
 
 	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
+	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
 	"github.com/dositadi/groupie-tracker/internal/utils"
 	"github.com/go-chi/chi/v5"
@@ -27,12 +28,23 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 
 	id := a.atoi(chi.URLParam(a.request, "id"))
 
+	user := a.getUser()
+
 	artistInfo := a.client.Get()[id]
+
+	userTickets, err := a.soldTicketsModel.GetAll(user.Id)
+	if err != nil {
+		e := helper.WrapError("User tickets get err", err)
+		a.logger.PrintError(e.Error(), map[string]string{
+			"Source": sourceR,
+		})
+	}
 
 	data := struct {
 		HomeUrl, ArtistDetailUrl, AllEventsPageUrl, TicketUrl, PathUrl, PrivacyPageUrl, TermsPageUrl string
 		ArtistInfo                                                                                   herokuapp.ArtistInfo
 		AllArtists                                                                                   map[int]herokuapp.ArtistInfo
+		UserTickets                                                                                  []data.SoldTickets
 		JsObject                                                                                     template.JS
 		ArtistIdKey, DateKey, PathKey, LocationKey                                                   string
 	}{
@@ -45,6 +57,7 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 		HomeUrl:          utils.HOME.String(),
 		ArtistInfo:       artistInfo,
 		AllArtists:       a.client.Get(),
+		UserTickets:      userTickets,
 		ArtistDetailUrl:  utils.ARTIST_DETAILS.String(),
 		AllEventsPageUrl: utils.ALL_EVENTS_ROUTES.String(),
 		PrivacyPageUrl:   fmt.Sprintf("%s?%s=%s", utils.PRIVACY.String(), utils.PAGE_KEY, a.request.URL.EscapedPath()),

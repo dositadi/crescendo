@@ -34,7 +34,7 @@ func New(usermodel UserModel, favoriteModel homepage.FavoriteModel, preferenceMo
 	return &Get{
 		Auth:       *getauth.New(usermodel, client, logger, embedded),
 		HomePage:   *homepage.New(usermodel, client, logger, embedded, favoriteModel, preferenceModel, soldTickets),
-		DetailPage: *artistdetailpage.New(usermodel, client, logger, embedded, favoriteModel, preferenceModel),
+		DetailPage: *artistdetailpage.New(usermodel, client, logger, embedded, favoriteModel, preferenceModel, soldTickets),
 		LegalPage:  *legalpages.New(logger, embedded),
 	}
 }
