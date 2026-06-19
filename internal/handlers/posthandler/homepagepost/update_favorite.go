@@ -20,6 +20,7 @@ func (p *HomePage) UpdateFavoriteHandler(w http.ResponseWriter, r *http.Request)
 	favStatus := r.FormValue(utils.FAV_KEY)
 	val := r.FormValue(utils.ARTIST_ID_KEY)
 	artistId := p.atoi(val)
+	requestPage := r.FormValue(utils.PAGE_KEY)
 	page := pages.New(p.logger, w, p.embedded, p.client, r, p.favoriteModel, p.preferenceModel)
 	user := p.getUserId(r)
 
@@ -102,12 +103,18 @@ func (p *HomePage) UpdateFavoriteHandler(w http.ResponseWriter, r *http.Request)
 			}
 		}
 	}
-	if err := page.RenderHomePage(true); err != nil {
-		e := helper.WrapError("Render favorite button error", err)
-		p.logger.PrintError(e.Error(), map[string]string{
-			"Source": sourceUH,
-		})
-		return
+
+	switch requestPage {
+	case pages.PageHome:
+		if err := page.RenderHomePage(true); err != nil {
+			e := helper.WrapError("Render favorite button error", err)
+			p.logger.PrintError(e.Error(), map[string]string{
+				"Source": sourceUH,
+			})
+			return
+		}
+	case pages.PageFav:
+		http.Redirect(w, r, utils.FAVORITES.String()+"#artists-grid", http.StatusSeeOther)
 	}
 }
 

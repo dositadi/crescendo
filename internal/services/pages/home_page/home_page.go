@@ -14,6 +14,8 @@ import (
 
 const (
 	sourceRHome = "Render Home page f(n) under pages pkg"
+	PageHome    = "Home"
+	PageFav     = "Favorite"
 )
 
 var currentPage = 1
@@ -56,7 +58,11 @@ func (p *Pages) RenderHomePage(partial bool) error {
 
 	artists = sortArtist(mapToSlice(p.client.Get()), Sort(userPreference.Sort), Filter(userPreference.Filter))
 
-	page := p.request.FormValue(utils.PAGE_KEY)
+	var page string
+
+	if !partial {
+		page = p.request.FormValue(utils.PAGE_KEY)
+	}
 
 	if page != "" {
 		p := p.atoi(page)
@@ -102,7 +108,7 @@ func (p *Pages) RenderHomePage(partial bool) error {
 		FilterByName, FilterByCreationDate, FilterByFirstAlbum                                     string
 		FilterKey, ArtistIDKey, SearchKey, PageKey                                                 string
 		SortKey, SortASC, SortDESC                                                                 string
-		FavoriteArtistUrl, AllFavoritesUrl, FavKey, Favorited, NotFavorited                        string
+		FavoriteArtistUrl, AllFavoritesUrl, FavKey, Favorited, NotFavorited, RequestPage           string
 		SearchUrl, Url, ArtistDetailUrl, PrivacyPageUrl, TermsPageUrl, AboutPageUrl, PaidEventsUrl string
 		DisableNextbutton, DisablePrevButton, IsSearch                                             bool
 	}{
@@ -141,6 +147,7 @@ func (p *Pages) RenderHomePage(partial bool) error {
 		TermsPageUrl:         fmt.Sprintf("%s?%s=%s", utils.TERMS.String(), utils.PAGE_KEY, p.request.URL.EscapedPath()),
 		AboutPageUrl:         fmt.Sprintf("%s?%s=%s", utils.ABOUT.String(), utils.PAGE_KEY, p.request.URL.EscapedPath()),
 		PaidEventsUrl:        utils.ALL_EVENTS_ROUTES.String(),
+		RequestPage:          PageHome,
 	}
 
 	p.responseWriter.WriteHeader(http.StatusOK)

@@ -32,19 +32,23 @@ func (p *Pages) RenderFavoritePage() error {
 
 	data := struct {
 		ArtistDetailUrl, PrevPageUrl, FavoriteArtistUrl string
-		FavKey, ArtistIDKey                             string
+		FavKey, ArtistIDKey, PageKey                    string
 		Artists                                         []herokuapp.ArtistInfo
-		NotFavorited                                    string
+		Favorited                                       string
+		RequestPage                                     string
 	}{
 		ArtistDetailUrl:   utils.ARTIST_DETAILS.String(),
 		FavoriteArtistUrl: utils.FAVORITE.String(),
 		PrevPageUrl:       utils.HOME.String(),
-		NotFavorited:      string(NOT_FAVORITED),
+		Favorited:         string(FAVORITED),
 
 		FavKey:      utils.FAV_KEY,
 		ArtistIDKey: utils.ARTIST_ID_KEY,
+		PageKey:     utils.PAGE_KEY,
 
 		Artists: artists,
+
+		RequestPage: PageFav,
 	}
 
 	temp, err := template.New("favorites.html").Funcs(p.homePageFunc()).ParseFS(p.embedded.Get(), fs...)
@@ -69,7 +73,7 @@ func (p *Pages) RenderFavoritePage() error {
 func allFavorites(favorites []data.Favorite, artists map[int]herokuapp.ArtistInfo) []herokuapp.ArtistInfo {
 	var favoriteArtists []herokuapp.ArtistInfo
 	for _, favorite := range favorites {
-		if artist, ok := artists[favorite.ArtistId]; ok {
+		if artist, ok := artists[favorite.ArtistId]; ok && favorite.Status {
 			favoriteArtists = append(favoriteArtists, artist)
 		}
 	}
