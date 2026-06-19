@@ -299,7 +299,7 @@
         <nav class="flex flex-wrap items-center gap-x-6 gap-y-2">
           <a hx-get="{{.AboutPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="text-ink-muted hover:text-ink text-sm transition-colors">About</a>
           <a href="#" class="text-ink-muted hover:text-ink text-sm transition-colors">Artists</a>
-          <a href="#" class="text-ink-muted hover:text-ink text-sm transition-colors">Events</a>
+          <a hx-get="{{.PaidEventsUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="text-ink-muted hover:text-ink text-sm transition-colors">Events</a>
           <a hx-get="{{.PrivacyPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="text-ink-muted hover:text-ink text-sm transition-colors">Privacy</a>
           <a hx-get="{{.TermsPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="text-ink-muted hover:text-ink text-sm transition-colors">Terms</a>
         </nav>

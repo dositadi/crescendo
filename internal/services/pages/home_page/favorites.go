@@ -32,7 +32,7 @@ func (p *Pages) RenderFavoritePage() error {
 
 	data := struct {
 		ArtistDetailUrl, PrevPageUrl, FavoriteArtistUrl string
-		FavKey, ArtistIDKey, PageKey                    string
+		FavKey, ArtistIDKey, ReqPgKey                   string
 		Artists                                         []herokuapp.ArtistInfo
 		Favorited                                       string
 		RequestPage                                     string
@@ -44,7 +44,7 @@ func (p *Pages) RenderFavoritePage() error {
 
 		FavKey:      utils.FAV_KEY,
 		ArtistIDKey: utils.ARTIST_ID_KEY,
-		PageKey:     utils.PAGE_KEY,
+		ReqPgKey:    utils.REQ_PAGE_KEY,
 
 		Artists: artists,
 

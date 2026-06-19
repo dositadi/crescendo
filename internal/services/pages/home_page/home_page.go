@@ -58,11 +58,7 @@ func (p *Pages) RenderHomePage(partial bool) error {
 
 	artists = sortArtist(mapToSlice(p.client.Get()), Sort(userPreference.Sort), Filter(userPreference.Filter))
 
-	var page string
-
-	if !partial {
-		page = p.request.FormValue(utils.PAGE_KEY)
-	}
+	page := p.request.FormValue(utils.PAGE_KEY)
 
 	if page != "" {
 		p := p.atoi(page)
@@ -106,7 +102,7 @@ func (p *Pages) RenderHomePage(partial bool) error {
 		CurrentFilter, CurrentSort                                                                 string
 		FilterSortRoute                                                                            string
 		FilterByName, FilterByCreationDate, FilterByFirstAlbum                                     string
-		FilterKey, ArtistIDKey, SearchKey, PageKey                                                 string
+		FilterKey, ArtistIDKey, SearchKey, PageKey, ReqPgKey                                       string
 		SortKey, SortASC, SortDESC                                                                 string
 		FavoriteArtistUrl, AllFavoritesUrl, FavKey, Favorited, NotFavorited, RequestPage           string
 		SearchUrl, Url, ArtistDetailUrl, PrivacyPageUrl, TermsPageUrl, AboutPageUrl, PaidEventsUrl string
@@ -135,6 +131,7 @@ func (p *Pages) RenderHomePage(partial bool) error {
 		SearchKey:            utils.SEARCH_KEY,
 		Url:                  utils.HOME.String(),
 		PageKey:              utils.PAGE_KEY,
+		ReqPgKey:             utils.REQ_PAGE_KEY,
 		NextPage:             currentPage + 1,
 		PreviousPage:         currentPage - 1,
 		Count:                count,

@@ -14,6 +14,7 @@ const (
 	USER_ID_KEY       = "user"
 	SEARCH_KEY        = "search"
 	PAGE_KEY          = "page"
+	REQ_PAGE_KEY      = "req_page"
 	PATH_KEY          = "path"
 	DATE_KEY          = "date"
 	LOCATION_KEY      = "location"

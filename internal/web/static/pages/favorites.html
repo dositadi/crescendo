@@ -103,7 +103,7 @@
             class="artist-card-img"
             />
             <!-- Favourite button (OUTLINE — not favourited) -->
-            <button id="fav-{{.Id}}" hx-post="{{$.FavoriteArtistUrl}}?{{$.FavKey}}={{$.Favorited}}&{{$.ArtistIDKey}}={{.Id}}&{{$.PageKey}}={{$.RequestPage}}" hx-swap="outerHTML" hx-target="#body"
+            <button id="fav-{{.Id}}" hx-post="{{$.FavoriteArtistUrl}}?{{$.FavKey}}={{$.Favorited}}&{{$.ArtistIDKey}}={{.Id}}&{{$.ReqPgKey}}={{$.RequestPage}}" hx-swap="outerHTML" hx-target="#body"
             class="fav-btn cursor-pointer absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center bg-rose-500 border border-rose-400 text-white hover:bg-rose-600 transition-all duration-200"
             aria-label="Remove from favourites"
             >

@@ -20,7 +20,7 @@ func (p *HomePage) UpdateFavoriteHandler(w http.ResponseWriter, r *http.Request)
 	favStatus := r.FormValue(utils.FAV_KEY)
 	val := r.FormValue(utils.ARTIST_ID_KEY)
 	artistId := p.atoi(val)
-	requestPage := r.FormValue(utils.PAGE_KEY)
+	requestPage := r.FormValue(utils.REQ_PAGE_KEY)
 	page := pages.New(p.logger, w, p.embedded, p.client, r, p.favoriteModel, p.preferenceModel)
 	user := p.getUserId(r)
 
