@@ -27,6 +27,11 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 	}
 
 	id := a.atoi(chi.URLParam(a.request, "id"))
+	path := a.request.FormValue(utils.PATH_KEY)
+
+	if path == "" {
+		path = utils.HOME.String()
+	}
 
 	user := a.getUser()
 
@@ -41,12 +46,12 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 	}
 
 	data := struct {
-		HomeUrl, ArtistDetailUrl, AllEventsPageUrl, TicketUrl, PathUrl, PrivacyPageUrl, TermsPageUrl, RecieptPageUrl string
-		ArtistInfo                                                                                                   herokuapp.ArtistInfo
-		AllArtists                                                                                                   map[int]herokuapp.ArtistInfo
-		UserTickets                                                                                                  []data.SoldTickets
-		JsObject                                                                                                     template.JS
-		ArtistIdKey, DateKey, PathKey, LocationKey                                                                   string
+		PrevPageUrl, ArtistDetailUrl, AllEventsPageUrl, TicketUrl, PathUrl, PrivacyPageUrl, TermsPageUrl, RecieptPageUrl string
+		ArtistInfo                                                                                                       herokuapp.ArtistInfo
+		AllArtists                                                                                                       map[int]herokuapp.ArtistInfo
+		UserTickets                                                                                                      []data.SoldTickets
+		JsObject                                                                                                         template.JS
+		ArtistIdKey, DateKey, PathKey, LocationKey                                                                       string
 	}{
 		LocationKey:      utils.LOCATION_KEY,
 		PathKey:          utils.PATH_KEY,
@@ -54,7 +59,7 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 		ArtistIdKey:      utils.ARTIST_ID_KEY,
 		PathUrl:          a.request.URL.EscapedPath(),
 		TicketUrl:        utils.TICKET.String(),
-		HomeUrl:          utils.HOME.String(),
+		PrevPageUrl:      path,
 		RecieptPageUrl:   utils.RECIEPTS.String(),
 		ArtistInfo:       artistInfo,
 		AllArtists:       a.client.Get(),

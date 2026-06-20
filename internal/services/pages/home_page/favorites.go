@@ -31,20 +31,22 @@ func (p *Pages) RenderFavoritePage() error {
 	artists := allFavorites(favorites, p.client.Get())
 
 	data := struct {
-		ArtistDetailUrl, PrevPageUrl, FavoriteArtistUrl string
-		FavKey, ArtistIDKey, ReqPgKey                   string
-		Artists                                         []herokuapp.ArtistInfo
-		Favorited                                       string
-		RequestPage                                     string
+		ArtistDetailUrl, PrevPageUrl, FavoriteArtistUrl, PathUrl string
+		FavKey, ArtistIDKey, ReqPgKey, PathKey                   string
+		Artists                                                  []herokuapp.ArtistInfo
+		Favorited                                                string
+		RequestPage                                              string
 	}{
 		ArtistDetailUrl:   utils.ARTIST_DETAILS.String(),
 		FavoriteArtistUrl: utils.FAVORITE.String(),
 		PrevPageUrl:       utils.HOME.String(),
+		PathUrl:           p.request.URL.EscapedPath(),
 		Favorited:         string(FAVORITED),
 
 		FavKey:      utils.FAV_KEY,
 		ArtistIDKey: utils.ARTIST_ID_KEY,
 		ReqPgKey:    utils.REQ_PAGE_KEY,
+		PathKey:     utils.PATH_KEY,
 
 		Artists: artists,
 
