@@ -8,8 +8,8 @@ import (
 
 type config struct {
 	postgresDbDsn string
-	jwtkey      string
-	opencageKey string
+	jwtkey        string
+	opencageKey   string
 }
 
 func (c *config) Init(logger jsonlog.Logger) {
