@@ -32,11 +32,12 @@ func (t *TicketPage) RenderPaidEventsPage(event Events) error {
 		return err
 	}
 
-
 	data := struct {
-		PaidEvents                                []data.SoldTickets
-		ArtistInfoName, ArtistInfoImage           string
-		PrivacyPageUrl, TermsPageUrl, PrevPageUrl string
+		PaidEvents                                                         []data.SoldTickets
+		ArtistInfoName, ArtistInfoImage                                    string
+		PrivacyPageUrl, TermsPageUrl, PrevPageUrl, PathUrl, RecieptPageUrl string
+
+		PathKey, DateKey, ArtistIdKey, LocationKey string
 	}{
 		PaidEvents:      boughtTickets,
 		ArtistInfoName:  "name",
@@ -44,6 +45,13 @@ func (t *TicketPage) RenderPaidEventsPage(event Events) error {
 		PrivacyPageUrl:  fmt.Sprintf("%s?%s=%s", utils.PRIVACY.String(), utils.PAGE_KEY, t.request.URL.EscapedPath()),
 		TermsPageUrl:    fmt.Sprintf("%s?%s=%s", utils.TERMS.String(), utils.PAGE_KEY, t.request.URL.EscapedPath()),
 		PrevPageUrl:     utils.HOME.String(),
+		PathUrl:         t.request.URL.EscapedPath(),
+		RecieptPageUrl:  utils.RECIEPTS.String(),
+
+		PathKey:     utils.PATH_KEY,
+		DateKey:     utils.DATE_KEY,
+		ArtistIdKey: utils.ARTIST_ID_KEY,
+		LocationKey: utils.LOCATION_KEY,
 	}
 
 	temp, err := template.New("paid_events.html").Funcs(t.detailPageFuncMap()).ParseFS(t.embedded.Get(), fs...)
