@@ -18,7 +18,7 @@
     <div class="flex items-center gap-3 h-15">
 
       <!-- Back button -->
-      <a hx-get="{{.PreviousPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true"
+      <a hx-get="{{.DetailPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true"
          class="inline-flex items-center gap-1.5 text-sm font-medium text-ink-secondary
                 hover:text-brand transition-colors duration-200 group shrink-0">
         <svg class="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-0.5"
@@ -90,7 +90,7 @@
                   <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-2 mb-1">
                       <!-- <span class="text-[10px] font-semibold text-brand uppercase tracking-widest bg-brand-light px-2 py-0.5 rounded-full">Next Show</span> -->
-                      <span class="text-[10px] font-semibold text-emerald-700 uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">On Sale</span>
+                      <span class="text-[10px] font-semibold text-emerald-700 uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">{{if Paid $.UserTickets $.ArtistInfo.Id .}} Paid {{else}} On Sale {{end}}</span>
                     </div>
                     <h3 class="font-semibold text-ink text-base leading-snug">Music of the Spheres World Tour</h3>
                     <div class="flex items-center gap-1.5 mt-1.5">
@@ -104,8 +104,8 @@
 
                   <!-- Action -->
                   <div class="shrink-0">
-                    <button hx-get="{{$.TicketUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" hx-vals='{"{{$.PathKey}}":"{{$.PreviousPageUrl}}","{{$.DateKey}}":"{{.}}","{{$.ArtistIdKey}}":"{{$.ArtistInfo.Id}}","{{$.LocationKey}}":"{{$key | CleanCityName}}"}' class="cursor-pointer inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand text-white text-sm font-medium hover:bg-brand-hover active:bg-brand-active transition-colors duration-200" style="box-shadow:0 4px 14px rgba(79,70,229,.18);">
-                      Get Tickets
+                    <button {{if Paid $.UserTickets $.ArtistInfo.Id .}} hx-get="{{$.RecieptPageUrl}}"  hx-vals='{"{{$.PathKey}}":"{{$.PathUrl}}","{{$.DateKey}}":"{{.}}","{{$.ArtistIdKey}}":"{{$.ArtistInfo.Id}}","{{$.LocationKey}}":"{{$key | CleanCityName}}"}' {{else}} hx-get="{{$.TicketUrl}}"  hx-vals='{"{{$.PathKey}}":"{{$.PathUrl}}","{{$.DateKey}}":"{{.}}","{{$.ArtistIdKey}}":"{{$.ArtistInfo.Id}}","{{$.LocationKey}}":"{{$key | CleanCityName}}"}' {{end}} hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="cursor-pointer inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand text-white text-sm font-medium hover:bg-brand-hover active:bg-brand-active transition-colors duration-200" style="box-shadow:0 4px 14px rgba(79,70,229,.18);">
+                      {{if Paid $.UserTickets $.ArtistInfo.Id .}} See Receipt {{else}} Get Tickets {{end}}
                       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                       </svg>

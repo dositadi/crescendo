@@ -1,10 +1,12 @@
 package ticketpage
 
 import (
+	"fmt"
 	"html/template"
 
 	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
+	"github.com/dositadi/groupie-tracker/internal/services/ordercache"
 	"github.com/dositadi/groupie-tracker/internal/utils"
 )
 
@@ -19,6 +21,8 @@ func (t *TicketPage) RenderTicketReciept() error {
 	artistId := t.request.FormValue(utils.ARTIST_ID_KEY)
 	location := t.request.FormValue(utils.LOCATION_KEY)
 	date := t.request.FormValue(utils.DATE_KEY)
+	path := t.request.FormValue(utils.PATH_KEY)
+	fmt.Println(path)
 
 	user := t.getUser()
 
@@ -32,9 +36,15 @@ func (t *TicketPage) RenderTicketReciept() error {
 	}
 
 	data := struct {
-		BoughtTicket data.SoldTickets
+		PreviousPageUrl                                    string
+		BoughtTicket                                       data.SoldTickets
+		TotalTicketAmount, TotalBookingFee, TotalVatAmount float64
 	}{
-		BoughtTicket: userTicket,
+		PreviousPageUrl:   path,
+		BoughtTicket:      userTicket,
+		TotalTicketAmount: ordercache.TotalTicketAmount(ordercache.GetTicketPrice(userTicket.TicketType), userTicket.Qty),
+		TotalBookingFee:   ordercache.TotalBookingFee(*userTicket.BookingFee, userTicket.Qty),
+		TotalVatAmount:    ordercache.VatAmount(*userTicket.Vat, ordercache.TotalTicketAmount(ordercache.GetTicketPrice(userTicket.TicketType), userTicket.Qty), ordercache.TotalBookingFee(*userTicket.BookingFee, userTicket.Qty)),
 	}
 
 	temp, err := template.New("reciepts_page.html").Funcs(t.detailPageFuncMap()).ParseFS(t.embedded.Get(), fs...)

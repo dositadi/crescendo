@@ -25,7 +25,7 @@ func (t *TicketPage) RenderTicketPage() error {
 	date := t.request.FormValue(utils.DATE_KEY)
 	location := t.request.FormValue(utils.LOCATION_KEY)
 	user := t.getUser()
-	path := fmt.Sprintf("%s/%v", utils.ARTIST_DETAILS.String(), artistId)
+	path := t.request.FormValue(utils.PATH_KEY)
 
 	// Add the user's order to the cache
 	ordercache.Set(user.Id, location, artistId, string(ordercache.GENERAL))

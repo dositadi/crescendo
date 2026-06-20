@@ -41,12 +41,12 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 	}
 
 	data := struct {
-		HomeUrl, ArtistDetailUrl, AllEventsPageUrl, TicketUrl, PathUrl, PrivacyPageUrl, TermsPageUrl string
-		ArtistInfo                                                                                   herokuapp.ArtistInfo
-		AllArtists                                                                                   map[int]herokuapp.ArtistInfo
-		UserTickets                                                                                  []data.SoldTickets
-		JsObject                                                                                     template.JS
-		ArtistIdKey, DateKey, PathKey, LocationKey                                                   string
+		HomeUrl, ArtistDetailUrl, AllEventsPageUrl, TicketUrl, PathUrl, PrivacyPageUrl, TermsPageUrl, RecieptPageUrl string
+		ArtistInfo                                                                                                   herokuapp.ArtistInfo
+		AllArtists                                                                                                   map[int]herokuapp.ArtistInfo
+		UserTickets                                                                                                  []data.SoldTickets
+		JsObject                                                                                                     template.JS
+		ArtistIdKey, DateKey, PathKey, LocationKey                                                                   string
 	}{
 		LocationKey:      utils.LOCATION_KEY,
 		PathKey:          utils.PATH_KEY,
@@ -55,6 +55,7 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 		PathUrl:          a.request.URL.EscapedPath(),
 		TicketUrl:        utils.TICKET.String(),
 		HomeUrl:          utils.HOME.String(),
+		RecieptPageUrl:   utils.RECIEPTS.String(),
 		ArtistInfo:       artistInfo,
 		AllArtists:       a.client.Get(),
 		UserTickets:      userTickets,
