@@ -261,6 +261,41 @@ body {
   animation-delay: 1.2s;
 }
 
+.settings-d1 { animation: fade-up 0.55s ease-out 0.05s both; }
+    .settings-d2 { animation: fade-up 0.55s ease-out 0.13s both; }
+    .settings-d3 { animation: fade-up 0.55s ease-out 0.21s both; }
+
+    .settings-card {
+      background: #FFFFFF;
+      border: 1px solid #E5E7EB;
+      border-radius: 18px;
+      box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    }
+
+    /* Avatar upload */
+    .avatar-upload {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
+    }
+    .avatar-edit-btn {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #4F46E5;
+      border: 2px solid #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .avatar-edit-btn:hover { background: #4338CA; }
+
  /* ── Stagger animations ───────────────────────────────────────────── */
 .ph1-d1 { animation: fade-up 0.55s ease-out 0.05s both; }
 .ph1-d2 { animation: fade-up 0.55s ease-out 0.13s both; }
