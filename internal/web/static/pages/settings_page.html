@@ -97,7 +97,7 @@
       <h2 class="text-sm font-semibold text-ink mb-4">Username</h2>
 
       <label class="block text-xs font-medium text-ink-secondary mb-1.5">Display name</label>
-      <input type="text" value="johndoe"
+      <input type="text" value="{{.User.Username}}"
              class="field-input w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface-alt
                     text-sm text-ink placeholder:text-ink-disabled" />
       <p class="text-xs text-ink-disabled mt-2">
@@ -133,6 +133,22 @@
         </div>
       </div>
     </section>
+
+
+    <!-- ── Save button ──────────────────────────────────────────────── -->
+    <div class="flex justify-end gap-3 settings-d3">
+      <button type="button"
+              class="px-5 py-2.5 rounded-xl text-sm font-medium text-ink-secondary
+                     hover:text-ink transition-colors duration-200">
+        Cancel
+      </button>
+      <button type="submit"
+              class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-brand text-white
+                     text-sm font-semibold shadow-brand-sm hover:bg-brand-hover hover:-translate-y-0.5
+                     active:bg-brand-active active:translate-y-0 transition-all duration-200">
+        Save Changes
+      </button>
+    </div>
 
 
     <!-- ── Danger Zone ──────────────────────────────────────────────── -->
@@ -175,22 +191,6 @@
       </div>
     </section>
 
-
-    <!-- ── Save button ──────────────────────────────────────────────── -->
-    <div class="flex justify-end gap-3 settings-d3">
-      <button type="button"
-              class="px-5 py-2.5 rounded-xl text-sm font-medium text-ink-secondary
-                     hover:text-ink transition-colors duration-200">
-        Cancel
-      </button>
-      <button type="submit"
-              class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-brand text-white
-                     text-sm font-semibold shadow-brand-sm hover:bg-brand-hover hover:-translate-y-0.5
-                     active:bg-brand-active active:translate-y-0 transition-all duration-200">
-        Save Changes
-      </button>
-    </div>
-
   </form>
 
 </main>
@@ -211,9 +211,9 @@
         <span class="font-display text-ink-disabled text-sm tracking-tight">Crescendo</span>
       </a>
       <nav class="flex items-center gap-4 text-xs text-ink-muted">
-        <a href="#" class="hover:text-ink transition-colors">Privacy</a>
-        <a href="#" class="hover:text-ink transition-colors">Terms</a>
-        <a href="#" class="hover:text-ink transition-colors">Support</a>
+        <a hx-get="{{.PrivacyPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="text-ink-muted hover:text-ink text-sm transition-colors">Privacy</a>
+        <a hx-get="{{.TermsPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" class="text-ink-muted hover:text-ink text-sm transition-colors">Terms</a>
+        <a href="#" class="hover:text-ink text-sm transition-colors">Support</a>
       </nav>
       <p class="text-xs text-ink-disabled">&copy; 2025 Crescendo.</p>
     </div>

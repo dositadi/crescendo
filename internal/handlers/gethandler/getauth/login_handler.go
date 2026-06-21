@@ -7,7 +7,7 @@ import (
 )
 
 func (h *Auth) LoginPageHandler(w http.ResponseWriter, r *http.Request) {
-	authService := authservice.New(w, h.embedded, h.logger)
+	authService := authservice.New(w, h.embedded, h.logger,r)
 
 	if err := authService.RenderLoginPage(); err != nil {
 		h.logger.PrintError(err.Error(), map[string]string{

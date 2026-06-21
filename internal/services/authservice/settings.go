@@ -1,9 +1,12 @@
 package authservice
 
 import (
+	"fmt"
 	"html/template"
 
+	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
+	"github.com/dositadi/groupie-tracker/internal/utils"
 )
 
 const (
@@ -15,7 +18,18 @@ func (a *AuthService) RenderSettingsPage() error {
 		"internal/web/static/pages/settings_page.html",
 	}
 
-	data := struct{}{}
+	user := a.getUser()
+
+	data := struct {
+		PrivacyPageUrl, TermsPageUrl string
+
+		User data.User
+	}{
+		PrivacyPageUrl: fmt.Sprintf("%s?%s=%s", utils.PRIVACY.String(), utils.PAGE_KEY, a.request.URL.EscapedPath()),
+		TermsPageUrl:   fmt.Sprintf("%s?%s=%s", utils.TERMS.String(), utils.PAGE_KEY, a.request.URL.EscapedPath()),
+
+		User: user,
+	}
 
 	temp, err := template.New("settings_page.html").ParseFS(a.embedded.Get(), fs...)
 	if err != nil {

@@ -7,7 +7,7 @@ import (
 )
 
 func (a *Auth) SettingsPageHandler(w http.ResponseWriter, r *http.Request) {
-	page := authservice.New(w, a.embedded, a.logger)
+	page := authservice.New(w, a.embedded, a.logger,r)
 
 	if err := page.RenderSettingsPage(); err != nil {
 		a.logger.PrintError(err.Error(), map[string]string{

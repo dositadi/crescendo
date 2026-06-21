@@ -36,7 +36,7 @@ func (a *Auth) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	password := r.FormValue(utils.PASSWORD_KEY)
 	check := true
 
-	authService := authservice.New(w, a.embedded, a.logger)
+	authService := authservice.New(w, a.embedded, a.logger,r)
 
 	errType, err := validator.ValidateLoginFormValues(email, password)
 	if err != nil {
