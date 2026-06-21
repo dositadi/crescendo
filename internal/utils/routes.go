@@ -9,6 +9,7 @@ func (r Route) String() string {
 const (
 	LOGIN             Route = Route("/auth/session")
 	REGISTER          Route = Route("/auth/registration")
+	SETTINGS          Route = Route("/user/settings")
 	ABOUT             Route = Route("/crescendo/about")
 	TERMS             Route = Route("/crescendo/terms")
 	PRIVACY           Route = Route("/crescendo/privacy")

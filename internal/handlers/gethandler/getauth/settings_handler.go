@@ -6,12 +6,12 @@ import (
 	"github.com/dositadi/groupie-tracker/internal/services/authservice"
 )
 
-func (a *Auth) SignupHandler(w http.ResponseWriter, r *http.Request) {
-	authService := authservice.New(w, a.embedded, a.logger)
+func (a *Auth) SettingsPageHandler(w http.ResponseWriter, r *http.Request) {
+	page := authservice.New(w, a.embedded, a.logger)
 
-	if err := authService.RenderSignupPage(r.URL.EscapedPath()); err != nil {
+	if err := page.RenderSettingsPage(); err != nil {
 		a.logger.PrintError(err.Error(), map[string]string{
-			"Source": "getauth.SignupHandler()",
+			"Source": "getauth.SettingsPageHandler()",
 		})
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

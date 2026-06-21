@@ -39,6 +39,7 @@ func (a *App) initHandlers() {
 		r.With(a.midleware.VerifyAccessToken).Get(utils.ALL_EVENTS_ROUTES.String(), a.handler.Get.HomePage.PaidEventsPageHandler)
 		r.With(a.midleware.VerifyAccessToken).Get(utils.FAVORITES.String(), a.handler.Get.HomePage.FavoritePageHandler)
 		r.With(a.midleware.VerifyAccessToken).Get(utils.RECIEPTS.String(), a.handler.Get.DetailPage.RecieptPageHandler)
+		r.With(a.midleware.VerifyAccessToken).Get(utils.SETTINGS.String(), a.handler.Get.Auth.SettingsPageHandler)
 	})
 
 	// Post request routes

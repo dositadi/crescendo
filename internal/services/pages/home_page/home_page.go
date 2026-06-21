@@ -95,18 +95,18 @@ func (p *Pages) RenderHomePage(partial bool) error {
 	}
 
 	data := struct {
-		Username                                                                                            string
-		NextPage, PreviousPage, Count, Total                                                                int
-		UserFavorites                                                                                       map[int]data.Favorite
-		Artists                                                                                             []herokuapp.ArtistInfo
-		CurrentFilter, CurrentSort                                                                          string
-		FilterSortRoute                                                                                     string
-		FilterByName, FilterByCreationDate, FilterByFirstAlbum                                              string
-		FilterKey, ArtistIDKey, SearchKey, PageKey, ReqPgKey, PathKey                                       string
-		SortKey, SortASC, SortDESC                                                                          string
-		FavoriteArtistUrl, AllFavoritesUrl, FavKey, Favorited, NotFavorited, RequestPage                    string
-		SearchUrl, Url, ArtistDetailUrl, PrivacyPageUrl, TermsPageUrl, AboutPageUrl, PaidEventsUrl, PathUrl string
-		DisableNextbutton, DisablePrevButton, IsSearch                                                      bool
+		Username                                                                                                         string
+		NextPage, PreviousPage, Count, Total                                                                             int
+		UserFavorites                                                                                                    map[int]data.Favorite
+		Artists                                                                                                          []herokuapp.ArtistInfo
+		CurrentFilter, CurrentSort                                                                                       string
+		FilterSortRoute                                                                                                  string
+		FilterByName, FilterByCreationDate, FilterByFirstAlbum                                                           string
+		FilterKey, ArtistIDKey, SearchKey, PageKey, ReqPgKey, PathKey                                                    string
+		SortKey, SortASC, SortDESC                                                                                       string
+		FavoriteArtistUrl, AllFavoritesUrl, FavKey, Favorited, NotFavorited, RequestPage                                 string
+		SearchUrl, Url, ArtistDetailUrl, PrivacyPageUrl, TermsPageUrl, AboutPageUrl, PaidEventsUrl, PathUrl, SettingsUrl string
+		DisableNextbutton, DisablePrevButton, IsSearch                                                                   bool
 	}{
 		Username:             strings.Fields(p.getUser().Username)[0],
 		UserFavorites:        userFavorites,
@@ -144,6 +144,7 @@ func (p *Pages) RenderHomePage(partial bool) error {
 		TermsPageUrl:         fmt.Sprintf("%s?%s=%s", utils.TERMS.String(), utils.PAGE_KEY, p.request.URL.EscapedPath()),
 		AboutPageUrl:         fmt.Sprintf("%s?%s=%s", utils.ABOUT.String(), utils.PAGE_KEY, p.request.URL.EscapedPath()),
 		PathUrl:              p.request.URL.EscapedPath(),
+		SettingsUrl:          utils.SETTINGS.String(),
 		PathKey:              utils.PATH_KEY,
 		PaidEventsUrl:        utils.ALL_EVENTS_ROUTES.String(),
 		RequestPage:          PageHome,
