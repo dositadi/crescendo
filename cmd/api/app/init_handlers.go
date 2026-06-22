@@ -48,6 +48,7 @@ func (a *App) initHandlers() {
 		r.Post(utils.REGISTER.String(), a.handler.Post.Auth.RegisterHandler)
 		r.Post(utils.LOGIN.String(), a.handler.Post.Auth.LoginHandler)
 		r.With(a.midleware.VerifyAccessToken).Post(utils.FILTER_SORT_ROUTE.String(), a.handler.Post.HomePage.FilterSortHandler)
+		r.With(a.midleware.VerifyAccessToken).Post(utils.UPLOAD_PROFILE.String(), a.handler.Post.Auth.UploadProfilePicture)
 
 		// App post request
 		r.With(a.midleware.VerifyAccessToken).Post(utils.FAVORITE.String(), a.handler.Post.HomePage.UpdateFavoriteHandler)

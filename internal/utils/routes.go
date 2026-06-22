@@ -10,6 +10,7 @@ const (
 	LOGIN             Route = Route("/auth/session")
 	REGISTER          Route = Route("/auth/registration")
 	SETTINGS          Route = Route("/user/settings")
+	UPLOAD_PROFILE    Route = Route("/user/upload-avatar")
 	ABOUT             Route = Route("/crescendo/about")
 	TERMS             Route = Route("/crescendo/terms")
 	PRIVACY           Route = Route("/crescendo/privacy")

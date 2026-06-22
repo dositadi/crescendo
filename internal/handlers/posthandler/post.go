@@ -30,13 +30,13 @@ type Post struct {
 	TicketPage ticketpage.TicketPage
 }
 
-func New(userModel UserModel, favoriteModel homepagepost.FavoriteModel, preferenceModel homepagepost.PreferenceModel, soldTicketsModel ticketpage.SoldTicketsModel, client herokuapp.HerokuApp, logger jsonlog.Logger, embedded groupietracker.Embedded) *Post {
+func New(userModel UserModel, favoriteModel homepagepost.FavoriteModel, preferenceModel homepagepost.PreferenceModel, soldTicketsModel ticketpage.SoldTicketsModel, storageModel authpost.StorageModel, client herokuapp.HerokuApp, logger jsonlog.Logger, embedded groupietracker.Embedded) *Post {
 	return &Post{
 		userModel:  userModel,
 		logger:     logger,
 		client:     client,
 		embedded:   embedded,
-		Auth:       *authpost.New(logger, userModel, preferenceModel, embedded),
+		Auth:       *authpost.New(logger, userModel, preferenceModel, storageModel, embedded),
 		HomePage:   *homepagepost.New(logger, userModel, favoriteModel, preferenceModel, embedded, client),
 		TicketPage: *ticketpage.New(logger, embedded, client, soldTicketsModel),
 	}

@@ -1,9 +1,13 @@
 package authpost
 
 import (
+	"io"
+	"net/http"
+
 	groupietracker "github.com/dositadi/groupie-tracker"
 	"github.com/dositadi/groupie-tracker/internal/data"
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
+	"github.com/dositadi/groupie-tracker/internal/utils"
 )
 
 type UserModel interface {
@@ -23,18 +27,36 @@ type PreferenceModel interface {
 	Update(preference data.PreferenceUpdate) error
 }
 
+type StorageModel interface {
+	DeleteProfilePicture(relativeFilePath ...string) error
+	GetPublicUrl(relativeFilePath string) string
+	UpdateProfilePicture(relativeFilePath string, file io.Reader) error
+	UploadProfilePicture(fileRelativePath string, file io.Reader) error
+}
+
 type Auth struct {
 	logger          jsonlog.Logger
 	usermodel       UserModel
 	preferenceModel PreferenceModel
 	embedded        groupietracker.Embedded
+	storage         StorageModel
 }
 
-func New(logger jsonlog.Logger, userModel UserModel, preferenceModel PreferenceModel, embedded groupietracker.Embedded) *Auth {
+func New(logger jsonlog.Logger, userModel UserModel, preferenceModel PreferenceModel, storage StorageModel, embedded groupietracker.Embedded) *Auth {
 	return &Auth{
 		logger:          logger,
 		usermodel:       userModel,
 		preferenceModel: preferenceModel,
+		storage:         storage,
 		embedded:        embedded,
 	}
+}
+
+func (a *Auth) getUser(r *http.Request) data.User {
+	val := r.Context().Value(utils.USER_ID_KEY)
+
+	if user, ok := val.(data.User); ok {
+		return user
+	}
+	return data.User{}
 }

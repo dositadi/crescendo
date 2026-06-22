@@ -10,12 +10,15 @@ import (
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 	"github.com/dositadi/groupie-tracker/internal/middlewares"
 	"github.com/dositadi/groupie-tracker/internal/models"
+	"github.com/dositadi/groupie-tracker/internal/models/storage"
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5"
+	storage_go "github.com/supabase-community/storage-go"
 )
 
 type App struct {
 	db        *pgx.Conn
+	storage   *storage_go.Client
 	config    config
 	logger    *jsonlog.Logger
 	handler   *handlers.Handler
@@ -34,10 +37,11 @@ func (a *App) init() {
 	a.opencage = opencage.New(a.config.opencageKey)
 	a.client = herokuapp.New(*a.logger, *a.opencage)
 	a.client.Init()
-	a.initSupabase(a.config.supabaseUrl, a.config.supabaseSecretKet)
+	a.storage = a.initSupabase(a.config.supabaseUrl, a.config.supabaseSecretKet)
 	a.initDB()
 	models := models.New(a.db, *a.logger)
-	a.handler = handlers.New(*a.logger, &models.UserModel, &models.FavoriteModel, &models.PreferenceModel, &models.SoldTicketsModel, *a.client, a.embedded)
+	storage := storage.New(*a.logger, a.storage)
+	a.handler = handlers.New(*a.logger, &models.UserModel, &models.FavoriteModel, &models.PreferenceModel, storage, &models.SoldTicketsModel, *a.client, a.embedded)
 	a.midleware = middlewares.New(*a.handler, *a.logger, a.embedded)
 	a.initHandlers()
 }

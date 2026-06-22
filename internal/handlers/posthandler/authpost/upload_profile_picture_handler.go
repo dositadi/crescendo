@@ -1,6 +1,7 @@
 package authpost
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/dositadi/groupie-tracker/internal/helper"
@@ -23,6 +24,8 @@ func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, e.Error(), http.StatusBadRequest)
 	}
 
+	user := a.getUser(r)
+
 	file, _, err := r.FormFile(utils.AVATAR_KEY)
 	if err != nil {
 		e := helper.WrapError("Error getting file", err)
@@ -33,4 +36,18 @@ func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer file.Close()
+
+	fileName := genFilePath(user.Id)
+
+	if err = a.storage.UploadProfilePicture(fileName, file); err != nil {
+		e := helper.WrapError("Error uploading file", err)
+		a.logger.PrintError(e.Error(), map[string]string{
+			"Source": sourceUp,
+		})
+		http.Error(w, e.Error(), http.StatusBadRequest)
+	}
+}
+
+func genFilePath(userId string) string {
+	return fmt.Sprintf("%s/profile-avatar.png", userId)
 }
