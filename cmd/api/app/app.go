@@ -34,6 +34,7 @@ func (a *App) init() {
 	a.opencage = opencage.New(a.config.opencageKey)
 	a.client = herokuapp.New(*a.logger, *a.opencage)
 	a.client.Init()
+	a.initSupabase(a.config.supabaseUrl, a.config.supabaseSecretKet)
 	a.initDB()
 	models := models.New(a.db, *a.logger)
 	a.handler = handlers.New(*a.logger, &models.UserModel, &models.FavoriteModel, &models.PreferenceModel, &models.SoldTicketsModel, *a.client, a.embedded)

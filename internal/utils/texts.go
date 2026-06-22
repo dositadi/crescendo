@@ -30,4 +30,8 @@ const (
 	CARD_EXP_DATE_KEY    = "expiry-date"
 	CVC_KEY              = "cvc"
 	CARD_HOLDER_NAME_KEY = "card-holder-name"
+
+	//User profile
+	AVATAR_KEY       = "avatar"
+	USER_PROFILE_BUCKET_ID = "user-avatar"
 )

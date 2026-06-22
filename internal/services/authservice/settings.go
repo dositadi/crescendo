@@ -23,6 +23,8 @@ func (a *AuthService) RenderSettingsPage() error {
 	data := struct {
 		PrivacyPageUrl, TermsPageUrl string
 
+		AvatarKey string
+
 		User data.User
 	}{
 		PrivacyPageUrl: fmt.Sprintf("%s?%s=%s", utils.PRIVACY.String(), utils.PAGE_KEY, a.request.URL.EscapedPath()),

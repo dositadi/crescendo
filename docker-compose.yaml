@@ -5,6 +5,8 @@ services:
       - POSTGRES_DB_DSN=${POSTGRES_DB_DSN}
       - JWTKEY=${JWTKEY}
       - OPEN_CAGE_KEY=${OPEN_CAGE_KEY}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SECRET_KEY=${SUPABASE_SECRET_KEY}
     ports:
       - 8080:8080
     volumes:
