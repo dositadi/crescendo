@@ -48,6 +48,8 @@ func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 		})
 		http.Error(w, e.Error(), http.StatusBadRequest)
 	}
+
+	fmt.Println(a.storage.GetPublicUrl(fileName))
 }
 
 func genFilePath(userId string) string {

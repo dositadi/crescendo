@@ -1,14 +1,24 @@
 package app
 
 import (
-	"github.com/dositadi/groupie-tracker/internal/utils"
-	storage_go "github.com/supabase-community/storage-go"
+	"os"
+
+	"github.com/dositadi/groupie-tracker/internal/helper"
+	"github.com/supabase-community/supabase-go"
 )
 
-func (a *App) initSupabase(supabaseUrl, secretKey string) *storage_go.Client {
-	client := storage_go.NewClient(supabaseUrl, secretKey, nil)
+func (a *App) initSupabase() *supabase.Client {
+	client, err := supabase.NewClient(a.config.supabaseUrl, a.config.supabaseSecretKet, &supabase.ClientOptions{})
+	if err != nil {
+		e := helper.WrapError("Unable to connect to supabase", err)
+		a.logger.PrintFatal(e.Error(), map[string]string{
+			"Source": "app.initSupabase()",
+		})
+		os.Exit(1)
+	}
 
-	client.CreateBucket(utils.USER_PROFILE_BUCKET_ID, storage_go.BucketOptions{})
-
+	a.logger.PrintInfo("Supabase connected successfully", map[string]string{
+		"Source": "app.initSupabase()",
+	})
 	return client
 }

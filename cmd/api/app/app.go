@@ -13,12 +13,12 @@ import (
 	"github.com/dositadi/groupie-tracker/internal/models/storage"
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5"
-	storage_go "github.com/supabase-community/storage-go"
+	"github.com/supabase-community/supabase-go"
 )
 
 type App struct {
 	db        *pgx.Conn
-	storage   *storage_go.Client
+	storage   *supabase.Client
 	config    config
 	logger    *jsonlog.Logger
 	handler   *handlers.Handler
@@ -37,7 +37,7 @@ func (a *App) init() {
 	a.opencage = opencage.New(a.config.opencageKey)
 	a.client = herokuapp.New(*a.logger, *a.opencage)
 	a.client.Init()
-	a.storage = a.initSupabase(a.config.supabaseUrl, a.config.supabaseSecretKet)
+	a.storage = a.initSupabase()
 	a.initDB()
 	models := models.New(a.db, *a.logger)
 	storage := storage.New(*a.logger, a.storage)

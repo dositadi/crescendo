@@ -2,18 +2,20 @@ package storage
 
 import (
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
-	storage_go "github.com/supabase-community/storage-go"
+	"github.com/dositadi/groupie-tracker/internal/utils"
+	"github.com/supabase-community/supabase-go"
 )
 
-
 type Storage struct {
-	logger jsonlog.Logger
-	client *storage_go.Client
+	logger   jsonlog.Logger
+	client   *supabase.Client
+	bucketId string
 }
 
-func New(logger jsonlog.Logger, client *storage_go.Client) *Storage {
+func New(logger jsonlog.Logger, client *supabase.Client) *Storage {
 	return &Storage{
-		logger: logger,
-		client: client,
+		logger:   logger,
+		client:   client,
+		bucketId: utils.USER_PROFILE_BUCKET_ID,
 	}
 }
