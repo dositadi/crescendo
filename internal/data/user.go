@@ -10,6 +10,7 @@ type User struct {
 	Id             string
 	Username       string
 	Email          string
+	AvatarUrl      string
 	HashedPassword []byte
 	Agreed         bool
 	Version        int
@@ -20,12 +21,14 @@ type User struct {
 type UpdateUser struct {
 	Username       *string
 	Email          *string
+	AvatarUrl      *string
 	HashedPassword []byte
 }
 
 type ActiveUser struct {
-	Id       string
-	Username string
-	Email    string
+	Id        string
+	Username  string
+	Email     string
+	AvatarUrl string
 	jwt.RegisteredClaims
 }

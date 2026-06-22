@@ -19,21 +19,31 @@ func (a *AuthService) RenderSettingsPage() error {
 	}
 
 	user := a.getUser()
+	path := a.request.FormValue(utils.PATH_KEY)
+	if path == "" {
+		path = utils.HOME.String()
+	}
 
 	data := struct {
-		PrivacyPageUrl, TermsPageUrl, UploadUrl string
+		PrivacyPageUrl, TermsPageUrl, UploadUrl, PrevPageUrl, ProfileUpdateUrl string
 
-		AvatarKey string
+		AvatarKey, UsernameKey, CurrentPassKey, NewPassKey, ConfirmPassKey string
 
 		User data.User
 	}{
-		PrivacyPageUrl: fmt.Sprintf("%s?%s=%s", utils.PRIVACY.String(), utils.PAGE_KEY, a.request.URL.EscapedPath()),
-		TermsPageUrl:   fmt.Sprintf("%s?%s=%s", utils.TERMS.String(), utils.PAGE_KEY, a.request.URL.EscapedPath()),
-		UploadUrl:      utils.UPLOAD_PROFILE.String(),
+		PrivacyPageUrl:   fmt.Sprintf("%s?%s=%s", utils.PRIVACY.String(), utils.PAGE_KEY, a.request.URL.EscapedPath()),
+		TermsPageUrl:     fmt.Sprintf("%s?%s=%s", utils.TERMS.String(), utils.PAGE_KEY, a.request.URL.EscapedPath()),
+		UploadUrl:        utils.UPLOAD_PROFILE.String(),
+		PrevPageUrl:      path,
+		ProfileUpdateUrl: utils.UPDATE_USER_INFO.String(),
 
 		User: user,
 
-		AvatarKey: utils.AVATAR_KEY,
+		AvatarKey:      utils.AVATAR_KEY,
+		UsernameKey:    utils.USERNAME_KEY,
+		CurrentPassKey: utils.PASSWORD_KEY,
+		NewPassKey:     utils.NEW_PASSWORD_KEY,
+		ConfirmPassKey: utils.CONFIRM_PASS_KEY,
 	}
 
 	temp, err := template.New("settings_page.html").ParseFS(a.embedded.Get(), fs...)

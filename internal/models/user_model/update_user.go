@@ -65,6 +65,10 @@ func (u *UserModel) Update(id string, info data.UpdateUser) error {
 		user.Email = *info.Email
 	}
 
+	if info.AvatarUrl != nil {
+		user.AvatarUrl = *info.AvatarUrl
+	}
+
 	exists, err := u.IDExists(id)
 	if err != nil {
 		return err
@@ -77,11 +81,11 @@ func (u *UserModel) Update(id string, info data.UpdateUser) error {
 		return USER_NOT_FOUND
 	}
 
-	query := `UPDATE users SET username = $1, email = $2, hashed_password = $3, version = version + 1, updated_at = now() WHERE id = $4 AND version = $5`
+	query := `UPDATE users SET username = $1, email = $2,avatarUrl = $3, hashed_password = $4, version = version + 1, updated_at = now() WHERE id = $5 AND version = $6`
 	ctx, cancel := context.WithTimeout(context.Background(), timeOut*time.Second)
 	defer cancel()
 
-	_, err = u.db.Exec(ctx, query, user.Username, user.Email, user.HashedPassword, user.Id, user.Version)
+	_, err = u.db.Exec(ctx, query, user.Username, user.Email, user.AvatarUrl, user.HashedPassword, id, user.Version)
 	if err != nil {
 		var e error
 		switch {

@@ -67,7 +67,7 @@ func (m *Middleware) VerifyAccessToken(next http.Handler) http.Handler {
 				return
 			}
 
-			cxt := context.WithValue(r.Context(), utils.USER_ID_KEY, data.User{Username: active.Username, Email: active.Email, Id: active.Id})
+			cxt := context.WithValue(r.Context(), utils.USER_ID_KEY, data.User{Username: active.Username, Email: active.Email, Id: active.Id, AvatarUrl: active.AvatarUrl})
 
 			next.ServeHTTP(w, r.WithContext(cxt))
 		},

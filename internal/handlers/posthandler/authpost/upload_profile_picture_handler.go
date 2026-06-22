@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
 	"github.com/dositadi/groupie-tracker/internal/utils"
 )
@@ -23,6 +24,7 @@ func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 		a.logger.PrintError(e.Error(), map[string]string{
 			"Source": sourceUp,
 		})
+		// Send an error response here
 		http.Error(w, e.Error(), http.StatusBadRequest)
 		return
 	}
@@ -34,6 +36,7 @@ func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 			"Source": sourceUp,
 		})
 		http.Error(w, e.Error(), http.StatusBadRequest)
+		// Send an error response here
 		return
 	}
 
@@ -47,9 +50,31 @@ func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 			"Source": sourceUp,
 		})
 		http.Error(w, e.Error(), http.StatusBadRequest)
+		// Send an error response here
+		return
 	}
 
-	fmt.Println(a.storage.GetPublicUrl(fileName))
+	avatarUrl := a.storage.GetPublicUrl(fileName)
+
+	userUpdate := data.UpdateUser{
+		AvatarUrl: &avatarUrl,
+	}
+
+	if err := a.usermodel.Update(user.Id, userUpdate); err != nil {
+		e := helper.WrapError("Error uploading file", err)
+		a.logger.PrintError(e.Error(), map[string]string{
+			"Source": sourceUp,
+		})
+		http.Error(w, e.Error(), http.StatusBadRequest)
+		// Send an error response here
+		return
+	}
+
+	a.logger.PrintInfo("User uploaded avatar", map[string]string{
+		"Source":   sourceUp,
+		"User":     user.Username,
+		"Filename": fileName,
+	})
 }
 
 func genFilePath(userId string) string {

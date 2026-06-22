@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
     id uuid NOT NULL PRIMARY KEY,
     username text NOT NULL,
     email citext NOT NULL UNIQUE,
+    avatarUrl text NOT NULL DEFAULT 'https://i.pravatar.cc/80?img=11',
     hashed_password bytea NOT NULL,
     version integer NOT NULL DEFAULT 1,
     agreed boolean NOT NULL DEFAULT false,

@@ -19,7 +19,7 @@
   <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center gap-3 h-15">
 
-      <a hx-get="" hx-swap="outerHTML" hx-target="#body" hx-push-url="true"
+      <a hx-get="{{.PrevPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true"
          class="inline-flex items-center gap-1.5 text-sm font-medium text-ink-secondary
                 hover:text-brand transition-colors duration-200 group shrink-0">
         <svg class="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-0.5"
@@ -92,12 +92,14 @@
     </section>
   </form>
 
+  <div id="info"></div>
+
   <!-- ── Username ─────────────────────────────────────────────────── -->
     <section class="settings-card p-5 sm:p-6 settings-d2">
       <h2 class="text-sm font-semibold text-ink mb-4">Username</h2>
 
       <label class="block text-xs font-medium text-ink-secondary mb-1.5">Display name</label>
-      <input type="text" value="{{.User.Username}}"
+      <input type="text" name="{{.UsernameKey}}" value="{{.User.Username}}"
              class="field-input w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface-alt
                     text-sm text-ink placeholder:text-ink-disabled" />
       <p class="text-xs text-ink-disabled mt-2">
@@ -113,21 +115,21 @@
       <div class="flex flex-col gap-4">
         <div>
           <label class="block text-xs font-medium text-ink-secondary mb-1.5">Current password</label>
-          <input type="password" placeholder="••••••••"
+          <input name="{{.CurrentPassKey}}" type="password" placeholder="••••••••"
                  class="field-input w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface-alt
                         text-sm text-ink placeholder:text-ink-disabled" />
         </div>
 
         <div>
           <label class="block text-xs font-medium text-ink-secondary mb-1.5">New password</label>
-          <input type="password" placeholder="••••••••"
+          <input name="{{.NewPassKey}}" type="password" placeholder="••••••••"
                  class="field-input w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface-alt
                         text-sm text-ink placeholder:text-ink-disabled" />
         </div>
 
         <div>
           <label class="block text-xs font-medium text-ink-secondary mb-1.5">Confirm new password</label>
-          <input type="password" placeholder="••••••••"
+          <input name="{{.ConfirmPassKey}}" type="password" placeholder="••••••••"
                  class="field-input w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface-alt
                         text-sm text-ink placeholder:text-ink-disabled" />
         </div>
@@ -137,12 +139,12 @@
 
     <!-- ── Save button ──────────────────────────────────────────────── -->
     <div class="flex justify-end gap-3 settings-d3">
-      <button type="button"
+      <button hx-get="{{.PrevPageUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" type="button"
               class="px-5 py-2.5 rounded-xl text-sm font-medium text-ink-secondary
                      hover:text-ink transition-colors duration-200">
         Cancel
       </button>
-      <button type="submit"
+      <button hx-get="{{.ProfileUpdateUrl}}" hx-swap="outerHTML" hx-target="#info" hx-push-url="true" hx-include="[name='{{.UsernameKey}}'], [name='{{.CurrentPassKey}}'], [name='{{.NewPassKey}}'], [name='{{.ConfirmPassKey}}']" type="button" type="submit"
               class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-brand text-white
                      text-sm font-semibold shadow-brand-sm hover:bg-brand-hover hover:-translate-y-0.5
                      active:bg-brand-active active:translate-y-0 transition-all duration-200">

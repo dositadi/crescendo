@@ -34,4 +34,8 @@ const (
 	//User profile
 	AVATAR_KEY       = "avatar"
 	USER_PROFILE_BUCKET_ID = "user-avatar"
+	CONFIRM_PASS_KEY = "confirm-password"
+	NEW_PASSWORD_KEY = "new-password"
+	
+
 )

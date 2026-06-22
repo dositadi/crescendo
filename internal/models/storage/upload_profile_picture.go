@@ -14,6 +14,7 @@ func (s *Storage) UploadProfilePicture(fileRelativePath string, file io.Reader) 
 	_, err := s.client.Storage.UploadFile(s.bucketId, fileRelativePath, file, storage_go.FileOptions{
 		ContentType: &contentType,
 	})
+
 	if err != nil {
 		e := helper.WrapError("Profile picture upload error", err)
 		s.logger.PrintError(e.Error(), map[string]string{
