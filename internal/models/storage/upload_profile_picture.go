@@ -19,5 +19,8 @@ func (s *Storage) UploadProfilePicture(fileRelativePath string, file io.Reader) 
 		return e
 	}
 	fmt.Println(resp.Data)
+	s.logger.PrintInfo(fmt.Sprintf("%s uploaded successfully"), map[string]string{
+		"Source": "storage.UploadProfilePicture()",
+	})
 	return nil
 }

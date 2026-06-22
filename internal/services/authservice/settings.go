@@ -21,7 +21,7 @@ func (a *AuthService) RenderSettingsPage() error {
 	user := a.getUser()
 
 	data := struct {
-		PrivacyPageUrl, TermsPageUrl string
+		PrivacyPageUrl, TermsPageUrl, UploadUrl string
 
 		AvatarKey string
 
@@ -29,8 +29,11 @@ func (a *AuthService) RenderSettingsPage() error {
 	}{
 		PrivacyPageUrl: fmt.Sprintf("%s?%s=%s", utils.PRIVACY.String(), utils.PAGE_KEY, a.request.URL.EscapedPath()),
 		TermsPageUrl:   fmt.Sprintf("%s?%s=%s", utils.TERMS.String(), utils.PAGE_KEY, a.request.URL.EscapedPath()),
+		UploadUrl:      utils.UPLOAD_PROFILE.String(),
 
 		User: user,
+
+		AvatarKey: utils.AVATAR_KEY,
 	}
 
 	temp, err := template.New("settings_page.html").ParseFS(a.embedded.Get(), fs...)

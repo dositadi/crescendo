@@ -13,7 +13,9 @@ const (
 )
 
 func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
-	r.Body = http.MaxBytesReader(w, r.Body, 1<<20<<2+1<<10)
+	user := a.getUser(r)
+	fmt.Println(user.Email)
+	r.Body = http.MaxBytesReader(w, r.Body, (1<<20<<2)+(1<<10))
 	// 1 << 20 = 1mb | 1mb << 2 = 1mb * 2^n = 1mb * 2^2 = 1mb * 4 = 4mb. 1 << 10 = 1 * 2^n = 1 * 2^10 = 1024
 
 	if err := r.ParseMultipartForm(1 << 20 << 2); err != nil {
@@ -22,9 +24,8 @@ func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 			"Source": sourceUp,
 		})
 		http.Error(w, e.Error(), http.StatusBadRequest)
+		return
 	}
-
-	user := a.getUser(r)
 
 	file, _, err := r.FormFile(utils.AVATAR_KEY)
 	if err != nil {
@@ -33,6 +34,7 @@ func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 			"Source": sourceUp,
 		})
 		http.Error(w, e.Error(), http.StatusBadRequest)
+		return
 	}
 
 	defer file.Close()
