@@ -32,9 +32,9 @@ func (a *AuthService) RenderAuthError(e Error, message string) error {
 	}
 
 	data := struct {
-		Error string
+		Message string
 	}{
-		Error: message,
+		Message: message,
 	}
 
 	a.responseWriter.WriteHeader(http.StatusBadRequest)
@@ -53,6 +53,57 @@ func (a *AuthService) RenderAuthError(e Error, message string) error {
 		e := helper.WrapError("Error executing template", err)
 		a.logger.PrintError(e.Error(), map[string]string{
 			"Source": sourceEr,
+		})
+		return e
+	}
+	return nil
+}
+
+type SettingInfo string
+
+const (
+	InfoAvatar = SettingInfo("info-avatar")
+	InfoForm   = SettingInfo("info")
+
+	sourceInfo = "authservice.RenderInfo()"
+)
+
+type Info struct {
+	Title   string
+	Message string
+}
+
+func (a *AuthService) RenderInfo(id SettingInfo, info Info, isError bool) error {
+	fs := []string{
+		"internal/web/static/partials/pages/settings_page.html",
+	}
+
+	data := struct {
+		Id   string
+		Info Info
+	}{
+		Id:   string(id),
+		Info: info,
+	}
+
+	temp, err := template.New("settings_page.html").ParseFS(a.embedded.Get(), fs...)
+	if err != nil {
+		e := helper.WrapError("Error creating template", err)
+		a.logger.PrintError(e.Error(), map[string]string{
+			"Source": sourceInfo,
+		})
+		return e
+	}
+
+	if isError {
+		err = temp.ExecuteTemplate(a.responseWriter, "error", data)
+	} else {
+		err = temp.ExecuteTemplate(a.responseWriter, "success", data)
+	}
+	if err != nil {
+		e := helper.WrapError("Error executing template", err)
+		a.logger.PrintError(e.Error(), map[string]string{
+			"Source": sourceInfo,
 		})
 		return e
 	}
