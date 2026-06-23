@@ -3,6 +3,7 @@ package ticketpage
 import (
 	"fmt"
 	"html/template"
+	"strings"
 
 	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
@@ -33,12 +34,16 @@ func (t *TicketPage) RenderPaidEventsPage(event Events) error {
 	}
 
 	data := struct {
-		PaidEvents                                                         []data.SoldTickets
-		ArtistInfoName, ArtistInfoImage                                    string
-		PrivacyPageUrl, TermsPageUrl, PrevPageUrl, PathUrl, RecieptPageUrl string
+		User                                                                            data.User
+		Username                                                                        string
+		PaidEvents                                                                      []data.SoldTickets
+		ArtistInfoName, ArtistInfoImage                                                 string
+		PrivacyPageUrl, TermsPageUrl, PrevPageUrl, PathUrl, RecieptPageUrl, SettingsUrl string
 
 		PathKey, DateKey, ArtistIdKey, LocationKey string
 	}{
+		User:            user,
+		Username:        strings.Fields(user.Username)[0],
 		PaidEvents:      boughtTickets,
 		ArtistInfoName:  "name",
 		ArtistInfoImage: "image",
@@ -47,6 +52,7 @@ func (t *TicketPage) RenderPaidEventsPage(event Events) error {
 		PrevPageUrl:     utils.HOME.String(),
 		PathUrl:         t.request.URL.EscapedPath(),
 		RecieptPageUrl:  utils.RECIEPTS.String(),
+		SettingsUrl:     fmt.Sprintf("%s?%s=%s", utils.SETTINGS.String(), utils.PATH_KEY, t.request.URL.EscapedPath()),
 
 		PathKey:     utils.PATH_KEY,
 		DateKey:     utils.DATE_KEY,

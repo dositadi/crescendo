@@ -44,7 +44,7 @@ func (p *Pages) RenderHomePage(partial bool) error {
 		return err
 	}
 
-	//user, err := p.
+	user := p.getUser()
 
 	temp, err := template.New("home_page.html").Funcs(p.homePageFunc()).ParseFS(p.embedded.Get(), fs...)
 	if err != nil {
@@ -109,6 +109,7 @@ func (p *Pages) RenderHomePage(partial bool) error {
 		FavoriteArtistUrl, AllFavoritesUrl, FavKey, Favorited, NotFavorited, RequestPage                                 string
 		SearchUrl, Url, ArtistDetailUrl, PrivacyPageUrl, TermsPageUrl, AboutPageUrl, PaidEventsUrl, PathUrl, SettingsUrl string
 		DisableNextbutton, DisablePrevButton, IsSearch                                                                   bool
+		User                                                                                                             data.User
 	}{
 		Username:             strings.Fields(p.getUser().Username)[0],
 		UserFavorites:        userFavorites,
@@ -150,6 +151,7 @@ func (p *Pages) RenderHomePage(partial bool) error {
 		PathKey:              utils.PATH_KEY,
 		PaidEventsUrl:        utils.ALL_EVENTS_ROUTES.String(),
 		RequestPage:          PageHome,
+		User:                 user,
 	}
 
 	p.responseWriter.WriteHeader(http.StatusOK)

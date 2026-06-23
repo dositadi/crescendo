@@ -74,14 +74,16 @@ func (a *ArtistDetail) detailPageFuncMap() template.FuncMap {
 		"CleanCityName": func(city string) string {
 			city = strings.ReplaceAll(city, "-", " ")
 			city = strings.ReplaceAll(city, "_", "-")
-			citySlice := strings.Split(city, " ")
+			city = strings.ToLower(city)
+			sl := strings.Fields(city)
 
-			for i, c := range citySlice {
-				v := []rune(c)
-				citySlice[i] = string(unicode.ToUpper(v[0])) + string(v[1:])
+			for i, w := range sl {
+				rn := []rune(w)
+				rn[0] = unicode.ToUpper(rn[0])
+				sl[i] = string(rn)
 			}
 
-			return strings.Join(citySlice, ", ")
+			return strings.Join(sl, ", ")
 		},
 		"GetLocations": func(locations []string) string {
 			return locations[0]

@@ -3,6 +3,7 @@ package artistdetail
 import (
 	"fmt"
 	"html/template"
+	"strings"
 
 	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
@@ -46,13 +47,17 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 	}
 
 	data := struct {
-		PrevPageUrl, ArtistDetailUrl, AllEventsPageUrl, TicketUrl, PathUrl, PrivacyPageUrl, TermsPageUrl, RecieptPageUrl string
-		ArtistInfo                                                                                                       herokuapp.ArtistInfo
-		AllArtists                                                                                                       map[int]herokuapp.ArtistInfo
-		UserTickets                                                                                                      []data.SoldTickets
-		JsObject                                                                                                         template.JS
-		ArtistIdKey, DateKey, PathKey, LocationKey                                                                       string
+		PrevPageUrl, ArtistDetailUrl, AllEventsPageUrl, TicketUrl, PathUrl, PrivacyPageUrl, TermsPageUrl, RecieptPageUrl, SettingsUrl string
+		ArtistInfo                                                                                                                    herokuapp.ArtistInfo
+		User                                                                                                                          data.User
+		Username                                                                                                                      string
+		AllArtists                                                                                                                    map[int]herokuapp.ArtistInfo
+		UserTickets                                                                                                                   []data.SoldTickets
+		JsObject                                                                                                                      template.JS
+		ArtistIdKey, DateKey, PathKey, LocationKey                                                                                    string
 	}{
+		User:             user,
+		Username:         strings.Fields(a.getUser().Username)[0],
 		LocationKey:      utils.LOCATION_KEY,
 		PathKey:          utils.PATH_KEY,
 		DateKey:          utils.DATE_KEY,
@@ -61,6 +66,7 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 		TicketUrl:        utils.TICKET.String(),
 		PrevPageUrl:      path,
 		RecieptPageUrl:   utils.RECIEPTS.String(),
+		SettingsUrl:      fmt.Sprintf("%s?%s=%s", utils.SETTINGS.String(), utils.PATH_KEY, a.request.URL.EscapedPath()),
 		ArtistInfo:       artistInfo,
 		AllArtists:       a.client.Get(),
 		UserTickets:      userTickets,
