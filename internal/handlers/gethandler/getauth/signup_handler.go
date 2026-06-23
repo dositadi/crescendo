@@ -7,7 +7,7 @@ import (
 )
 
 func (a *Auth) SignupHandler(w http.ResponseWriter, r *http.Request) {
-	authService := authservice.New(w, a.embedded, a.logger,r)
+	authService := authservice.New(w, a.embedded, a.logger, r, a.usermodel)
 
 	if err := authService.RenderSignupPage(r.URL.EscapedPath()); err != nil {
 		a.logger.PrintError(err.Error(), map[string]string{

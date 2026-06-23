@@ -60,10 +60,10 @@ func (u *UserModel) GetWithID(id string) (data.User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeOut*time.Second)
 	defer cancel()
 
-	query := `SELECT username, email, avatarUrl, version FROM users WHERE id = $1`
+	query := `SELECT username, email, avatarUrl, version, hashed_password FROM users WHERE id = $1`
 	row := u.db.QueryRow(ctx, query, id)
 
-	if err := row.Scan(&user.Username, &user.Email, &user.AvatarUrl, &user.Version); err != nil {
+	if err := row.Scan(&user.Username, &user.Email, &user.AvatarUrl, &user.Version, &user.HashedPassword); err != nil {
 		var e error
 		switch {
 		case errors.Is(err, context.Canceled):

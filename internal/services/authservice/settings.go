@@ -18,16 +18,24 @@ func (a *AuthService) RenderSettingsPage() error {
 		"internal/web/static/pages/settings_page.html",
 	}
 
-	user := a.getUser()
 	path := a.request.FormValue(utils.PATH_KEY)
 	if path == "" {
 		path = utils.HOME.String()
 	}
 
+	user, err := a.userModel.GetWithEmail(a.getUser().Email)
+	if err != nil {
+		e := helper.WrapError("User fetch error", err)
+		a.logger.PrintError(e.Error(), map[string]string{
+			"Source": sourceS,
+		})
+		return e
+	}
+
 	data := struct {
 		PrivacyPageUrl, TermsPageUrl, UploadUrl, PrevPageUrl, ProfileUpdateUrl string
 
-		AvatarKey, UsernameKey, CurrentPassKey, NewPassKey, ConfirmPassKey string
+		AvatarKey, UsernameKey, CurrentPassKey, NewPassKey, ConfirmPassKey, AvatarRespId, FormRespId string
 
 		User data.User
 	}{
@@ -44,6 +52,9 @@ func (a *AuthService) RenderSettingsPage() error {
 		CurrentPassKey: utils.PASSWORD_KEY,
 		NewPassKey:     utils.NEW_PASSWORD_KEY,
 		ConfirmPassKey: utils.CONFIRM_PASS_KEY,
+
+		AvatarRespId: string(InfoAvatar),
+		FormRespId:   string(InfoForm),
 	}
 
 	temp, err := template.New("settings_page.html").ParseFS(a.embedded.Get(), fs...)

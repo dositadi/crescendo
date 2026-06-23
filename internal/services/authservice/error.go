@@ -78,15 +78,32 @@ func (a *AuthService) RenderInfo(id SettingInfo, info Info, isError bool) error 
 		"internal/web/static/partials/pages/settings_page.html",
 	}
 
-	data := struct {
-		Id   string
-		Info Info
-	}{
-		Id:   string(id),
-		Info: info,
+	user, err := a.userModel.GetWithEmail(a.getUser().Email)
+	if err != nil {
+		e := helper.WrapError("User fetch error", err)
+		a.logger.PrintError(e.Error(), map[string]string{
+			"Source": sourceInfo,
+		})
+		return e
 	}
 
-	temp, err := template.New("settings_page.html").ParseFS(a.embedded.Get(), fs...)
+	data := struct {
+		Id        string
+		Info      Info
+		AvatarUrl string
+	}{
+		Id:        string(id),
+		Info:      info,
+		AvatarUrl: user.AvatarUrl,
+	}
+
+	temp, err := template.New("settings_page.html").Funcs(
+		template.FuncMap{
+			"IsAvatar": func(id string) bool {
+				return id == string(InfoAvatar)
+			},
+		},
+	).ParseFS(a.embedded.Get(), fs...)
 	if err != nil {
 		e := helper.WrapError("Error creating template", err)
 		a.logger.PrintError(e.Error(), map[string]string{

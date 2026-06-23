@@ -32,6 +32,7 @@ type StorageModel interface {
 	GetPublicUrl(relativeFilePath string) string
 	UpdateProfilePicture(relativeFilePath string, file io.Reader) error
 	UploadProfilePicture(fileRelativePath string, file io.Reader) error
+	GetFiles(filePath string)
 }
 
 type Auth struct {

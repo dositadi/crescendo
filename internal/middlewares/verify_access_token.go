@@ -39,7 +39,7 @@ func (m *Middleware) VerifyAccessToken(next http.Handler) http.Handler {
 				logger.PrintError(e.Error()+" "+tokenString, map[string]string{
 					"Source": "Verify access token f(n) under middleware pkg",
 				})
-				page := authservice.New(w, m.embedded, m.logger, r)
+				page := authservice.New(w, m.embedded, m.logger, r, nil)
 
 				if err := page.RenderSessionTimeOutPage(); err != nil {
 					e := fmt.Errorf("Server error")
@@ -56,7 +56,7 @@ func (m *Middleware) VerifyAccessToken(next http.Handler) http.Handler {
 				logger.PrintError(e.Error(), map[string]string{
 					"Source": "Verify access token f(n) under middleware pkg",
 				})
-				page := authservice.New(w, m.embedded, m.logger, r)
+				page := authservice.New(w, m.embedded, m.logger, r, nil)
 
 				if err := page.RenderSessionTimeOutPage(); err != nil {
 					e := fmt.Errorf("Server error")

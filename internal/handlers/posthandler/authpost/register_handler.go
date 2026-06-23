@@ -35,7 +35,7 @@ func (a *Auth) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	terms := r.FormValue(utils.TERMS_KEY)
 	check := true
 
-	authService := authservice.New(w, a.embedded, a.logger, r)
+	authService := authservice.New(w, a.embedded, a.logger, r, a.usermodel)
 
 	errType, err := validator.ValidRegFormValues(username, email, password)
 	if err != nil {

@@ -9,19 +9,31 @@ import (
 	"github.com/dositadi/groupie-tracker/internal/utils"
 )
 
+type UserModel interface {
+	Delete(id string) error
+	GetWithID(id string) (data.User, error)
+	GetWithEmail(email string) (data.User, error)
+	Insert(user data.User) error
+	Update(id string, info data.UpdateUser) error
+	EmailExists(email string) (bool, error)
+	IDExists(id string) (bool, error)
+}
+
 type AuthService struct {
 	responseWriter http.ResponseWriter
 	embedded       groupietracker.Embedded
 	logger         jsonlog.Logger
 	request        *http.Request
+	userModel      UserModel
 }
 
-func New(w http.ResponseWriter, f groupietracker.Embedded, logger jsonlog.Logger, request *http.Request) *AuthService {
+func New(w http.ResponseWriter, f groupietracker.Embedded, logger jsonlog.Logger, request *http.Request, userModel UserModel) *AuthService {
 	return &AuthService{
 		responseWriter: w,
 		embedded:       f,
 		logger:         logger,
 		request:        request,
+		userModel:      userModel,
 	}
 }
 

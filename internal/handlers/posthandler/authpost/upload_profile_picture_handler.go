@@ -6,6 +6,7 @@ import (
 
 	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
+	"github.com/dositadi/groupie-tracker/internal/services/authservice"
 	"github.com/dositadi/groupie-tracker/internal/utils"
 )
 
@@ -16,16 +17,26 @@ const (
 func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 	user := a.getUser(r)
 	fmt.Println(user.Email)
-	r.Body = http.MaxBytesReader(w, r.Body, (1<<20<<2)+(1<<10))
-	// 1 << 20 = 1mb | 1mb << 2 = 1mb * 2^n = 1mb * 2^2 = 1mb * 4 = 4mb. 1 << 10 = 1 * 2^n = 1 * 2^10 = 1024
+	r.Body = http.MaxBytesReader(w, r.Body, (4<<20)+(1<<10))
+	// 1 << 20 = 1mb | 1mb << 2 = 1mb * 2^n = 1mb * 2^2 = 1mb * 4 = 4mb.(4 << 20 = 4 * 2^20 = 4mb) 1 << 10 = 1 * 2^n = 1 * 2^10 = 1024
 
-	if err := r.ParseMultipartForm(1 << 20 << 2); err != nil {
+	page := authservice.New(w, a.embedded, a.logger, r, a.usermodel)
+
+	if err := r.ParseMultipartForm(4 << 20); err != nil {
 		e := helper.WrapError("File size exceeds limit (4mb)", err)
 		a.logger.PrintError(e.Error(), map[string]string{
 			"Source": sourceUp,
 		})
-		// Send an error response here
-		http.Error(w, e.Error(), http.StatusBadRequest)
+
+		if err = page.RenderInfo(authservice.InfoAvatar, authservice.Info{
+			Title:   "File too large",
+			Message: "The picture you choose is above 4mb. Choose a picture of lesser size and try again.",
+		}, true); err != nil {
+			a.logger.PrintError(err.Error(), map[string]string{
+				"Source": sourceUp,
+			})
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
 		return
 	}
 
@@ -35,8 +46,15 @@ func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 		a.logger.PrintError(e.Error(), map[string]string{
 			"Source": sourceUp,
 		})
-		http.Error(w, e.Error(), http.StatusBadRequest)
-		// Send an error response here
+		if err = page.RenderInfo(authservice.InfoAvatar, authservice.Info{
+			Title:   "Something wrong happened.",
+			Message: "Kindly try again.",
+		}, true); err != nil {
+			a.logger.PrintError(err.Error(), map[string]string{
+				"Source": sourceUp,
+			})
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
 		return
 	}
 
@@ -49,8 +67,15 @@ func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 		a.logger.PrintError(e.Error(), map[string]string{
 			"Source": sourceUp,
 		})
-		http.Error(w, e.Error(), http.StatusBadRequest)
-		// Send an error response here
+		if err = page.RenderInfo(authservice.InfoAvatar, authservice.Info{
+			Title:   "Server Error",
+			Message: "Something wrong happened. Kindly check your network connection and try again.",
+		}, true); err != nil {
+			a.logger.PrintError(err.Error(), map[string]string{
+				"Source": sourceUp,
+			})
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 		return
 	}
 
@@ -65,16 +90,34 @@ func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 		a.logger.PrintError(e.Error(), map[string]string{
 			"Source": sourceUp,
 		})
-		http.Error(w, e.Error(), http.StatusBadRequest)
-		// Send an error response here
+		if err = page.RenderInfo(authservice.InfoAvatar, authservice.Info{
+			Title:   "Server Error",
+			Message: "Something wrong happened. Kindly check your network connection and try again.",
+		}, true); err != nil {
+			a.logger.PrintError(err.Error(), map[string]string{
+				"Source": sourceUp,
+			})
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 		return
 	}
+
+	a.storage.GetFiles(fileName)
 
 	a.logger.PrintInfo("User uploaded avatar", map[string]string{
 		"Source":   sourceUp,
 		"User":     user.Username,
 		"Filename": fileName,
 	})
+	if err = page.RenderInfo(authservice.InfoAvatar, authservice.Info{
+		Title:   "Success",
+		Message: "Your changes have been saved.",
+	}, false); err != nil {
+		a.logger.PrintError(err.Error(), map[string]string{
+			"Source": sourceUp,
+		})
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func genFilePath(userId string) string {
