@@ -43,7 +43,7 @@ func TestRecover(t *testing.T) {
 			recorder := httptest.NewRecorder()
 			request := httptest.NewRequest(http.MethodGet, "/", nil)
 			h := handlers.New(*logger, &usermodel.UserModel{}, nil, nil, nil, nil, herokuapp.HerokuApp{}, *groupietracker.New())
-			mid := New(*h, *logger, groupietracker.Embedded{})
+			mid := New(*h, *logger, groupietracker.Embedded{}, &usermodel.UserModel{})
 
 			mid.Recover(tt.handler).ServeHTTP(recorder, request)
 

@@ -44,6 +44,8 @@ func (p *Pages) RenderHomePage(partial bool) error {
 		return err
 	}
 
+	//user, err := p.
+
 	temp, err := template.New("home_page.html").Funcs(p.homePageFunc()).ParseFS(p.embedded.Get(), fs...)
 	if err != nil {
 		e := helper.WrapError("Error creating template", err)

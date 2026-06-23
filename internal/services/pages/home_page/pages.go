@@ -47,6 +47,8 @@ type PreferenceModel interface {
 	Update(preference data.PreferenceUpdate) error
 }
 
+
+
 type Pages struct {
 	logger          jsonlog.Logger
 	responseWriter  http.ResponseWriter

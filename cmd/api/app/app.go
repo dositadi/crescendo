@@ -42,7 +42,7 @@ func (a *App) init() {
 	models := models.New(a.db, *a.logger)
 	storage := storage.New(*a.logger, a.storage)
 	a.handler = handlers.New(*a.logger, &models.UserModel, &models.FavoriteModel, &models.PreferenceModel, storage, &models.SoldTicketsModel, *a.client, a.embedded)
-	a.midleware = middlewares.New(*a.handler, *a.logger, a.embedded)
+	a.midleware = middlewares.New(*a.handler, *a.logger, a.embedded, &models.UserModel)
 	a.initHandlers()
 }
 

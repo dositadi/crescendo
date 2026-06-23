@@ -67,7 +67,18 @@ func (m *Middleware) VerifyAccessToken(next http.Handler) http.Handler {
 				return
 			}
 
-			cxt := context.WithValue(r.Context(), utils.USER_ID_KEY, data.User{Username: active.Username, Email: active.Email, Id: active.Id, AvatarUrl: active.AvatarUrl})
+			user, err := m.usermodel.GetWithID(active.Id)
+			if err != nil {
+				e := helper.WrapError("Unauthorized access", err)
+				logger.PrintError(e.Error(), map[string]string{
+					"Source": "Verify access token f(n) under middleware pkg",
+				})
+
+				http.Redirect(w, r, utils.LOGIN.String(), http.StatusSeeOther)
+				return
+			}
+
+			cxt := context.WithValue(r.Context(), utils.USER_ID_KEY, data.User{Username: active.Username, Email: active.Email, Id: active.Id, AvatarUrl: user.AvatarUrl})
 
 			next.ServeHTTP(w, r.WithContext(cxt))
 		},

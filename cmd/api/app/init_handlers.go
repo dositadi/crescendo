@@ -47,13 +47,14 @@ func (a *App) initHandlers() {
 		// Auth routes
 		r.Post(utils.REGISTER.String(), a.handler.Post.Auth.RegisterHandler)
 		r.Post(utils.LOGIN.String(), a.handler.Post.Auth.LoginHandler)
-		r.With(a.midleware.VerifyAccessToken).Post(utils.FILTER_SORT_ROUTE.String(), a.handler.Post.HomePage.FilterSortHandler)
 		r.With(a.midleware.VerifyAccessToken).Post(utils.UPLOAD_PROFILE.String(), a.handler.Post.Auth.UploadProfilePicture)
+		r.With(a.midleware.VerifyAccessToken).Post(utils.UPDATE_USER_INFO.String(), a.handler.Post.Auth.UpdateProfileHandler)
 
 		// App post request
 		r.With(a.midleware.VerifyAccessToken).Post(utils.FAVORITE.String(), a.handler.Post.HomePage.UpdateFavoriteHandler)
 		r.With(a.midleware.VerifyAccessToken).Post(utils.TicketType.String(), a.handler.Post.TicketPage.TicketTypeHandler)
 		r.With(a.midleware.VerifyAccessToken).Post(string(utils.TicketQuantity), a.handler.Post.TicketPage.QuantitySelectorHandler)
 		r.With(a.midleware.VerifyAccessToken).Post(utils.Payment.String(), a.handler.Post.TicketPage.SoldTicketHandler)
+		r.With(a.midleware.VerifyAccessToken).Post(utils.FILTER_SORT_ROUTE.String(), a.handler.Post.HomePage.FilterSortHandler)
 	})
 }
