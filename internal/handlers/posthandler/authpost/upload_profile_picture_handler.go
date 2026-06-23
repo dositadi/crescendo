@@ -3,6 +3,8 @@ package authpost
 import (
 	"fmt"
 	"net/http"
+	"strings"
+	"time"
 
 	"github.com/dositadi/groupie-tracker/internal/data"
 	"github.com/dositadi/groupie-tracker/internal/helper"
@@ -62,8 +64,9 @@ func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 
 	fileName := genFilePath(user.Id)
 
-	if err = a.storage.UploadProfilePicture(fileName, file); err != nil {
-		e := helper.WrapError("Error uploading file", err)
+	exist, err := a.storage.Exists(user.Id, strings.Split(fileName, "/")[1])
+	if err != nil {
+		e := helper.WrapError("Error checking if file exists", err)
 		a.logger.PrintError(e.Error(), map[string]string{
 			"Source": sourceUp,
 		})
@@ -79,7 +82,44 @@ func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	avatarUrl := a.storage.GetPublicUrl(fileName)
+	// If avatar exists already in the store update instead
+	if exist {
+		if err = a.storage.UpdateProfilePicture(fileName, file); err != nil {
+			e := helper.WrapError("Error updating file", err)
+			a.logger.PrintError(e.Error(), map[string]string{
+				"Source": sourceUp,
+			})
+			if err = page.RenderInfo(authservice.InfoAvatar, authservice.Info{
+				Title:   "Server Error",
+				Message: "Something wrong happened. Kindly check your network connection and try again.",
+			}, true); err != nil {
+				a.logger.PrintError(err.Error(), map[string]string{
+					"Source": sourceUp,
+				})
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+			return
+		}
+	} else {
+		if err = a.storage.UploadProfilePicture(fileName, file); err != nil {
+			e := helper.WrapError("Error uploading file", err)
+			a.logger.PrintError(e.Error(), map[string]string{
+				"Source": sourceUp,
+			})
+			if err = page.RenderInfo(authservice.InfoAvatar, authservice.Info{
+				Title:   "Server Error",
+				Message: "Something wrong happened. Kindly check your network connection and try again.",
+			}, true); err != nil {
+				a.logger.PrintError(err.Error(), map[string]string{
+					"Source": sourceUp,
+				})
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+			return
+		}
+	}
+
+	avatarUrl := fmt.Sprintf("%s?t=%v", a.storage.GetPublicUrl(fileName), time.Now().Unix())
 
 	userUpdate := data.UpdateUser{
 		AvatarUrl: &avatarUrl,
@@ -102,8 +142,6 @@ func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.storage.GetFiles(fileName)
-
 	a.logger.PrintInfo("User uploaded avatar", map[string]string{
 		"Source":   sourceUp,
 		"User":     user.Username,
@@ -117,6 +155,7 @@ func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 			"Source": sourceUp,
 		})
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 }
 

@@ -8,7 +8,10 @@ import (
 )
 
 func (s *Storage) UpdateProfilePicture(relativeFilePath string, file io.Reader) error {
-	_, err := s.client.Storage.UpdateFile(s.bucketId, relativeFilePath, file, storage_go.FileOptions{})
+	contentType := "image/png"
+	_, err := s.client.Storage.UpdateFile(s.bucketId, relativeFilePath, file, storage_go.FileOptions{
+		ContentType: &contentType,
+	})
 	if err != nil {
 		e := helper.WrapError("Profile picture upload error", err)
 		s.logger.PrintError(e.Error(), map[string]string{
