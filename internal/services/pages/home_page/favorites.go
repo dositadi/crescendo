@@ -1,7 +1,9 @@
 package pages
 
 import (
+	"fmt"
 	"html/template"
+	"strings"
 
 	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
@@ -31,15 +33,18 @@ func (p *Pages) RenderFavoritePage() error {
 	artists := allFavorites(favorites, p.client.Get())
 
 	data := struct {
-		ArtistDetailUrl, PrevPageUrl, FavoriteArtistUrl, PathUrl string
-		FavKey, ArtistIDKey, ReqPgKey, PathKey                   string
-		Artists                                                  []herokuapp.ArtistInfo
-		Favorited                                                string
-		RequestPage                                              string
+		ArtistDetailUrl, PrevPageUrl, FavoriteArtistUrl, PathUrl, SettingsUrl string
+		FavKey, ArtistIDKey, ReqPgKey, PathKey                                string
+		Artists                                                               []herokuapp.ArtistInfo
+		Favorited                                                             string
+		RequestPage                                                           string
+		User                                                                  data.User
+		Username                                                              string
 	}{
 		ArtistDetailUrl:   utils.ARTIST_DETAILS.String(),
 		FavoriteArtistUrl: utils.FAVORITE.String(),
 		PrevPageUrl:       utils.HOME.String(),
+		SettingsUrl:       fmt.Sprintf("%s?%s=%s", utils.SETTINGS.String(), utils.PATH_KEY, p.request.URL.EscapedPath()),
 		PathUrl:           p.request.URL.EscapedPath(),
 		Favorited:         string(FAVORITED),
 
@@ -51,6 +56,9 @@ func (p *Pages) RenderFavoritePage() error {
 		Artists: artists,
 
 		RequestPage: PageFav,
+
+		User:     user,
+		Username: strings.Fields(p.getUser().Username)[0],
 	}
 
 	temp, err := template.New("favorites.html").Funcs(p.homePageFunc()).ParseFS(p.embedded.Get(), fs...)

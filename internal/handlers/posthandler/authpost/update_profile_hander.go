@@ -1,7 +1,6 @@
 package authpost
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/dositadi/groupie-tracker/internal/data"
@@ -24,6 +23,113 @@ func (a *Auth) UpdateProfileHandler(w http.ResponseWriter, r *http.Request) {
 	page := authservice.New(w, a.embedded, a.logger, r, a.usermodel)
 
 	var updateUser data.UpdateUser
+
+	if currentPass != "" {
+		userPass, err := a.usermodel.GetWithEmail(user.Email)
+		if err != nil {
+			e := helper.WrapError("User fetch error", err)
+			a.logger.PrintError(e.Error(), map[string]string{
+				"Source": sourcePr,
+			})
+
+			if err = page.RenderInfo(authservice.InfoForm, authservice.Info{
+				Title:   "Something wrong happened.",
+				Message: "Kindly try again.",
+			}, true); err != nil {
+				a.logger.PrintError(err.Error(), map[string]string{
+					"Source": sourcePr,
+				})
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+			return
+		}
+
+		if err = a.compareHashedPassword(userPass.HashedPassword, []byte(currentPass)); err != nil {
+			e := helper.WrapError("The current password is not correct", err)
+			a.logger.PrintError(e.Error(), map[string]string{
+				"Source": sourcePr,
+			})
+
+			if err = page.RenderInfo(authservice.InfoForm, authservice.Info{
+				Title:   "Password mismatch.",
+				Message: "The current password you provided is not correct.",
+			}, true); err != nil {
+				a.logger.PrintError(err.Error(), map[string]string{
+					"Source": sourcePr,
+				})
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+			return
+		}
+
+		if newPass == "" {
+			e := "The new password field cannot be empty"
+			a.logger.PrintError(e, map[string]string{
+				"Source": sourcePr,
+			})
+			if err = page.RenderInfo(authservice.InfoForm, authservice.Info{
+				Title:   "Empty field.",
+				Message: "The new password field cannot be empty.",
+			}, true); err != nil {
+				a.logger.PrintError(err.Error(), map[string]string{
+					"Source": sourcePr,
+				})
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+			return
+		}
+
+		if confirmPass == "" {
+			e := "The confirm password field cannot be empty"
+			a.logger.PrintError(e, map[string]string{
+				"Source": sourcePr,
+			})
+			if err = page.RenderInfo(authservice.InfoForm, authservice.Info{
+				Title:   "Empty field.",
+				Message: "The confirm password field cannot be empty.",
+			}, true); err != nil {
+				a.logger.PrintError(err.Error(), map[string]string{
+					"Source": sourcePr,
+				})
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+			return
+		}
+
+		if newPass != confirmPass {
+			e := "Password mismatch. New password and confirm password do not match"
+			a.logger.PrintError(e, map[string]string{
+				"Source": sourcePr,
+			})
+			if err = page.RenderInfo(authservice.InfoForm, authservice.Info{
+				Title:   "Password mismatch.",
+				Message: "New password and confirm password do not match.",
+			}, true); err != nil {
+				a.logger.PrintError(err.Error(), map[string]string{
+					"Source": sourcePr,
+				})
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+			return
+		}
+	} else if newPass != "" || confirmPass == "" {
+		if currentPass == "" {
+			e := "Current password field cannot be empty"
+			a.logger.PrintError(e, map[string]string{
+				"Source": sourcePr,
+			})
+			if err := page.RenderInfo(authservice.InfoForm, authservice.Info{
+				Title:   "Empty field.",
+				Message: "Current password field cannot be empty.",
+			}, true); err != nil {
+				a.logger.PrintError(err.Error(), map[string]string{
+					"Source": sourcePr,
+				})
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+			return
+		}
+	}
 
 	hashedPassword, err := a.hashPassword([]byte(newPass))
 	if err != nil {
@@ -85,111 +191,5 @@ func (a *Auth) UpdateProfileHandler(w http.ResponseWriter, r *http.Request) {
 
 func (a *Auth) validatePassword(currentPass, newPass, confirmPass, userEmail string, page *authservice.AuthService, w http.ResponseWriter) (bool, error) {
 
-	if currentPass != "" {
-		userPass, err := a.usermodel.GetWithEmail(userEmail)
-		if err != nil {
-			e := helper.WrapError("User fetch error", err)
-			a.logger.PrintError(e.Error(), map[string]string{
-				"Source": sourcePr,
-			})
-
-			if err = page.RenderInfo(authservice.InfoForm, authservice.Info{
-				Title:   "Something wrong happened.",
-				Message: "Kindly try again.",
-			}, true); err != nil {
-				a.logger.PrintError(err.Error(), map[string]string{
-					"Source": sourcePr,
-				})
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-			}
-			return false, e
-		}
-
-		if err = a.compareHashedPassword(userPass.HashedPassword, []byte(currentPass)); err != nil {
-			e := helper.WrapError("The current password is not correct", err)
-			a.logger.PrintError(e.Error(), map[string]string{
-				"Source": sourcePr,
-			})
-
-			if err = page.RenderInfo(authservice.InfoForm, authservice.Info{
-				Title:   "Password mismatch.",
-				Message: "The current password you provided is not correct.",
-			}, true); err != nil {
-				a.logger.PrintError(err.Error(), map[string]string{
-					"Source": sourcePr,
-				})
-				http.Error(w, err.Error(), http.StatusBadRequest)
-			}
-			return false, e
-		}
-
-		if newPass == "" {
-			e := "The new password field cannot be empty"
-			a.logger.PrintError(e, map[string]string{
-				"Source": sourcePr,
-			})
-			if err = page.RenderInfo(authservice.InfoForm, authservice.Info{
-				Title:   "Empty field.",
-				Message: "The new password field cannot be empty.",
-			}, true); err != nil {
-				a.logger.PrintError(err.Error(), map[string]string{
-					"Source": sourcePr,
-				})
-				http.Error(w, err.Error(), http.StatusBadRequest)
-			}
-			return false, errors.New("The new password field cannot be empty")
-		}
-
-		if confirmPass == "" {
-			e := "The confirm password field cannot be empty"
-			a.logger.PrintError(e, map[string]string{
-				"Source": sourcePr,
-			})
-			if err = page.RenderInfo(authservice.InfoForm, authservice.Info{
-				Title:   "Empty field.",
-				Message: "The confirm password field cannot be empty.",
-			}, true); err != nil {
-				a.logger.PrintError(err.Error(), map[string]string{
-					"Source": sourcePr,
-				})
-				http.Error(w, err.Error(), http.StatusBadRequest)
-			}
-			return false, errors.New("The confirm password field cannot be empty")
-		}
-
-		if newPass != confirmPass {
-			e := "Password mismatch. New password and confirm password do not match"
-			a.logger.PrintError(e, map[string]string{
-				"Source": sourcePr,
-			})
-			if err = page.RenderInfo(authservice.InfoForm, authservice.Info{
-				Title:   "Password mismatch.",
-				Message: "New password and confirm password do not match.",
-			}, true); err != nil {
-				a.logger.PrintError(err.Error(), map[string]string{
-					"Source": sourcePr,
-				})
-				http.Error(w, err.Error(), http.StatusBadRequest)
-			}
-			return false, errors.New("Password mismatch. New password and confirm password do not match")
-		}
-	} else if newPass != "" || confirmPass == "" {
-		if currentPass == "" {
-			e := "Current password field cannot be empty"
-			a.logger.PrintError(e, map[string]string{
-				"Source": sourcePr,
-			})
-			if err := page.RenderInfo(authservice.InfoForm, authservice.Info{
-				Title:   "Empty field.",
-				Message: "Current password field cannot be empty.",
-			}, true); err != nil {
-				a.logger.PrintError(err.Error(), map[string]string{
-					"Source": sourcePr,
-				})
-				http.Error(w, err.Error(), http.StatusBadRequest)
-			}
-			return false, errors.New(e)
-		}
-	}
 	return true, nil
 }

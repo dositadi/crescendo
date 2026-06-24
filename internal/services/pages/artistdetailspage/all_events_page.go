@@ -3,6 +3,7 @@ package artistdetail
 import (
 	"fmt"
 	"html/template"
+	"strings"
 
 	"github.com/dositadi/groupie-tracker/internal/client/herokuapp"
 	"github.com/dositadi/groupie-tracker/internal/data"
@@ -21,10 +22,11 @@ func (a *ArtistDetail) RenderAllEventsPage() error {
 	}
 
 	id := a.atoi(chi.URLParam(a.request, "id"))
+	user := a.getUser()
 
 	artistInfo := a.client.Get()[id]
 
-	userTickets, err := a.soldTicketsModel.GetAll(a.getUser().Id)
+	userTickets, err := a.soldTicketsModel.GetAll(user.Id)
 	if err != nil {
 		e := helper.WrapError("User tickets get err", err)
 		a.logger.PrintError(e.Error(), map[string]string{
@@ -37,18 +39,25 @@ func (a *ArtistDetail) RenderAllEventsPage() error {
 	detailPage := fmt.Sprintf("%s/%v", utils.ARTIST_DETAILS.String(), id)
 
 	data := struct {
-		ArtistDetailUrl, TicketUrl, PathUrl, RecieptPageUrl, DetailPageUrl string
+		ArtistDetailUrl, TicketUrl, PathUrl, RecieptPageUrl, DetailPageUrl,SettingsUrl string
 		ArtistInfo                                                         herokuapp.ArtistInfo
 		AllArtists                                                         map[int]herokuapp.ArtistInfo
 		UserTickets                                                        []data.SoldTickets
 		PathKey, DateKey, ArtistIdKey, LocationKey                         string
+
+		User data.User
+		Username string
 	}{
+		User:     user,
+		Username: strings.Fields(a.getUser().Username)[0],
+
 		// All urls
 		PathUrl:         prevPage,
 		DetailPageUrl:   detailPage,
 		ArtistDetailUrl: utils.ARTIST_DETAILS.String(),
 		TicketUrl:       utils.TICKET.String(),
 		RecieptPageUrl:  utils.RECIEPTS.String(),
+		SettingsUrl:     fmt.Sprintf("%s?%s=%s", utils.SETTINGS.String(), utils.PATH_KEY, a.request.URL.EscapedPath()),
 
 		// Artists details
 		ArtistInfo:  artistInfo,
