@@ -188,8 +188,9 @@ func (a *Auth) UpdateProfileHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
-
+/* 
 func (a *Auth) validatePassword(currentPass, newPass, confirmPass, userEmail string, page *authservice.AuthService, w http.ResponseWriter) (bool, error) {
 
 	return true, nil
 }
+ */
