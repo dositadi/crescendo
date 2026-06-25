@@ -30,7 +30,7 @@ func (a *ArtistDetail) RenderArtistDetailPage() error {
 	id := a.atoi(chi.URLParam(a.request, "id"))
 	path := a.request.FormValue(utils.PATH_KEY)
 
-	if path == "" {
+	if path == "" || path == string(utils.ARTIST_SEARCH) {
 		path = utils.HOME.String()
 	}
 

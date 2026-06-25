@@ -116,17 +116,17 @@ func (p *Pages) RenderSearch() error {
 	}
 
 	data := struct {
-		NextPage, PreviousPage, Count, Total                   int
-		UserFavorites                                          map[int]data.Favorite
-		Artists                                                []herokuapp.ArtistInfo
-		CurrentFilter, CurrentSort                             string
-		FilterSortRoute                                        string
-		FilterByName, FilterByCreationDate, FilterByFirstAlbum string
-		FilterKey, ArtistIDKey, SearchKey, FavKey, PageKey     string
-		SortKey, SortASC, SortDESC                             string
-		Favorited, NotFavorited                                string
-		FavoriteArtistUrl, Url, ArtistDetailUrl                string
-		DisableNextbutton, DisablePrevButton, IsSearch         bool
+		NextPage, PreviousPage, Count, Total                                  int
+		UserFavorites                                                         map[int]data.Favorite
+		Artists                                                               []herokuapp.ArtistInfo
+		CurrentFilter, CurrentSort                                            string
+		FilterSortRoute                                                       string
+		FilterByName, FilterByCreationDate, FilterByFirstAlbum, RequestPage   string
+		FilterKey, ArtistIDKey, SearchKey, FavKey, PageKey, ReqPgKey, PathKey string
+		SortKey, SortASC, SortDESC                                            string
+		Favorited, NotFavorited                                               string
+		FavoriteArtistUrl, Url, ArtistDetailUrl, PathUrl                      string
+		DisableNextbutton, DisablePrevButton, IsSearch                        bool
 	}{
 		UserFavorites:        userFavorites,
 		Artists:              paginatedArtists,
@@ -141,6 +141,7 @@ func (p *Pages) RenderSearch() error {
 		SortASC:              string(ASCENDING_ORDER),
 		SortDESC:             string(DESCENDING_ORDER),
 		FavoriteArtistUrl:    utils.FAVORITE.String(),
+		PathUrl:              p.request.URL.EscapedPath(),
 		FavKey:               utils.FAV_KEY,
 		Favorited:            string(FAVORITED),
 		NotFavorited:         string(NOT_FAVORITED),
@@ -154,8 +155,11 @@ func (p *Pages) RenderSearch() error {
 		Total:                len(artists),
 		Url:                  utils.ARTIST_SEARCH.String(),
 		PageKey:              utils.PAGE_KEY,
+		ReqPgKey:             utils.REQ_PAGE_KEY,
+		PathKey:              utils.PATH_KEY,
 		IsSearch:             true,
 		ArtistDetailUrl:      utils.ARTIST_DETAILS.String(),
+		RequestPage:          PageHome,
 	}
 
 	p.responseWriter.WriteHeader(http.StatusOK)

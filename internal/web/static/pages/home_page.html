@@ -87,11 +87,32 @@
           </button>
 
           <!-- Mobile menu toggle -->
-          <button class="md:hidden w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.07] border border-white/10 text-white/70" aria-label="Menu">
+          <div class="dropdown-wrap relative shrink-0" tabindex="0">
+            <button class="md:hidden w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.07] border border-white/10 text-white/70" aria-label="Menu">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
             </svg>
-          </button>
+            </button>
+            <div id="filter" class="dropdown-menu">
+              <div class="px-4 py-2.5 border-b border-border-soft">
+                <span class="live-dot shrink-0"></span>
+                <span class="text-ink text-sm font-medium truncate max-w-32.5">{{CleanText .Username}}</span>
+              </div>
+              <div class="dropdown-item active">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+                Actions
+              </div>
+              <a hx-get="{{.PaidEventsUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" hx-swap="outerHTML" hx-target="#body">
+                  <div class="dropdown-item">Events</div>
+              </a>
+              <a hx-get="{{.AllFavoritesUrl}}" hx-swap="outerHTML" hx-target="#body" hx-push-url="true" hx-swap="outerHTML" hx-target="#body">
+                  <div class="dropdown-item">Favorites</div>
+              </a>
+              <a hx-get="{{.SettingsUrl}}" hx-swap="outerHTML" hx-push-url="true" hx-target="#body" hx-swap="outerHTML" hx-target="#body">
+                  <div class="dropdown-item">Settings</div>
+              </a>
+            </div>
+          </div>
         </div>
 
       </nav>
