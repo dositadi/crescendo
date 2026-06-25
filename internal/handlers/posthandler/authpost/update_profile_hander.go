@@ -121,6 +121,13 @@ func (a *Auth) validatePassword(currentPass, newPass, confirmPass, userEmail str
 			}
 		}
 
+		if len(newPass) < 8 {
+			return nil, &authservice.Info{
+				Title:   "Invalid Password.",
+				Message: "The new password must be at least 8 characters long.",
+			}
+		}
+
 		if confirmPass == "" {
 			return nil, &authservice.Info{
 				Title:   "Empty field.",
