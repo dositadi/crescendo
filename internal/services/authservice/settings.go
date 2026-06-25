@@ -33,7 +33,7 @@ func (a *AuthService) RenderSettingsPage() error {
 	}
 
 	data := struct {
-		PrivacyPageUrl, TermsPageUrl, UploadUrl, PrevPageUrl, ProfileUpdateUrl string
+		PrivacyPageUrl, TermsPageUrl, UploadUrl, PrevPageUrl, ProfileUpdateUrl, LogoutUrl, DeleteAccountUrl string
 
 		AvatarKey, UsernameKey, CurrentPassKey, NewPassKey, ConfirmPassKey, AvatarRespId, FormRespId string
 
@@ -44,6 +44,8 @@ func (a *AuthService) RenderSettingsPage() error {
 		UploadUrl:        utils.UPLOAD_PROFILE.String(),
 		PrevPageUrl:      path,
 		ProfileUpdateUrl: utils.UPDATE_USER_INFO.String(),
+		DeleteAccountUrl: utils.DELETE_ACCOUNT.String(),
+		LogoutUrl:        utils.LOGOUT.String(),
 
 		User: user,
 

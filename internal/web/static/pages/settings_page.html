@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/htmx-ext-response-targets@2.0.4" integrity="sha384-T41oglUPvXLGBVyRdZsVRxNWnOOqCynaPubjUVjxhsjFTKrFJGEMm3/0KGmNQ+Pg" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body id="body" hx-boost="true" hx-ext="response-targets" class="min-h-screen font-sans text-ink">
@@ -161,7 +162,12 @@
           <p class="text-sm font-medium text-ink">Log out</p>
           <p class="text-xs text-ink-muted">Sign out of Crescendo on this device.</p>
         </div>
-        <button type="button"
+        <button hx-post="{{.LogoutUrl}}"
+        hx-target="#body" hx-swap="outerHTML"  hx-trigger='confirmed' onClick="Swal.fire({title: 'Confirm', text:'Are you sure you want to logout?'}).then((result)=>{
+            if(result.isConfirmed){
+              htmx.trigger(this, 'confirmed');  
+            } 
+        })" type="button"
                 class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl
                        border border-border text-sm font-medium text-ink-secondary
                        hover:bg-surface-alt hover:text-ink transition-all duration-200 w-full sm:w-auto">
@@ -177,7 +183,11 @@
           <p class="text-sm font-medium text-red-700">Delete account</p>
           <p class="text-xs text-ink-muted">Permanently remove your account and all data. This cannot be undone.</p>
         </div>
-        <button type="button"
+        <button hx-post="{{.DeleteAccountUrl}}"  hx-target="#body" hx-swap="outerHTML" hx-trigger='confirmed' onClick="Swal.fire({title: 'Confirm', text:'Are you sure you want to delete your account? This action cannot be undone.'}).then((result)=>{
+            if(result.isConfirmed){
+              htmx.trigger(this, 'confirmed');  
+            } 
+        })" type="button"
                 class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl
                        bg-rose-500 text-white text-sm font-medium
                        hover:bg-rose-600 transition-all duration-200 w-full sm:w-auto">
