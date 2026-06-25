@@ -9,6 +9,8 @@ func (r Route) String() string {
 const (
 	LOGIN             Route = Route("/auth/session")
 	REGISTER          Route = Route("/auth/registration")
+	LOGOUT            Route = Route("/auth/logout")
+	DELETE_ACCOUNT    Route = Route("/auth/delete-account")
 	SETTINGS          Route = Route("/user/settings")
 	UPLOAD_PROFILE    Route = Route("/user/upload-avatar")
 	UPDATE_USER_INFO  Route = Route("/user/update-info")

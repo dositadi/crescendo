@@ -49,6 +49,8 @@ func (a *App) initHandlers() {
 		r.Post(utils.LOGIN.String(), a.handler.Post.Auth.LoginHandler)
 		r.With(a.midleware.VerifyAccessToken).Post(utils.UPLOAD_PROFILE.String(), a.handler.Post.Auth.UploadProfilePicture)
 		r.With(a.midleware.VerifyAccessToken).Post(utils.UPDATE_USER_INFO.String(), a.handler.Post.Auth.UpdateProfileHandler)
+		r.With(a.midleware.VerifyAccessToken).Post(utils.LOGOUT.String(), a.handler.Post.Auth.LogoutHandler)
+		r.With(a.midleware.VerifyAccessToken).Post(utils.DELETE_ACCOUNT.String(), a.handler.Post.Auth.DeleteAccount)
 
 		// App post request
 		r.With(a.midleware.VerifyAccessToken).Post(utils.FAVORITE.String(), a.handler.Post.HomePage.UpdateFavoriteHandler)
