@@ -11,5 +11,4 @@ func New(host string) *Mailer {
 	return &Mailer{
 		mailerClient: client,
 	}
-	
 }
