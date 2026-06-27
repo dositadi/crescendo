@@ -40,9 +40,6 @@ func (a *Auth) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 		}
 		return
-
-
-		
 	}
 
 	file, _, err := r.FormFile(utils.AVATAR_KEY)
