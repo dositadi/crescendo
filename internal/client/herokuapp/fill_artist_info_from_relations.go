@@ -8,7 +8,7 @@ import (
 	"github.com/dositadi/groupie-tracker/internal/helper"
 )
 
-func (h *HerokuApp) fillArtistInfoFromRelations(ctx context.Context, chArtistInfo chan *ArtistInfo, chError chan error, artists map[int]artist) chan *ArtistInfo {
+func (h *HerokuApp) fillArtistInfoFromRelations(ctx context.Context, chArtistInfo <- chan *ArtistInfo, chError chan error, artists map[int]artist) chan *ArtistInfo {
 	temp := make(chan *ArtistInfo, len(artists))
 	wg := new(sync.WaitGroup)
 

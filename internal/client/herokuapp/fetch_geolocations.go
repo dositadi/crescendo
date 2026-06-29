@@ -9,7 +9,7 @@ import (
 	"github.com/dositadi/groupie-tracker/internal/helper"
 )
 
-func (h *HerokuApp) fillGeolocationsFromOpenCage(ctx context.Context, chArtists chan *ArtistInfo, chError chan error) chan *ArtistInfo {
+func (h *HerokuApp) fillGeolocationsFromOpenCage(ctx context.Context, chArtists <-chan *ArtistInfo, chError chan error) chan *ArtistInfo {
 	out := make(chan *ArtistInfo, 5)
 	outerWg := new(sync.WaitGroup)
 
@@ -37,6 +37,7 @@ func (h *HerokuApp) fillGeolocationsFromOpenCage(ctx context.Context, chArtists 
 						select {
 						case chError <- err:
 						case <-ctx.Done():
+							return
 						default:
 						}
 						return
@@ -69,6 +70,7 @@ func (h *HerokuApp) fillGeolocationsFromOpenCage(ctx context.Context, chArtists 
 			select {
 			case out <- &art:
 			case <-ctx.Done():
+				return
 			}
 		}(*current)
 	}
@@ -81,6 +83,5 @@ func (h *HerokuApp) fillGeolocationsFromOpenCage(ctx context.Context, chArtists 
 	h.logger.PrintInfo("Geolocations fetch successful", map[string]string{
 		"Source": "Fill geolocations f(n) under artistapi package.",
 	})
-
 	return out
 }

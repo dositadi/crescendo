@@ -5,8 +5,8 @@ import (
 	"sync"
 )
 
-func (h *HerokuApp) fillArtistsInfoFromArtists(artists map[int]artist) chan ArtistInfo {
-	temp := make(chan ArtistInfo, len(artists))
+func (h *HerokuApp) fillArtistsInfoFromArtists(artists map[int]artist) <-chan *ArtistInfo {
+	temp := make(chan *ArtistInfo, len(artists))
 
 	if artists == nil {
 		h.logger.PrintFatal("Recieved a nil paramter [artists]", map[string]string{
@@ -28,7 +28,7 @@ func (h *HerokuApp) fillArtistsInfoFromArtists(artists map[int]artist) chan Arti
 
 			artInfo = populateArtistInfo(a, artInfo)
 
-			temp <- *artInfo
+			temp <- artInfo
 		}(art)
 	}
 
