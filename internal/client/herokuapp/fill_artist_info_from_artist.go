@@ -1,11 +1,12 @@
 package herokuapp
 
 import (
+	"context"
 	"os"
 	"sync"
 )
 
-func (h *HerokuApp) fillArtistsInfoFromArtists(artists map[int]artist) <-chan *ArtistInfo {
+func (h *HerokuApp) fillArtistsInfoFromArtists(ctx context.Context, artists map[int]artist) <-chan *ArtistInfo {
 	temp := make(chan *ArtistInfo, len(artists))
 
 	if artists == nil {
@@ -28,7 +29,11 @@ func (h *HerokuApp) fillArtistsInfoFromArtists(artists map[int]artist) <-chan *A
 
 			artInfo = populateArtistInfo(a, artInfo)
 
-			temp <- artInfo
+			select {
+			case <-ctx.Done():
+				return
+			case temp <- artInfo:
+			}
 		}(art)
 	}
 

@@ -39,6 +39,7 @@ func (h *HerokuApp) fillArtistInfoFromDate(ctx context.Context, chArtistInfo <- 
 				select {
 				case chError <- e:
 				case <-ctx.Done():
+					return 
 				default:
 				}
 				return
@@ -60,6 +61,7 @@ func (h *HerokuApp) fillArtistInfoFromDate(ctx context.Context, chArtistInfo <- 
 			select {
 			case temp <- filledArtistInfo:
 			case <-ctx.Done():
+				return 
 			}
 		}(artInfo, art)
 	}

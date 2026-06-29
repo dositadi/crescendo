@@ -30,6 +30,7 @@ func (h *HerokuApp) fillArtistInfoFromRelations(ctx context.Context, chArtistInf
 				select {
 				case chError <- e:
 				case <-ctx.Done():
+					return 
 				default:
 				}
 			}
@@ -49,6 +50,7 @@ func (h *HerokuApp) fillArtistInfoFromRelations(ctx context.Context, chArtistInf
 			select {
 			case temp <- filledArtistInfo:
 			case <-ctx.Done():
+				return 
 			}
 		}(artInfo, art)
 	}

@@ -29,7 +29,7 @@ func (h *HerokuApp) mapArtistsInfo() {
 	//chArtistInfo := h.fillArtistInfoFromLocation(ctx, filledArtists, chError, arts)
 	//chArtistInfo = h.fillArtistInfoFromDate(ctx, chArtistInfo, chError, arts)
 	//chArtistInfo = h.fillArtistInfoFromRelations(ctx, chArtistInfo, chError, arts)
-	chArtistInfo := h.fillGeolocationsFromOpenCage(ctx, h.fillArtistInfoFromRelations(ctx, h.fillArtistInfoFromDate(ctx, h.fillArtistInfoFromLocation(ctx, h.fillArtistsInfoFromArtists(arts), chError, arts), chError, arts), chError, arts), chError)
+	chArtistInfo := h.fillGeolocationsFromOpenCage(ctx, h.fillArtistInfoFromRelations(ctx, h.fillArtistInfoFromDate(ctx, h.fillArtistInfoFromLocation(ctx, h.fillArtistsInfoFromArtists(ctx, arts), chError, arts), chError, arts), chError, arts), chError)
 
 	select {
 	case <-chError:

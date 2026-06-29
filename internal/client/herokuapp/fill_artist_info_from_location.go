@@ -40,6 +40,7 @@ func (h *HerokuApp) fillArtistInfoFromLocation(ctx context.Context, chArtistInfo
 				select {
 				case chError <- e:
 				case <-ctx.Done():
+					return 
 				default:
 				}
 			}
@@ -59,6 +60,7 @@ func (h *HerokuApp) fillArtistInfoFromLocation(ctx context.Context, chArtistInfo
 			select {
 			case temp <- artInfo:
 			case <-ctx.Done():
+				return 
 			}
 
 		}(artInfo, art)
