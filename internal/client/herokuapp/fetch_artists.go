@@ -3,17 +3,15 @@ package herokuapp
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 
 	"github.com/dositadi/groupie-tracker/internal/helper"
-	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
 )
 
 const (
 	artistUrl = "https://groupietrackers.herokuapp.com/api/artists"
 )
 
-var logger = jsonlog.New(os.Stdout, jsonlog.LevelInfo)
+//var logger = jsonlog.New(os.Stdout, jsonlog.LevelInfo)
 
 // A generic function that fetches all the artist resource.
 func (h *HerokuApp) fetchArtists() (map[int]artist, error) {
@@ -23,6 +21,7 @@ func (h *HerokuApp) fetchArtists() (map[int]artist, error) {
 		h.logger.PrintFatal(e.Error(), map[string]string{
 			"Source": "Fetch artists f(n) under artistapi package.",
 		})
+		return nil, e
 	}
 
 	defer response.Body.Close()
@@ -35,6 +34,7 @@ func (h *HerokuApp) fetchArtists() (map[int]artist, error) {
 		h.logger.PrintFatal(e.Error(), map[string]string{
 			"Source": "Fetch artists f(n) under artistapi package.",
 		})
+		return nil, e
 	}
 
 	artistsMap := make(map[int]artist)

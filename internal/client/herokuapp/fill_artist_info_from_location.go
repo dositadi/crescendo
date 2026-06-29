@@ -39,6 +39,7 @@ func (h *HerokuApp) fillArtistInfoFromLocation(ctx context.Context, chArtistInfo
 
 				select {
 				case chError <- e:
+					return 
 				case <-ctx.Done():
 					return 
 				default:

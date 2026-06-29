@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"sync"
 	"time"
 )
 
@@ -21,29 +20,46 @@ func (h *HerokuApp) mapArtistsInfo() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+
 	chError := make(chan error)
 
 	start := time.Now()
 
-	//filledArtists := h.fillArtistsInfoFromArtists(arts)
-	//chArtistInfo := h.fillArtistInfoFromLocation(ctx, filledArtists, chError, arts)
-	//chArtistInfo = h.fillArtistInfoFromDate(ctx, chArtistInfo, chError, arts)
-	//chArtistInfo = h.fillArtistInfoFromRelations(ctx, chArtistInfo, chError, arts)
-	chArtistInfo := h.fillGeolocationsFromOpenCage(ctx, h.fillArtistInfoFromRelations(ctx, h.fillArtistInfoFromDate(ctx, h.fillArtistInfoFromLocation(ctx, h.fillArtistsInfoFromArtists(ctx, arts), chError, arts), chError, arts), chError, arts), chError)
+	chArtistInfo := h.fillArtistsInfoFromArtists(ctx, arts)
+	chArtistInfo = h.fillArtistInfoFromDate(ctx, chArtistInfo, chError, arts)
+	chArtistInfo = h.fillArtistInfoFromLocation(ctx, chArtistInfo, chError, arts)
+	chArtistInfo = h.fillArtistInfoFromRelations(ctx, chArtistInfo, chError, arts)
+	//chArtistInfo = h.fillGeolocationsFromOpenCage(ctx, chArtistInfo, chError)
 
-	select {
-	case <-chError:
-		time.Sleep(5 * time.Millisecond)
-		os.Exit(1)
-	default:
+	for {
+		if chArtistInfo == nil {
+			break
+		}
+		select {
+		case e, ok := <-chError:
+			if !ok {
+				chError = nil
+				continue
+			}
+			h.logger.PrintError(e.Error(), map[string]string{
+				"Source": "herokuapp.mapArtistsInfo()",
+			})
+			cancel()
+			os.Exit(1)
+		case artistInfo, ok := <-chArtistInfo:
+			if !ok {
+				chArtistInfo = nil
+				continue
+			}
+			byId[artistInfo.Id] = *artistInfo
+
+			fmt.Println(time.Since(start))
+			fmt.Println(byId)
+		}
 	}
-	for artistInfo := range chArtistInfo {
-		byId[artistInfo.Id] = *artistInfo
-	}
-	fmt.Println(time.Since(start))
 }
 
-func fanIn(ctx context.Context, workers ...<-chan *ArtistInfo) <-chan *ArtistInfo {
+/* func fanIn(ctx context.Context, workers ...<-chan *ArtistInfo) <-chan *ArtistInfo {
 	multiplexedStream := make(chan *ArtistInfo)
 	multiplexGroup := new(sync.WaitGroup)
 
@@ -71,13 +87,21 @@ func fanIn(ctx context.Context, workers ...<-chan *ArtistInfo) <-chan *ArtistInf
 	return multiplexedStream
 }
 
-func fanOut(chArtists chan *ArtistInfo) []<-chan *ArtistInfo {
+func fanOut(in <-chan *ArtistInfo, wk func(*ArtistInfo) *ArtistInfo) []<-chan *ArtistInfo {
 	workerSize := 10
-	workers := make([]<-chan *ArtistInfo, workerSize)
+	outputs := make([]<-chan *ArtistInfo, workerSize)
 
 	// Note: each channel is a product of a go routine and therefore is a go routine itself. Hence, I have 10 worker routines fetching the data
 	for i := range workerSize {
-		workers[i] = chArtists
+		out := make(chan *ArtistInfo)
+		outputs[i] = out
+
+		go func(out chan *ArtistInfo) {
+			for artist := range in {
+				out <- wk(artist)
+			}
+		}(out)
 	}
-	return workers
+	return outputs
 }
+*/

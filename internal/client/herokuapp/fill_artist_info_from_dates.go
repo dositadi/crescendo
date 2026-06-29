@@ -9,7 +9,7 @@ import (
 	"github.com/dositadi/groupie-tracker/internal/helper"
 )
 
-func (h *HerokuApp) fillArtistInfoFromDate(ctx context.Context, chArtistInfo <- chan *ArtistInfo, chError chan error, artists map[int]artist) chan *ArtistInfo {
+func (h *HerokuApp) fillArtistInfoFromDate(ctx context.Context, chArtistInfo <-chan *ArtistInfo, chError chan error, artists map[int]artist) chan *ArtistInfo {
 	temp := make(chan *ArtistInfo, len(artists))
 	wg := new(sync.WaitGroup)
 
@@ -38,8 +38,9 @@ func (h *HerokuApp) fillArtistInfoFromDate(ctx context.Context, chArtistInfo <- 
 
 				select {
 				case chError <- e:
-				case <-ctx.Done():
 					return 
+				case <-ctx.Done():
+					return
 				default:
 				}
 				return
@@ -61,7 +62,7 @@ func (h *HerokuApp) fillArtistInfoFromDate(ctx context.Context, chArtistInfo <- 
 			select {
 			case temp <- filledArtistInfo:
 			case <-ctx.Done():
-				return 
+				return
 			}
 		}(artInfo, art)
 	}

@@ -11,7 +11,7 @@ import (
 )
 
 type InfoTypes interface {
-	artist | location | concertDate | relations
+	artist | []artist | location | concertDate | relations
 }
 
 // Writing an interace type to populate the Artist struct with all it's data.
@@ -72,6 +72,7 @@ func fetchInfo[T InfoTypes](url string) (T, error) {
 		logger.PrintError(e.Error(), map[string]string{
 			"Source": "Fetch info f(n)",
 		})
+		return info, e
 	}
 
 	defer resp.Body.Close()
@@ -83,6 +84,7 @@ func fetchInfo[T InfoTypes](url string) (T, error) {
 		logger.PrintError(e.Error(), map[string]string{
 			"Source": "Fetch info f(n)",
 		})
+		return info, e
 	}
 
 	return info, nil
