@@ -21,11 +21,11 @@ func (h *HerokuApp) mapArtistsInfo() {
 	defer cancel()
 	chError := make(chan error)
 
-	//filledArtists := h.fillArtistsInfoFromArtists(arts)
-	//chArtistInfo := h.fillArtistInfoFromLocation(ctx, filledArtists, chError, arts)
-	//chArtistInfo = h.fillArtistInfoFromDate(ctx, chArtistInfo, chError, arts)
-	//chArtistInfo = h.fillArtistInfoFromRelations(ctx, chArtistInfo, chError, arts)
-	chArtistInfo := h.fillGeolocationsFromOpenCage(ctx, h.fillArtistInfoFromRelations(ctx, h.fillArtistInfoFromDate(ctx, h.fillArtistInfoFromLocation(ctx, h.fillArtistsInfoFromArtists(arts), chError, arts), chError, arts), chError, arts), chError)
+	filledArtists := h.fillArtistsInfoFromArtists(arts)
+	chArtistInfo := h.fillArtistInfoFromLocation(ctx, filledArtists, chError, arts)
+	chArtistInfo = h.fillArtistInfoFromDate(ctx, chArtistInfo, chError, arts)
+	chArtistInfo = h.fillArtistInfoFromRelations(ctx, chArtistInfo, chError, arts)
+	//chArtistInfo = h.fillGeolocationsFromOpenCage(ctx, chArtistInfo, chError)
 
 	select {
 	case <-chError:
