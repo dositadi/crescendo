@@ -1,6 +1,8 @@
 package mailer
 
-import "github.com/wneessen/go-mail"
+import (
+	"github.com/wneessen/go-mail"
+)
 
 type Mailer struct {
 	mailerClient *mail.Client
