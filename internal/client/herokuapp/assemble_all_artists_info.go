@@ -31,32 +31,43 @@ func (h *HerokuApp) mapArtistsInfo() {
 	chArtistInfo = h.fillArtistInfoFromRelations(ctx, chArtistInfo, chError, arts)
 	//chArtistInfo = h.fillGeolocationsFromOpenCage(ctx, chArtistInfo, chError)
 
-	for {
-		if chArtistInfo == nil {
-			break	
-		}
-		select {
-		case e, ok := <-chError:
-			if !ok {
-				chError = nil
-				continue
-			}
-			h.logger.PrintError(e.Error(), map[string]string{
-				"Source": "herokuapp.mapArtistsInfo()",
-			})
-			cancel()
-			os.Exit(1)
-		case artistInfo, ok := <-chArtistInfo:
-			if !ok {
-				chArtistInfo = nil
-				continue
-			}
-			byId[artistInfo.Id] = *artistInfo
-
-			fmt.Println(time.Since(start))
-			fmt.Println(byId)
-		}
+	for artistInfo := range h.orDone(ctx, cancel, chError, chArtistInfo) {
+		byId[artistInfo.Id] = *artistInfo
 	}
+
+	fmt.Println(time.Since(start))
+}
+
+func (h *HerokuApp) orDone(ctx context.Context, cancel context.CancelFunc, done <-chan error, chArtistInfo <-chan *ArtistInfo) <-chan *ArtistInfo {
+	out := make(chan *ArtistInfo)
+
+	go func() {
+		defer close(out)
+
+		for {
+			select {
+			case e, ok := <-done:
+				if !ok {
+					return
+				}
+				h.logger.PrintError(e.Error(), map[string]string{
+					"Source": "herokuapp.mapArtistsInfo()",
+				})
+				cancel()
+				os.Exit(1)
+			case artistInfo, ok := <-chArtistInfo:
+				if !ok {
+					return
+				}
+
+				select {
+				case out <- artistInfo:
+				case <-ctx.Done():
+				}
+			}
+		}
+	}()
+	return out
 }
 
 /* func fanIn(ctx context.Context, workers ...<-chan *ArtistInfo) <-chan *ArtistInfo {
