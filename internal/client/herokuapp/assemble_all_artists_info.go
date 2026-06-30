@@ -33,8 +33,7 @@ func (h *HerokuApp) mapArtistsInfo() {
 
 	for {
 		if chArtistInfo == nil {
-			break
-			
+			break	
 		}
 		select {
 		case e, ok := <-chError:
