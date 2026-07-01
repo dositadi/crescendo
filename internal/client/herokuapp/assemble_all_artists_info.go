@@ -59,6 +59,7 @@ func (h *HerokuApp) orDone(ctx context.Context, cancel context.CancelFunc, done 
 				if !ok {
 					return
 				}
+				
 
 				select {
 				case out <- artistInfo:
