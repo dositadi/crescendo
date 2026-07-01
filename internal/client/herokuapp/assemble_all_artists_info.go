@@ -60,7 +60,6 @@ func (h *HerokuApp) orDone(ctx context.Context, cancel context.CancelFunc, done 
 					return
 				}
 				
-
 				select {
 				case out <- artistInfo:
 				case <-ctx.Done():
