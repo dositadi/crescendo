@@ -29,7 +29,7 @@ func (h *HerokuApp) mapArtistsInfo() {
 	chArtistInfo = h.fillArtistInfoFromDate(ctx, chArtistInfo, chError, arts)
 	chArtistInfo = h.fillArtistInfoFromLocation(ctx, chArtistInfo, chError, arts)
 	chArtistInfo = h.fillArtistInfoFromRelations(ctx, chArtistInfo, chError, arts)
-	//chArtistInfo = h.fillGeolocationsFromOpenCage(ctx, chArtistInfo, chError)
+	chArtistInfo = h.fillGeolocationsFromOpenCage(ctx, chArtistInfo, chError)
 
 	for artistInfo := range h.orDone(ctx, cancel, chError, chArtistInfo) {
 		byId[artistInfo.Id] = *artistInfo
@@ -59,7 +59,7 @@ func (h *HerokuApp) orDone(ctx context.Context, cancel context.CancelFunc, done 
 				if !ok {
 					return
 				}
-				
+
 				select {
 				case out <- artistInfo:
 				case <-ctx.Done():
