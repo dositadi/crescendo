@@ -26,6 +26,8 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o /app ./cmd/api
 
+# Stage 3
+
 FROM alpine:3.22
 
 WORKDIR /root

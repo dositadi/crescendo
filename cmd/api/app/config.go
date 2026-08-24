@@ -12,6 +12,7 @@ type config struct {
 	opencageKey       string
 	supabaseUrl       string
 	supabaseSecretKet string
+	port              string
 }
 
 func (c *config) Init(logger jsonlog.Logger) {
@@ -21,6 +22,7 @@ func (c *config) Init(logger jsonlog.Logger) {
 		opencageKey:       os.Getenv("OPEN_CAGE_KEY"),
 		supabaseUrl:       os.Getenv("SUPABASE_URL"),
 		supabaseSecretKet: os.Getenv("SUPABASE_SECRET_KEY"),
+		port:              os.Getenv("PORT"),
 	}
 
 	if temp.jwtkey == "" {
@@ -57,6 +59,10 @@ func (c *config) Init(logger jsonlog.Logger) {
 			"Hint":    "Set the Supabase secret api key in the environment",
 		})
 		os.Exit(1)
+	}
+
+	if temp.port == "" {
+		temp.port = "8080"
 	}
 
 	*c = temp

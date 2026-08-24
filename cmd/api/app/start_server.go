@@ -19,7 +19,7 @@ const (
 
 func (a *App) startServer() {
 	server := http.Server{
-		Addr:         "0.0.0.0:8080",
+		Addr:         ":" + a.config.port,
 		Handler:      a.router,
 		WriteTimeout: 10 * time.Second,
 		ReadTimeout:  10 * time.Second,
@@ -67,7 +67,7 @@ func (a *App) startServer() {
 		os.Exit(1)
 	}
 
-	a.db.Close(ctx)
+	a.db.Close()
 
 	a.logger.PrintInfo("Server shutdown gracefully", map[string]string{
 		"Source": sourceServer,

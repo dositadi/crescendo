@@ -2,15 +2,15 @@ package preferencemodel
 
 import (
 	jsonlog "github.com/dositadi/groupie-tracker/internal/json_log"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type PreferenceModel struct {
-	db     *pgx.Conn
+	db     *pgxpool.Pool
 	logger jsonlog.Logger
 }
 
-func New(db *pgx.Conn, logger jsonlog.Logger) *PreferenceModel {
+func New(db *pgxpool.Pool, logger jsonlog.Logger) *PreferenceModel {
 	return &PreferenceModel{
 		logger: logger,
 		db:     db,

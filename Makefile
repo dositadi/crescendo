@@ -12,3 +12,6 @@ docker-exec-db:
 
 tailwind-watch:
 	npx @tailwindcss/cli -i ./src/input.css -o ./src/output.css --watch
+
+push:
+	git add . && git commit -m "${m}" && git push

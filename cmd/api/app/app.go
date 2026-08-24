@@ -12,12 +12,12 @@ import (
 	"github.com/dositadi/groupie-tracker/internal/models"
 	"github.com/dositadi/groupie-tracker/internal/models/storage"
 	"github.com/go-chi/chi/v5"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/supabase-community/supabase-go"
 )
 
 type App struct {
-	db        *pgx.Conn
+	db        *pgxpool.Pool
 	storage   *supabase.Client
 	config    config
 	logger    *jsonlog.Logger

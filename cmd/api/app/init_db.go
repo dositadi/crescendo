@@ -2,29 +2,23 @@ package app
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"os"
 	"time"
 
-	"github.com/dositadi/groupie-tracker/internal/helper"
-	"github.com/golang-migrate/migrate/v4"
-	_ "github.com/golang-migrate/migrate/v4/database/postgres"
-	"github.com/golang-migrate/migrate/v4/source/iofs"
-	_ "github.com/golang-migrate/migrate/v4/source/iofs"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func (a *App) initDB() {
-	db, err := a.connectToDB()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	db, err := a.connectToDB(ctx)
 	if err != nil {
 		a.logger.PrintFatal(err.Error(), map[string]string{
 			"Source": "Initialize db f(n)",
 		})
 		os.Exit(1)
 	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
 
 	defer cancel()
 
@@ -35,11 +29,6 @@ func (a *App) initDB() {
 		os.Exit(1)
 	}
 
-	err = a.migrate()
-	if err != nil {
-		os.Exit(1)
-	}
-
 	a.logger.PrintInfo("Database Initialized successfully", map[string]string{
 		"Source": "Init db f(n)",
 	})
@@ -47,13 +36,22 @@ func (a *App) initDB() {
 	a.db = db
 }
 
-func (a *App) connectToDB() (*pgx.Conn, error) {
-	var db *pgx.Conn
+func (a *App) connectToDB(ctx context.Context) (*pgxpool.Pool, error) {
+	var dbPool *pgxpool.Pool
+
+	cfg, err := pgxpool.ParseConfig(a.config.postgresDbDsn)
+	if err != nil {
+		e := fmt.Errorf("Database connect err: %w", err)
+		a.logger.PrintError(e.Error(), map[string]string{
+			"Source": "Connect to db f(n)",
+		})
+		return nil, e
+	}
 
 	for i := 0; i <= 5; i++ {
 		var err error
 
-		db, err = pgx.Connect(context.Background(), a.config.postgresDbDsn)
+		dbPool, err = pgxpool.NewWithConfig(ctx, cfg)
 		if err != nil {
 			e := fmt.Errorf("Database connect err: %w", err)
 			a.logger.PrintError(e.Error(), map[string]string{
@@ -67,10 +65,10 @@ func (a *App) connectToDB() (*pgx.Conn, error) {
 	a.logger.PrintInfo("Database connected successfully", map[string]string{
 		"Source": "Connect to db f(n)",
 	})
-	return db, nil
+	return dbPool, nil
 }
 
-func (a *App) migrate() error {
+/* func (a *App) migrate() error {
 	migratefiles, err := iofs.New(a.embedded.Get(), "migrations")
 	if err != nil {
 		e := helper.WrapError("iofs driver failed", err)
@@ -102,3 +100,4 @@ func (a *App) migrate() error {
 	})
 	return nil
 }
+*/
