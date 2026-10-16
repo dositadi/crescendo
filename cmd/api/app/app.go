@@ -48,5 +48,6 @@ func (a *App) init() {
 
 func (a *App) Run() {
 	a.init()
+
 	a.startServer()
 }
